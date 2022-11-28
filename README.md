@@ -85,31 +85,6 @@ Now compile the server by running `mingw32-make`.
 
 If compilation was successful the binary will be placed in the `/bin/` folder.
 
-## Contributing
-CoD4x is licensed under the AGPL3 license. We welcome anybody to fork this project and submit a pull request.
+## Contributors:
 
-Plugins can be written in C/C++ and we also provide language bindings for D. The `/plugins` directory contains some example plugins. You can contribute to the project by developing plugins and create a pull request for them and/or uploading and promoting them on the [forums](https://cod4x.ovh/index.php?/forums/forum/5-server-plugins-and-management-tools/).
-
-If you want to contribute to the core project check the issue tracker for todos. We will try our best to keep the issue tracker filled with new bits.
-If you would like to work on a completely new feature, we would appreciate if you contact us first on the forums or on Github to discuss the idea.
-
-If you're not a programmer but still want to help, you can help by testing and reporting bugs, but also by writing documentation. Please submit your bug reports to the Github issue tracker.
-
-## Usage conditions for server hosters
-Aside from agreeing to the license, by making any use of CoD4x18 server you agree to the following:
-
-1. You make content which is connected to your CoD4x18 Server available to the developers on request. For example if you run a mod, you have to make everything available that is required to run another server just like your own. Think of a complete mod.ff, .iwds, plugins, database handlers, etc.
-
-2. The developers reserve the right to reuse your content as long as it is not used commercially. You have a right for your name/clan/website getting mentioned if this is going to happen.
-They can also use it on their own servers.
-
-3. Maps you have installed on a server have to be either available on the internet already, or be made available to the community at the [CoD4x forums](https://cod4x.ovh/index.php?/forums/), with all required assets, like scripts, within 20 weeks of installation. You have to annouce your map on the [forums](https://cod4x.ovh/index.php?/forums/) on the same day you have installed it to gain the 20 weeks grace period. Not announced maps will have to be made available within 1 week.
-
-4. Plugins have to be made available as sourcecode so the user can interact with it
-
-Server's IPs violating these conditions can get permanently disabled.
-
-These conditions have been established to keep user created content open to everyone, and also to value the work on CoD4x.
-
-## Everything else
-Please check out the [forums](https://cod4x.ovh) and [our wiki](https://github.com/callofduty4x/CoD4x_Server/wiki).
+***Note:*** If you would like to contribute to this repository, feel free to send a pull request, and I will review your code. Also feel free to post about any problems that may arise in the issues section of the repository.
