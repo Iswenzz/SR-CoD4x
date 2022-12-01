@@ -18,8 +18,6 @@ namespace Iswenzz::CoD4x
 
 	int PMove::GetSpeed()
 	{
-		Log::WriteLine("[PMove] %d", Player->ps->speed);
-
 		return Player->ps->speed;
 	}
 
