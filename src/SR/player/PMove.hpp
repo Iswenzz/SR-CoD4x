@@ -24,6 +24,9 @@ namespace Iswenzz::CoD4x
 		PMove(class Player *player);
 		virtual ~PMove() = default;
 
+		/// @brief Initialize the player movement.
+		void Initialize();
+
 		/// @brief Get the player speed.
 		int GetSpeed();
 

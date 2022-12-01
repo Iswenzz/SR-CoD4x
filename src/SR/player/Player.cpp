@@ -16,7 +16,7 @@ namespace Iswenzz::CoD4x
 
 	void Player::Spawn()
 	{
-
+		PMove->Initialize();
 	}
 
 	void Player::CalculateFrame(int time)

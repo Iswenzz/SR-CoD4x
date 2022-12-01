@@ -72,28 +72,23 @@ extern "C" void __cdecl ClientSpawn(gentity_s *ent, const float *spawn_origin, c
   ent->handler = 14;
   */
   ent->flags = 4096;
-  
+
   VectorCopy(playerMins, ent->r.mins);
   VectorCopy(playerMaxs, ent->r.maxs);
 
   iFlags = client->ps.eFlags & 0x100002;
-  
+
   memcpy(&savedSess, &client->sess, sizeof(savedSess));
-  
+
   savedSpawnCount = client->ps.stats[4];
   savedServerTime = client->lastServerTime;
 
-  int speed = client->ps.speed;
-  float speedScale = client->ps.moveSpeedScaleMultiplier;
-  int gravity = client->ps.gravity;
-  float jumpHeight = svs.clients[index].jumpHeight;
-  
   ClientClearFields(client);
 
   memset(client, 0, sizeof(gclient_s));
-  
+
   memcpy(&client->sess, &savedSess, sizeof(client->sess));
-  
+
   client->lastServerTime = savedServerTime;
   client->spectatorClient = -1;
   client->ps.stats[4] = savedSpawnCount + 1;
@@ -130,23 +125,18 @@ extern "C" void __cdecl ClientSpawn(gentity_s *ent, const float *spawn_origin, c
   PM_StartWeaponAnim(&client->ps, 1, 0);
 */
   G_SetOrigin(ent, spawn_origin);
-  
+
   VectorCopy(spawn_origin, client->ps.origin);
 
   client->ps.pm_flags |= 0x400u;
 
-  client->ps.speed = speed;
-  client->ps.moveSpeedScaleMultiplier = speedScale;
-  client->ps.gravity = gravity;
-  svs.clients[index].jumpHeight = jumpHeight;
-
   clean_spawn_angles[0] = spawn_angles[0];
   clean_spawn_angles[1] = spawn_angles[1];
   clean_spawn_angles[2] = 0.0;
-  
+
   SetClientViewAngle(ent, clean_spawn_angles);
   client->inactivityTime = level.time + 1000 * g_inactivity->integer;
-  
+
   client->buttons = client->sess.cmd.buttons;
   level.clientIsSpawning = 1;
   client->lastSpawnTime = level.time;
@@ -181,7 +171,7 @@ const char *__cdecl CS_DisplayName(clientState_t *cs, int type)
 {
   const char* clan = SV_GetPlayerClan(cs->clientIndex);
   const char* name = SV_GetPlayerName(cs->clientIndex);
-  
+
   if(name && clan)
   {
     return Com_DisplayName(name, clan, type);

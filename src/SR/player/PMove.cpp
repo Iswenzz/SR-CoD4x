@@ -7,7 +7,10 @@ namespace Iswenzz::CoD4x
 	PMove::PMove(class Player *Player)
 	{
 		this->Player = Player;
+	}
 
+	void PMove::Initialize()
+	{
 		Player->ps->speed = g_speed->integer;
 		Player->ps->gravity = static_cast<int>(g_gravity->value);
 		Player->cl->jumpHeight = jump_height->value;
@@ -15,6 +18,8 @@ namespace Iswenzz::CoD4x
 
 	int PMove::GetSpeed()
 	{
+		Log::WriteLine("[PMove] %d", Player->ps->speed);
+
 		return Player->ps->speed;
 	}
 
