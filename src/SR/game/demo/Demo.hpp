@@ -43,11 +43,18 @@ namespace Iswenzz::CoD4x
 		Demo(std::string id, std::string path);
 		~Demo();
 
+		/// @brief Initialize the demo huffman and mutex.
+		static void Initialize();
+
 		/// @brief Open a demo.
-		void Open();
+		/// @param req - The worker request.
+		static void Open(uv_work_t *req);
 
 		/// @brief Process chat messages.
 		/// @return
 		std::vector<std::string> ProcessChat();
+
+	private:
+		inline static uv_mutex_t Mutex;
 	};
 }

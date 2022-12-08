@@ -8,7 +8,7 @@ namespace Iswenzz::CoD4x
 		ID = id;
 		Reader = std::make_unique<Iswenzz::CoD4::DM1::DemoReader>(path);
 
-		Open();
+		AsyncCall(this, Open, nullptr);
 	}
 
 	Demo::~Demo()
@@ -16,49 +16,60 @@ namespace Iswenzz::CoD4x
 		Reader->Close();
 	}
 
-	void Demo::Open()
+	void Demo::Initialize()
 	{
+		Iswenzz::CoD4::DM1::Huffman::InitMain();
+		uv_mutex_init(&Demo::Mutex);
+	}
+
+	void Demo::Open(uv_work_t* req)
+	{
+		uv_mutex_lock(&Demo::Mutex);
+
 		try
 		{
+			Demo *demo = (Demo *)req->data;
 			DemoFrame previousFrame = { 0 };
 
-			while (Reader->Next())
+			while (demo->Reader->Next())
 			{
 				DemoFrame frame = { 0 };
 
-				if (Reader->DemoFile->CurrentMessageType == Iswenzz::CoD4::DM1::MSGType::MSG_FRAME)
+				if (demo->Reader->DemoFile->CurrentMessageType == Iswenzz::CoD4::DM1::MSGType::MSG_FRAME)
 					continue;
-				if (!Reader->GetCurrentSnapshot().valid)
+				if (!demo->Reader->GetCurrentSnapshot().valid)
 					continue;
 
-				auto ps = Reader->GetCurrentSnapshot().ps;
-				auto archive = Reader->GetCurrentFrame();
+				auto ps = demo->Reader->GetCurrentSnapshot().ps;
+				auto archive = demo->Reader->GetCurrentFrame();
 
-				frame.chat = ProcessChat();
-				frame.time = Reader->GetTimeMilliseconds();
-				frame.fps = Reader->GetFPS();
+				frame.chat = demo->ProcessChat();
+				frame.time = demo->Reader->GetTimeMilliseconds();
+				frame.fps = demo->Reader->GetFPS();
 				frame.ps = *reinterpret_cast<playerState_t *>(&ps);
-				frame.playerName = Reader->GetPlayerName().netname;
+				frame.playerName = demo->Reader->GetPlayerName().netname;
 				frame.entities = previousFrame.entities;
 				frame.forwardmove = *(char *)&ps.dofNearStart;
 				frame.rightmove = *(char *)&ps.dofNearEnd;
 				frame.buttons = *(int *)&ps.dofFarStart;
 
-				for (auto &ent : Reader->GetLastUpdatedEntities())
+				for (auto &ent : demo->Reader->GetLastUpdatedEntities())
 				{
 					if (ent.eType == ET_SCRIPTMOVER)
 						frame.entities[ent.number] = *reinterpret_cast<entityState_t*>(&ent);
 				}
 
 				previousFrame = frame;
-				Frames.push_back(frame);
+				demo->Frames.push_back(frame);
 			}
 
-			ConfigStrings = Reader->DemoFile->ConfigStrings;
-			Weapons = Utils::SplitString(Reader->GetConfigString("defaultweapon_mp"), ' ');
-			Reader->Close();
+			demo->ConfigStrings = demo->Reader->DemoFile->ConfigStrings;
+			demo->Weapons = Utils::SplitString(demo->Reader->GetConfigString("defaultweapon_mp"), ' ');
+			demo->Reader->Close();
 		}
 		catch (...) { }
+
+		uv_mutex_unlock(&Demo::Mutex);
 	}
 
 	std::vector<std::string> Demo::ProcessChat()

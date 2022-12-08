@@ -1,6 +1,7 @@
 [requires]
 CoD4DM1/1.0.2
 boost/1.78.0
+libuv/1.44.2
 
 [options]
 boost:without_atomic=True
