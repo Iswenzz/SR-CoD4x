@@ -3,7 +3,7 @@
 
 C_EXTERN
 {
-	#include <scr_vm.h>
+	#include <server.h>
 	#include <cscr_stringlist.h>
 	#include <bg.h>
 }

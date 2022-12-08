@@ -4,7 +4,7 @@
 extern "C" {
 #endif
 
-#include "../g_sv_shared.h"
+#include <server.h>
 
 void SR_Initialize();
 void SR_Shutdown();

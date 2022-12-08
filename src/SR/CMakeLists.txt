@@ -43,8 +43,9 @@ add_subdirectory(utils)
 
 target_sources(SR PUBLIC SR.cpp Macros.hpp)
 target_link_libraries(SR PUBLIC ${CONAN_LIBS})
-target_include_directories(SR PUBLIC . ..)
+target_include_directories(SR PUBLIC . .. ../version ../../plugins ../CGSC)
 target_precompile_headers(SR PUBLIC SR.hpp SR.h)
+target_compile_definitions(SR PUBLIC COD4X18UPDATE)
 
 get_target_property(SOURCES SR SOURCES)
 set_target_properties(SR PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../../../lib)
