@@ -20,6 +20,8 @@ namespace Iswenzz::CoD4x
 	Game::~Game()
 	{
 		Log::WriteLine("[SR] Shutdown");
+
+		AsyncShutdown();
 	}
 }
 
