@@ -226,7 +226,7 @@ namespace Iswenzz::CoD4x
 }
 
 C_EXTERN
-	{
+{
 	qboolean SR_DemoIsPlaying(client_t *cl)
 	{
 		if (!cl || !cl->gentity || !cl->gentity->client)

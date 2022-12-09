@@ -1,5 +1,6 @@
 #include "Debug.hpp"
 #include "utils/Log.hpp"
+#include "SR.hpp"
 
 namespace Iswenzz::CoD4x
 {
@@ -19,8 +20,6 @@ namespace Iswenzz::CoD4x
 			Log::WriteLine("PACKET: %d", size);
 	}
 }
-
-using namespace Iswenzz::CoD4x;
 
 C_EXTERN
 {

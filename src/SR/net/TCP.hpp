@@ -25,8 +25,8 @@ namespace Iswenzz::CoD4x
 		/// @brief User connection.
 		/// @param from - The address.
 		/// @param msg - The message.
-		/// @return qboolean
-		virtual qboolean Connect(netadr_t *from, msg_t *msg) = 0;
+		/// @return bool
+		virtual bool Connect(netadr_t *from, msg_t *msg) = 0;
 
 		/// @brief Disconnect user.
 		/// @param from - The address.

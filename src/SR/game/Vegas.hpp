@@ -25,8 +25,8 @@ namespace Iswenzz::CoD4x
 		/// @brief User connection.
 		/// @param from - The address.
 		/// @param msg - The message.
-		/// @return qboolean
-		qboolean Connect(netadr_t *from, msg_t *msg) override;
+		/// @return bool
+		bool Connect(netadr_t *from, msg_t *msg) override;
 
 		/// @brief Disconnect user.
 		/// @param from - The address.
@@ -42,11 +42,11 @@ namespace Iswenzz::CoD4x
 		/// @param player
 		void Frame(Player *player);
 	};
+}
 
-	C_EXTERN
-	{
-		qboolean OnConnect(netadr_t *from, msg_t *msg, int *connectionId);
-		void OnDisconnect(netadr_t *from, int connectionId);
-		int OnMessage(netadr_t *from, msg_t *msg, int connectionId);
-	}
+C_EXTERN
+{
+	qboolean OnConnectVegas(netadr_t *from, msg_t *msg, int *connectionId);
+	void OnDisconnectVegas(netadr_t *from, int connectionId);
+	int OnMessageVegas(netadr_t *from, msg_t *msg, int connectionId);
 }

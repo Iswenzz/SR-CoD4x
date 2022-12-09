@@ -5,13 +5,13 @@ namespace Iswenzz::CoD4x
 {
 	Vegas::Vegas() : TCP(200)
 	{
-		NET_TCPAddEventType(OnMessage, OnConnect, OnDisconnect, ServiceID);
+		NET_TCPAddEventType(OnMessageVegas, OnConnectVegas, OnDisconnectVegas, ServiceID);
 		IsEnabled = Cvar_RegisterBool("vegas", qfalse, 0, "Allow vegas rendering.");
 	}
 
-	qboolean Vegas::Connect(netadr_t *from, msg_t *msg)
+	bool Vegas::Connect(netadr_t *from, msg_t *msg)
 	{
-		return qtrue;
+		return true;
 	}
 
 	void Vegas::Disconnect(netadr_t *from)
@@ -60,17 +60,17 @@ namespace Iswenzz::CoD4x
 
 C_EXTERN
 {
-	qboolean OnConnect(netadr_t *from, msg_t *msg, int *connectionId)
+	qboolean OnConnectVegas(netadr_t *from, msg_t *msg, int *connectionId)
 	{
-		return SR->Server->Vegas->Connect(from, msg);
+		return static_cast<qboolean>(SR->Server->Vegas->Connect(from, msg));
 	}
 
-	void OnDisconnect(netadr_t *from, int connectionId)
+	void OnDisconnectVegas(netadr_t *from, int connectionId)
 	{
 		SR->Server->Vegas->Disconnect(from);
 	}
 
-	int OnMessage(netadr_t *from, msg_t *msg, int connectionId)
+	int OnMessageVegas(netadr_t *from, msg_t *msg, int connectionId)
 	{
 		return SR->Server->Vegas->Message(from, msg);
 	}
