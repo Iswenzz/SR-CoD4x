@@ -5,7 +5,6 @@ namespace Iswenzz::CoD4x
 {
 	void DemoCommands::Register()
 	{
-		Scr_AddFunction("registerspeedrundemo", RegisterSpeedrunDemo, qfalse);
 		Scr_AddMethod("playdemo", PlayDemo, qfalse);
 		Scr_AddMethod("isdemoplaying", IsDemoPlaying, qfalse);
 		Scr_AddMethod("getspeedrunvelocity", GetSpeedrunVelocity, qfalse);
@@ -15,6 +14,9 @@ namespace Iswenzz::CoD4x
 		Scr_AddMethod("getdemobuttons", GetDemoButtons, qfalse);
 		Scr_AddMethod("getdemotimer", GetDemoTimer, qfalse);
 		Scr_AddMethod("stopdemo", StopDemo, qfalse);
+
+		Scr_AddFunction("registerspeedrundemo", RegisterSpeedrunDemo, qfalse);
+		Scr_AddFunction("isdemoloaded", IsDemoLoaded, qfalse);
 	}
 
 	void DemoCommands::RegisterSpeedrunDemo()
@@ -52,6 +54,21 @@ namespace Iswenzz::CoD4x
 			player->DemoPlayer->Play(*demo);
 			Scr_AddEntity(player->DemoPlayer->Entity);
 		}
+	}
+
+	void DemoCommands::IsDemoLoaded()
+	{
+		CHECK_PARAMS(1, "Usage: IsDemoLoaded(<id>)");
+
+		std::string id = Scr_GetString(0);
+
+		auto demo = std::find_if(SR->DemoContainer->Demos.cbegin(), SR->DemoContainer->Demos.cend(),
+			[&](const std::shared_ptr<Demo> &item) { return item->ID == id; });
+
+		if (demo != std::end(SR->DemoContainer->Demos))
+			Scr_AddBool((*demo)->IsLoaded);
+		else
+			Scr_AddBool(qfalse);
 	}
 
 	void DemoCommands::IsDemoPlaying(scr_entref_t num)
