@@ -9,7 +9,7 @@ namespace Iswenzz::CoD4x
 	{
 	public:
 		std::vector<std::string> Directories{ };
-		std::vector<std::shared_ptr<Demo>> Demos{ };
+		std::map<std::string, std::shared_ptr<Demo>> Demos{ };
 
 		/// @brief Initialize a DemoContainer.
 		DemoContainer();

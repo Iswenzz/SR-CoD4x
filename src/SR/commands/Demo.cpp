@@ -46,12 +46,11 @@ namespace Iswenzz::CoD4x
 		std::string id = Scr_GetString(0);
 
 		auto player = SR->Players[num.entnum];
-		auto demo = std::find_if(SR->DemoContainer->Demos.cbegin(), SR->DemoContainer->Demos.cend(),
-			[&](const std::shared_ptr<Demo> &item) { return item->ID == id; });
+		auto demo = SR->DemoContainer->Demos.find(id);
 
 		if (demo != std::end(SR->DemoContainer->Demos))
 		{
-			player->DemoPlayer->Play(*demo);
+			player->DemoPlayer->Play(demo->second);
 			Scr_AddEntity(player->DemoPlayer->Entity);
 		}
 	}
@@ -62,11 +61,11 @@ namespace Iswenzz::CoD4x
 
 		std::string id = Scr_GetString(0);
 
-		auto demo = std::find_if(SR->DemoContainer->Demos.cbegin(), SR->DemoContainer->Demos.cend(),
-			[&](const std::shared_ptr<Demo> &item) { return item->ID == id; });
+		auto demo = SR->DemoContainer->Demos.find(id);
+		Log::WriteLine("[Demo] %d", SR->DemoContainer->Demos.size());
 
 		if (demo != std::end(SR->DemoContainer->Demos))
-			Scr_AddBool((*demo)->IsLoaded);
+			Scr_AddBool(demo->second->IsLoaded);
 		else
 			Scr_AddBool(qfalse);
 	}

@@ -35,7 +35,11 @@ namespace Iswenzz::CoD4x
 		if (demos.size())
 		{
 			std::string id = fmt("times_%s_%s", mode.c_str(), way.c_str());
-			Demos.push_back(std::make_shared<Demo>(id, demos.at(0)));
+
+			if (Demos.count(id))
+				Demos.erase(id);
+
+			Demos.insert({ id, std::make_shared<Demo>(id, demos.at(0)) });
 
 			Log::WriteLine("[DemoContainer] Register demo %s %s/%s", id.c_str(), playerId.c_str(), run.c_str());
 		}
