@@ -617,10 +617,7 @@ extern cvar_t* sv_maxDownloadRate;
 extern "C"{
 #endif
 
-#include "scr_vm.h"
-
-#include "CGSC/cgsc.h"
-#include "SR/SR.h"
+#include <SR/SR.h>
 
 gentity_t *SV_GentityNum( int num );
 int SV_NumForGentity( gentity_t *ent );

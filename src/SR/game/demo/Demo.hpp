@@ -8,6 +8,7 @@
 
 C_EXTERN
 {
+	#include <cgsc.h>
 	#include <server.h>
 	#include <q_math.h>
 }
