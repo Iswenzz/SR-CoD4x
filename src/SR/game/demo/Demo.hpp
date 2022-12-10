@@ -37,7 +37,7 @@ namespace Iswenzz::CoD4x
 		std::vector<DemoFrame> Frames{ };
 		std::array<std::string, MAX_CONFIGSTRINGS + 1> ConfigStrings{ };
 		std::vector<std::string> Weapons{ };
-		bool IsLoaded = false;
+		bool IsLoading = false;
 
 		/// @brief Initialize a new Demo.
 		/// @param id - The demo id.

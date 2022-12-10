@@ -41,7 +41,7 @@ namespace Iswenzz::CoD4x
 
 			Demos.insert({ id, std::make_shared<Demo>(id, demos.at(0)) });
 
-			Log::WriteLine("[DemoContainer] Register demo %s %s/%s", id.c_str(), playerId.c_str(), run.c_str());
+			Log::WriteLine("[DemoContainer] Register demo %s %s", id.c_str(), demos.at(0).c_str());
 		}
 		return demos.size();
 	}

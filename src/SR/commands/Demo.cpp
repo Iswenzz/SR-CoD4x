@@ -16,7 +16,7 @@ namespace Iswenzz::CoD4x
 		Scr_AddMethod("stopdemo", StopDemo, qfalse);
 
 		Scr_AddFunction("registerspeedrundemo", RegisterSpeedrunDemo, qfalse);
-		Scr_AddFunction("isdemoloaded", IsDemoLoaded, qfalse);
+		Scr_AddFunction("isdemoloading", IsDemoLoading, qfalse);
 	}
 
 	void DemoCommands::RegisterSpeedrunDemo()
@@ -55,17 +55,15 @@ namespace Iswenzz::CoD4x
 		}
 	}
 
-	void DemoCommands::IsDemoLoaded()
+	void DemoCommands::IsDemoLoading()
 	{
-		CHECK_PARAMS(1, "Usage: IsDemoLoaded(<id>)");
+		CHECK_PARAMS(1, "Usage: IsDemoLoading(<id>)");
 
 		std::string id = Scr_GetString(0);
 
 		auto demo = SR->DemoContainer->Demos.find(id);
-		Log::WriteLine("[Demo] %d", SR->DemoContainer->Demos.size());
-
 		if (demo != std::end(SR->DemoContainer->Demos))
-			Scr_AddBool(demo->second->IsLoaded);
+			Scr_AddBool(demo->second->IsLoading);
 		else
 			Scr_AddBool(qfalse);
 	}

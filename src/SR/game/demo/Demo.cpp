@@ -26,11 +26,11 @@ namespace Iswenzz::CoD4x
 	{
 		uv_mutex_lock(&Demo::Mutex);
 
+		Demo *demo = (Demo *)req->data;
+		demo->IsLoading = true;
+
 		try
 		{
-			Demo *demo = (Demo *)req->data;
-			demo->IsLoaded = false;
-
 			DemoFrame previousFrame = { 0 };
 
 			while (demo->Reader->Next())
@@ -67,11 +67,11 @@ namespace Iswenzz::CoD4x
 
 			demo->ConfigStrings = demo->Reader->DemoFile->ConfigStrings;
 			demo->Weapons = Utils::SplitString(demo->Reader->GetConfigString("defaultweapon_mp"), ' ');
-			demo->Reader->Close();
-			demo->IsLoaded = true;
 		}
 		catch (...) { }
 
+		demo->Reader->Close();
+		demo->IsLoading = false;
 		uv_mutex_unlock(&Demo::Mutex);
 	}
 
