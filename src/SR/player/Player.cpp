@@ -61,7 +61,21 @@ namespace Iswenzz::CoD4x
 	{
 		LastVoiceTime = VoiceTime;
 		VoiceTime = cl->gentity->client->lastVoiceTime;
-		Voice = VoiceTime != LastVoiceTime;
+
+		if (VoiceTime != LastVoiceTime)
+		{
+			Voice = true;
+			VoiceCount = 0;
+		}
+		else if (Voice)
+		{
+			VoiceCount++;
+			if (VoiceCount > 5)
+			{
+				Voice = false;
+				VoiceCount = 0;
+			}
+		}
 	}
 
 	clientSnapshot_t *Player::GetFrame()

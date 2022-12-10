@@ -30,6 +30,7 @@ namespace Iswenzz::CoD4x
 		int PreviousFPS = 0;
 		int SurfaceFlags = 0;
 		bool Voice = false;
+		int VoiceCount = 0;
 		int VoiceTime = 0;
 		int LastVoiceTime = 0;
 
