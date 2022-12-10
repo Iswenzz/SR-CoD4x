@@ -51,9 +51,17 @@ namespace Iswenzz::CoD4x
 	void Player::Frame()
 	{
 		CalculateFPS();
+		VoiceChat();
 
 		SR->Server->Vegas->Frame(this);
 		DemoPlayer->Frame();
+	}
+
+	void Player::VoiceChat()
+	{
+		LastVoiceTime = VoiceTime;
+		VoiceTime = cl->gentity->client->lastVoiceTime;
+		Voice = VoiceTime != LastVoiceTime;
 	}
 
 	clientSnapshot_t *Player::GetFrame()

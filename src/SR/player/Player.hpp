@@ -22,13 +22,16 @@ namespace Iswenzz::CoD4x
 		std::unique_ptr<PMove> PMove;
 		std::unique_ptr<DemoPlayer> DemoPlayer;
 
-		int SurfaceFlags = 0;
-
 		int CurrentFrameTime = 0;
 		int PreviousFrameTime = 0;
 		std::vector<int> FrameTimes{ };
+
 		int FPS = 0;
 		int PreviousFPS = 0;
+		int SurfaceFlags = 0;
+		bool Voice = false;
+		int VoiceTime = 0;
+		int LastVoiceTime = 0;
 
 		/// @brief Initialize a new player.
 		/// @param cl - The client.
@@ -51,6 +54,9 @@ namespace Iswenzz::CoD4x
 
 		/// @brief Player render frame.
 		void Frame();
+
+		/// @brief Process player voice chat.
+		void VoiceChat();
 
 		/// @brief Get the last player frame.
 		/// @return clientSnapshot_t*

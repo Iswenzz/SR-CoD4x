@@ -9,6 +9,9 @@ namespace Iswenzz::CoD4x
 		/// @brief Register commands.
 		static void Register();
 
+		/// @brief Is voice chat button pressed.
+		static void VoiceChatButtonPressed(scr_entref_t num);
+
 		/// @brief Get the player surface flag.
 		static void SurfaceFlags(scr_entref_t num);
 

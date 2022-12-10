@@ -11,6 +11,21 @@ namespace Iswenzz::CoD4x
 		Scr_AddMethod("getviewheightlerptime", GetViewHeightLerpTime, qfalse);
 		Scr_AddMethod("getdamagetimer", GetDamageTimer, qfalse);
 		Scr_AddMethod("weaponstate", GetWeaponState, qfalse);
+		Scr_AddMethod("voicechatbuttonpressed", VoiceChatButtonPressed, qfalse);
+	}
+
+	void PlayerCommands::VoiceChatButtonPressed(scr_entref_t num)
+	{
+		gentity_t *ent = VM_GetGEntityForNum(num);
+
+		if (!ent || !ent->client)
+		{
+			Scr_ObjectError("not a client\n");
+			return;
+		}
+
+		auto player = SR->Players[num.entnum];
+		Scr_AddBool(player->Voice);
 	}
 
 	void PlayerCommands::SurfaceFlags(scr_entref_t num)
