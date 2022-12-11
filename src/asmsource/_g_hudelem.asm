@@ -766,7 +766,13 @@ HECmd_Destroy_10:
 ;HECmd_SetPulseFX(scr_entref_t)
 HECmd_SetPulseFX:
 	; -------------------------- SR HECmd_SetPulseFX --------------------------
-	ret		; Disabled setPulseFX() due to memory leak.
+	; push ebp
+	; mov ebp, esp
+	; push edi
+	; push esi
+	; push ebx
+	; sub esp, 0x1
+	jmp HECmd_Destroy		; Disabled setPulseFX() due to memory leak.
 	; -------------------------- SR HECmd_SetPulseFX --------------------------
 	mov ebx, [ebp+0x8]
 	call Scr_GetNumParam

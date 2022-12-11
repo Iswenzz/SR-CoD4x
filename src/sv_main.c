@@ -3559,6 +3559,7 @@ void SV_LoadLevel(const char* levelname)
 
     Q_strncpyz(mapname, levelname, sizeof(mapname));
     FS_ConvertPath(mapname);
+	SR_SpawnServer(mapname);
     SV_PreLevelLoad();
     SV_SpawnServer(mapname);
 
@@ -3572,7 +3573,6 @@ void SV_LoadLevel(const char* levelname)
 
     SV_CalculateChecksums();
     SV_PostLevelLoad();
-	SR_SpawnServer(mapname);
 }
 
 
