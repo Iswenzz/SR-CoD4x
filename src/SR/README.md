@@ -13,7 +13,7 @@ _Pre-Requisites:_
 _Build Command:_
 
     mkdir build && cd build
-	conan remote add iswenzz-conan https://iswenzz.jfrog.io/artifactory/api/conan/iswenzz-conan
+    conan remote add iswenzz-conan https://iswenzz.jfrog.io/artifactory/api/conan/iswenzz-conan
     conan install .. --build missing --profile ../.conan/linux.conf
     cmake ..
     cmake --build .
@@ -27,7 +27,7 @@ _Pre-Requisites:_
 _Build Command:_
 
     mkdir build && cd build
-	conan remote add iswenzz-conan https://iswenzz.jfrog.io/artifactory/api/conan/iswenzz-conan
+    conan remote add iswenzz-conan https://iswenzz.jfrog.io/artifactory/api/conan/iswenzz-conan
     conan install .. --build missing --profile ../.conan/windows.conf
     cmake .. -G "MinGW Makefiles"
     cmake --build .
