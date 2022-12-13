@@ -729,6 +729,9 @@ void G_SetupHudMessagesForPlayer(client_t*);
 
 
 void SV_SayToPlayers(int clnum, int team, char* text);
+bool __cdecl SV_ClientHasClientMuted(int listener, int talker);
+bool __cdecl SV_ClientWantsVoiceData(int clientNum);
+void __cdecl SV_QueueVoicePacket(int talkerNum, int clientNum, struct VoicePacket_t *voicePacket);
 
 
 __optimize3 __regparm2 void SV_ExecuteClientMessage( client_t *cl, msg_t *msg );

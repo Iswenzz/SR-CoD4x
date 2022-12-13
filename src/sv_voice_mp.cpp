@@ -111,11 +111,10 @@ void __cdecl SV_UserVoice(client_t *cl, msg_t *msg)
       assert(msg->data != NULL);
 
       MSG_ReadData(msg, voicePacket.data, voicePacket.dataSize);
-      G_BroadcastVoice(cl->gentity, &voicePacket);
+      SR_BroadcastVoice(cl->gentity, &voicePacket);
     }
   }
 }
-
 
 void __cdecl SV_PreGameUserVoice(client_t *cl, msg_t *msg)
 {
