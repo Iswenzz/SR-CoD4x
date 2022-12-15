@@ -1,6 +1,15 @@
 #include "Voice.hpp"
 #include "SR.hpp"
 
+#define MINIMP3_ONLY_MP3
+#define MINIMP3_IMPLEMENTATION
+
+#include <minimp3_ex.h>
+#include <samplerate.h>
+
+#define VOICE_AMPLIFY 2
+#define PROXIMITY_DISTANCE 1500
+
 namespace Iswenzz::CoD4x
 {
 	Voice::Voice()
@@ -59,52 +68,84 @@ namespace Iswenzz::CoD4x
 		return encodedData;
 	}
 
-	void Voice::BroadcastVoice(struct gentity_s *entity, VoicePacket_t *packet)
+	std::vector<short> Voice::Amplify(std::vector<short> &data, float multiplier)
+	{
+		std::vector<short> dataAmplified(data.size());
+		for (int i = 0; i < data.size(); i++)
+		{
+			int amplified = data[i] * multiplier;
+
+			if (amplified > SHRT_MAX)
+				amplified = SHRT_MAX;
+			else if (amplified < SHRT_MIN)
+				amplified = SHRT_MIN;
+
+			dataAmplified[i] = static_cast<short>(amplified);
+		}
+		return dataAmplified;
+	}
+
+	std::vector<short> Voice::Proximity(std::vector<short> &data, gentity_t *talker, gentity_t *entity)
+	{
+		float distance = fabs(VectorDistance(talker->client->ps.origin, entity->client->ps.origin));
+
+		if (distance > PROXIMITY_DISTANCE)
+			distance = PROXIMITY_DISTANCE;
+		distance = 1 - (distance / PROXIMITY_DISTANCE);
+		distance *= VOICE_AMPLIFY;
+
+		return Amplify(data, distance);
+	}
+
+	void Voice::BroadcastVoice(gentity_t *talker, VoicePacket_t *packet)
 	{
 		int i;
-		struct gentity_s* ent;
+		gentity_t* entity;
 
-		std::vector<short> soundData = DecodePacket(packet);
-		VoicePacket_t newPacket = EncodePacket(soundData);
-		newPacket.talker = packet->talker;
+		std::vector<short> voiceData = DecodePacket(packet);
+		talker->client->lastVoiceTime = level.time;
 
-		entity->client->lastVoiceTime = level.time;
-
-		for (i = 0, ent = level.gentities; i < level.maxclients; i++, ent++)
+		for (i = 0, entity = level.gentities; i < level.maxclients; i++, entity++)
 		{
-			if (ent->client && ent->client->sess.sessionState != SESS_STATE_INTERMISSION)
+			if (entity->client && entity->client->sess.sessionState != SESS_STATE_INTERMISSION)
 			{
-				if (!voice_localEcho->boolean && ent == entity)
+				if (!voice_localEcho->boolean && entity == talker)
 					continue;
-				if (!voice_global->boolean && !OnSameTeam(ent, entity))
+				if (!voice_global->boolean && !OnSameTeam(entity, talker))
 					continue;
-				if (!voice_deadChat->boolean && ent->client->sess.sessionState == SESS_STATE_DEAD)
+				if (!voice_deadChat->boolean && entity->client->sess.sessionState == SESS_STATE_DEAD)
 					continue;
 
-				if (!SV_ClientHasClientMuted(i, entity->s.number) && SV_ClientWantsVoiceData(i))
-					SV_QueueVoicePacket(entity->s.number, i, &newPacket);
+				std::vector<short> proximityData = Proximity(voiceData, talker, entity);
+				VoicePacket_t newPacket = EncodePacket(proximityData);
+				newPacket.talker = packet->talker;
+
+				if (!SV_ClientHasClientMuted(i, talker->s.number) && SV_ClientWantsVoiceData(i))
+					SV_QueueVoicePacket(talker->s.number, i, &newPacket);
 			}
 		}
 	}
 
-	void Voice::WriteHeaderWAV(std::ofstream &file, int dataSize, int samplesCount)
+	void Voice::WriteHeaderWAV(std::ofstream &file, int channels, int rate, int samples)
 	{
+		file.seekp(0, file.end);
+		int fileSize = file.tellp();
 		file.seekp(0, file.beg);
 
 		WavHeader wav;
 		std::memcpy(&wav.riff, "RIFF", 4);
-		wav.chunkSize = dataSize + sizeof(WavHeader) - 8;
+		wav.chunkSize = fileSize + sizeof(WavHeader) - 8;
 		std::memcpy(&wav.wave, "WAVE", 4);
 		std::memcpy(&wav.fmt, "fmt ", 4);
 		wav.subchunk1Size = VOICE_PCM_CHUNK;
 		wav.audioFormat = VOICE_PCM;
-		wav.numChannels = VOICE_CHANNELS;
-		wav.sampleRate = VOICE_RATE;
-		wav.byteRate = VOICE_RATE * VOICE_CHANNELS * VOICE_BITS_PER_SAMPLE / 8;
-		wav.blockAlign = VOICE_CHANNELS * VOICE_BITS_PER_SAMPLE / 8;
+		wav.numChannels = channels;
+		wav.sampleRate = rate;
 		wav.bitsPerSample = VOICE_BITS_PER_SAMPLE;
+		wav.byteRate = wav.sampleRate * wav.numChannels * wav.bitsPerSample / 8;
+		wav.blockAlign = wav.numChannels * wav.bitsPerSample / 8;
 		std::memcpy(&wav.subchunk2ID, "data", 4);
-		wav.subchunk2Size = samplesCount;
+		wav.subchunk2Size = samples;
 
 		file.write(reinterpret_cast<char *>(&wav), sizeof(wav));
 	}
@@ -112,8 +153,8 @@ namespace Iswenzz::CoD4x
 
 C_EXTERN
 {
-	void SR_BroadcastVoice(struct gentity_s *entity, VoicePacket_t *packet)
+	void SR_BroadcastVoice(gentity_t *talker, VoicePacket_t *packet)
 	{
-		SR->Server->Voice->BroadcastVoice(entity, packet);
+		SR->Server->Voice->BroadcastVoice(talker, packet);
 	}
 }

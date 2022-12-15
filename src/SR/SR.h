@@ -15,7 +15,7 @@ void SR_InitializeEntity(gentity_t *ent);
 
 void SR_Frame();
 void SR_Packet(netadr_t *from, client_t* cl, msg_t *msg);
-void SR_BroadcastVoice(struct gentity_s *entity, struct VoicePacket_t *packet);
+void SR_BroadcastVoice(gentity_t *talker, struct VoicePacket_t *packet);
 void SR_ClientSpawn(gclient_t *client);
 void SR_CalculateFrame(playerState_t *ps);
 

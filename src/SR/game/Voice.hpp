@@ -3,8 +3,9 @@
 
 #include <fstream>
 #include <string>
-#include <cstring>
 #include <vector>
+#include <cstring>
+#include <cmath>
 
 #include <speex/speex.h>
 
@@ -80,15 +81,29 @@ namespace Iswenzz::CoD4x
 		/// @return
 		VoicePacket_t EncodePacket(std::vector<short> &packet);
 
+		/// @brief Proximity voice distance between the talker and the entity.
+		/// @param data - The voice data.
+		/// @param talker - The talker entity.
+		/// @param entity - The entity.
+		/// @return
+		std::vector<short> Proximity(std::vector<short> &data, gentity_t *talker, gentity_t *entity);
+
+		/// @brief Amplify audio data.
+		/// @param data - The audio data.
+		/// @param multiplier - The multiplier.
+		/// @return
+		std::vector<short> Amplify(std::vector<short> &data, float multiplier);
+
 		/// @brief Broadcast voice packets.
-		/// @param entity - The talker entity.
+		/// @param talker - The talker entity.
 		/// @param packet - The voice packets.
-		void BroadcastVoice(struct gentity_s *entity, VoicePacket_t *packet);
+		void BroadcastVoice(gentity_t *talker, VoicePacket_t *packet);
 
 		/// @brief Write WAV header.
 		/// @param file - The wav file.
-		/// @param dataSize - The wav data size.
-		/// @param samplesCount - The wav samples count.
-		void WriteHeaderWAV(std::ofstream &file, int dataSize, int samplesCount);
+		/// @param channels - Number of channels.
+		/// @param rate - The wav samples rate.
+		/// @param samples - The wav samples count.
+		void WriteHeaderWAV(std::ofstream &file, int channels, int rate, int samples);
 	};
 }
