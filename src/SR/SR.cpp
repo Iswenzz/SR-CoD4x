@@ -7,6 +7,7 @@ namespace Iswenzz::CoD4x
 		Log::WriteLine("[SR] Initialize");
 
 		Environment::Build();
+		Speex::Initialize();
 		Demo::Initialize();
 
 		Server = std::make_unique<class Server>();
@@ -21,6 +22,7 @@ namespace Iswenzz::CoD4x
 	{
 		Log::WriteLine("[SR] Shutdown");
 
+		Speex::Shutdown();
 		AsyncShutdown();
 	}
 }

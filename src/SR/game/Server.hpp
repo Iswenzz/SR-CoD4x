@@ -1,6 +1,6 @@
 #pragma once
 #include "game/Vegas.hpp"
-#include "game/Voice.hpp"
+#include "game/audio/Voice.hpp"
 
 C_EXTERN
 {

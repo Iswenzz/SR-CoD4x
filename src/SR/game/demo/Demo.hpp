@@ -3,7 +3,6 @@
 
 #include <CoD4DM1/API/DemoReader.hpp>
 #include <CoD4DM1/Crypt/Huffman.hpp>
-#include <memory>
 #include <map>
 
 C_EXTERN
@@ -35,7 +34,7 @@ namespace Iswenzz::CoD4x
 		std::string ID;
 		std::unique_ptr<Iswenzz::CoD4::DM1::DemoReader> Reader;
 		std::vector<DemoFrame> Frames{ };
-		std::array<std::string, MAX_CONFIGSTRINGS + 1> ConfigStrings{ };
+		std::array<std::string, MAX_CONFIGSTRINGS> ConfigStrings{ };
 		std::vector<std::string> Weapons{ };
 		bool IsLoading = false;
 

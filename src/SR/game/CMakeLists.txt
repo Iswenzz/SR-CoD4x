@@ -1,4 +1,5 @@
 add_subdirectory(demo)
+add_subdirectory(audio)
 
 target_sources(SR PUBLIC
 	Debug.hpp
@@ -8,6 +9,4 @@ target_sources(SR PUBLIC
 	Server.hpp
 	Server.cpp
 	Vegas.hpp
-	Vegas.cpp
-	Voice.hpp
-	Voice.cpp)
+	Vegas.cpp)

@@ -129,7 +129,8 @@
 		"shared_mutex": "cpp",
 		"span": "cpp",
 		"stack": "cpp",
-		"*.h++": "cpp"
+		"*.h++": "cpp",
+		"*.ch": "cpp"
 	},
 	"C_Cpp.errorSquiggles": "Disabled"
 }
