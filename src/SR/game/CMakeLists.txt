@@ -8,4 +8,6 @@ target_sources(SR PUBLIC
 	Server.hpp
 	Server.cpp
 	Vegas.hpp
-	Vegas.cpp)
+	Vegas.cpp
+	Voice.hpp
+	Voice.cpp)

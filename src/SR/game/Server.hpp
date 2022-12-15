@@ -1,5 +1,6 @@
 #pragma once
 #include "game/Vegas.hpp"
+#include "game/Voice.hpp"
 
 C_EXTERN
 {
@@ -12,7 +13,8 @@ namespace Iswenzz::CoD4x
 	class Server
 	{
 	public:
-		std::unique_ptr<Vegas> Vegas;
+		std::unique_ptr<class Voice> Voice;
+		std::unique_ptr<class Vegas> Vegas;
 
 		/// @brief Construct a new Server object.
 		Server();

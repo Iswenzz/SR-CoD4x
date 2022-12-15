@@ -22,10 +22,5 @@ namespace Iswenzz::CoD4x
 		/// @param cl - The client.
 		/// @param msg - The packet message.
 		void Packet(netadr_t *from, client_t* cl, msg_t *msg);
-
-		/// @brief Broadcast voice packets.
-		/// @param entity - The talker entity.
-		/// @param packet - The voice packets.
-		void BroadcastVoice(struct gentity_s *entity, VoicePacket_t *packet);
 	};
 }

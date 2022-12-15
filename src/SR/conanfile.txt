@@ -1,8 +1,11 @@
 [requires]
 CoD4DM1/1.0.2
 CGSC/1.2.0
+speex/1.2.1
 boost/1.78.0
 libuv/1.44.2
+minimp3/20200304
+libsamplerate/0.2.2
 
 [options]
 boost:without_atomic=True

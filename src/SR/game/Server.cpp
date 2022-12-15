@@ -5,6 +5,7 @@ namespace Iswenzz::CoD4x
 {
 	Server::Server()
 	{
+		Voice = std::make_unique<class Voice>();
 		Vegas = std::make_unique<class Vegas>();
 	}
 

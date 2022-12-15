@@ -51,6 +51,17 @@ get_target_property(SOURCES SR SOURCES)
 set_target_properties(SR PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../../../lib)
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES})
 
+# Dependencies
+set(STATIC_DEPENDENCIES
+	# ${CONAN_LIB_DIRS_COD4DM1}/libCoD4DM1.a # Missing exported methods on conan package
+	${CONAN_LIB_DIRS_SPEEX}/libspeex.a
+	${CONAN_LIB_DIRS_LIBUV}/libuv_a.a)
+
+foreach(dependency ${STATIC_DEPENDENCIES})
+	add_custom_command(TARGET SR POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy ${dependency} ../../../lib)
+endforeach()
+
 # Pack
 install(TARGETS SR LIBRARY DESTINATION lib)
 install(DIRECTORY src/ DESTINATION lib/include/SR
