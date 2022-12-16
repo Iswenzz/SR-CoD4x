@@ -5,6 +5,8 @@ target_sources(SR PUBLIC
 	MP3.cpp
 	Speex.hpp
 	Speex.cpp
+	Streamable.hpp
+	Streamable.cpp
 	Voice.hpp
 	Voice.cpp
 	WAV.hpp

@@ -8,6 +8,11 @@
 
 namespace Iswenzz::CoD4x
 {
+	void Voice::Stream()
+	{
+		if (!Radio) return;
+	}
+
 	std::vector<short> Voice::Proximity(std::vector<short> &data, gentity_t *talker, gentity_t *entity)
 	{
 		float distance = fabs(VectorDistance(talker->client->ps.origin, entity->client->ps.origin));
@@ -47,6 +52,11 @@ namespace Iswenzz::CoD4x
 					SV_QueueVoicePacket(talker->s.number, i, &newPacket);
 			}
 		}
+	}
+
+	void Voice::Frame()
+	{
+		Stream();
 	}
 }
 

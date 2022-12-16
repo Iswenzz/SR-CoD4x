@@ -1,6 +1,9 @@
 #pragma once
 #include "Macros.hpp"
+#include "Streamable.hpp"
+
 #include <vector>
+#include <map>
 
 C_EXTERN
 {
@@ -17,9 +20,15 @@ namespace Iswenzz::CoD4x
 	class Voice
 	{
 	public:
+		std::map<std::string, std::shared_ptr<Streamable>> Audios;
+		std::shared_ptr<Streamable> Radio;
+
 		/// @brief Initialize the voice chat.
 		Voice() = default;
 		~Voice() = default;
+
+		/// @brief Stream audio.
+		void Stream();
 
 		/// @brief Proximity voice distance between the talker and the entity.
 		/// @param data - The voice data.
@@ -32,5 +41,8 @@ namespace Iswenzz::CoD4x
 		/// @param talker - The talker entity.
 		/// @param packet - The voice packets.
 		void BroadcastVoice(gentity_t *talker, VoicePacket_t *packet);
+
+		/// @brief Voice server frame.
+		void Frame();
 	};
 }

@@ -1,8 +1,5 @@
 #pragma once
-#include <fstream>
-#include <string>
-#include <vector>
-#include <cstring>
+#include "Streamable.hpp"
 
 typedef struct
 {
@@ -24,18 +21,13 @@ typedef struct
 namespace Iswenzz::CoD4x
 {
 	/// @brief WAV audio file.
-	class WAV
+	class WAV : public Streamable
 	{
 	public:
-		std::ifstream Input;
-		std::ofstream Output;
-
-		std::string FilePath;
-
 		/// @brief Open a WAV file.
 		/// @param filepath - The file path.
 		WAV(std::string filepath);
-		~WAV();
+		virtual ~WAV() = default;
 
 		/// @brief Write header.
 		/// @param channels - Number of channels.

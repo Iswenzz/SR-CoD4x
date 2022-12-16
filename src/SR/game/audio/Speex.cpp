@@ -4,23 +4,25 @@ namespace Iswenzz::CoD4x
 {
 	void Speex::Initialize()
 	{
-		int enh = 1;
-		int vad = 0;
+		bool perceptualEnhancement = true;
+		bool voiceActivityDetection = true;
 
 		speex_bits_init(&Bits);
 
 		Decoder = speex_decoder_init(&speex_nb_mode);
-    	speex_decoder_ctl(Decoder, SPEEX_SET_ENH, &enh);
+    	speex_decoder_ctl(Decoder, SPEEX_SET_ENH, &perceptualEnhancement);
 
 		Encoder = speex_encoder_init(&speex_nb_mode);
-    	speex_encoder_ctl(Encoder, SPEEX_SET_VAD, &vad);
+    	speex_encoder_ctl(Encoder, SPEEX_SET_VAD, &voiceActivityDetection);
 	}
 
 	void Speex::Shutdown()
 	{
 		speex_bits_destroy(&Bits);
-		speex_decoder_destroy(Decoder);
-		speex_encoder_destroy(Encoder);
+		if (Decoder)
+			speex_decoder_destroy(Decoder);
+		if (Encoder)
+			speex_encoder_destroy(Encoder);
 	}
 
 	std::vector<short> Speex::Decode(VoicePacket_t *packet)

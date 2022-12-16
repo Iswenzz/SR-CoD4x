@@ -11,12 +11,4 @@ namespace Iswenzz::CoD4x
 	{
 		FilePath = filepath;
 	}
-
-	MP3::~MP3()
-	{
-		if (Input.is_open())
-			Input.close();
-		if (Output.is_open())
-			Output.close();
-	}
 }

@@ -8,14 +8,6 @@ namespace Iswenzz::CoD4x
 		FilePath = filepath;
 	}
 
-	WAV::~WAV()
-	{
-		if (Input.is_open())
-			Input.close();
-		if (Output.is_open())
-			Output.close();
-	}
-
 	void WAV::WriteHeader(int channels, int rate, int samples)
 	{
 		Output.seekp(0, Output.end);
