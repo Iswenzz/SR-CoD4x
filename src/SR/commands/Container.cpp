@@ -3,6 +3,7 @@
 #include "Demo.hpp"
 #include "Entity.hpp"
 #include "Player.hpp"
+#include "Game.hpp"
 
 namespace Iswenzz::CoD4x
 {
@@ -12,5 +13,6 @@ namespace Iswenzz::CoD4x
 		DemoCommands::Register();
 		EntityCommands::Register();
 		PlayerCommands::Register();
+		GameCommands::Register();
 	}
 }

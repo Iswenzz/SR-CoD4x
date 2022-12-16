@@ -16,6 +16,7 @@ namespace Iswenzz::CoD4x
 		void Open() override;
 
 		/// @brief Save file.
-		void Save() override;
+		/// @param path - The file path.
+		void Save(std::string path) override;
 	};
 }

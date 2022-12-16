@@ -5,7 +5,6 @@ namespace Iswenzz::CoD4x
 	void Speex::Initialize()
 	{
 		bool perceptualEnhancement = true;
-		bool voiceActivityDetection = true;
 
 		speex_bits_init(&Bits);
 
@@ -13,7 +12,6 @@ namespace Iswenzz::CoD4x
     	speex_decoder_ctl(Decoder, SPEEX_SET_ENH, &perceptualEnhancement);
 
 		Encoder = speex_encoder_init(&speex_nb_mode);
-    	speex_encoder_ctl(Encoder, SPEEX_SET_VAD, &voiceActivityDetection);
 	}
 
 	void Speex::Shutdown()

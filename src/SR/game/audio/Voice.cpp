@@ -1,16 +1,33 @@
 #include "Voice.hpp"
-#include "Speex.hpp"
-#include "Audio.hpp"
+#include "Streamable.hpp"
 #include "SR.hpp"
 
 #define VOICE_AMPLIFY 2
+#define VOICE_STREAM_ITERATION 4
 #define PROXIMITY_DISTANCE 1500
 
 namespace Iswenzz::CoD4x
 {
 	void Voice::Stream()
 	{
-		if (!Radio) return;
+		if (!Radio || Radio->IsStreamEnd()) return;
+
+		int i;
+		gentity_t* entity;
+
+		for (int p = 0; p < VOICE_STREAM_ITERATION; p++)
+		{
+			VoicePacket_t packet = Radio->Play();
+			packet.talker = -1;
+
+			for (i = 0, entity = level.gentities; i < level.maxclients; i++, entity++)
+			{
+				if (entity->client && entity->client->sess.sessionState != SESS_STATE_INTERMISSION)
+					SV_QueueVoicePacket(i, i, &packet);
+			}
+			if (Radio->IsStreamEnd())
+				break;
+		}
 	}
 
 	std::vector<short> Voice::Proximity(std::vector<short> &data, gentity_t *talker, gentity_t *entity)

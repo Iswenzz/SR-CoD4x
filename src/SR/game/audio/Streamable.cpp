@@ -10,8 +10,34 @@ namespace Iswenzz::CoD4x
 			Output.close();
 	}
 
-	std::vector<short> Streamable::Play()
+	void Streamable::ProcessPackets()
 	{
-		return { };
+		int position = 0;
+		bool lastFrame = false;
+
+		while (!lastFrame)
+		{
+			lastFrame = position + SPEEX_FRAME_SIZE >= Buffer.size();
+			int size = lastFrame ? Buffer.size() - position : SPEEX_FRAME_SIZE;
+			std::vector<short> stream(size);
+
+			auto start = Buffer.begin() + position;
+			auto end = start + stream.size();
+
+			std::copy(start, end, stream.begin());
+			position += stream.size();
+			VoicePacket_t packet = Speex::Encode(stream);
+			StreamPackets.push_back(packet);
+		}
+	}
+
+	VoicePacket_t Streamable::Play()
+	{
+		return StreamPackets[StreamPosition++];
+	}
+
+	bool Streamable::IsStreamEnd()
+	{
+		return StreamPosition >= StreamPackets.size();
 	}
 }

@@ -40,16 +40,17 @@ namespace Iswenzz::CoD4x
 		FileSize = Buffer.size() * channels;
 
 		free(fileInfo.buffer);
+		ProcessPackets();
 	}
 
-	void MP3::Save()
+	void MP3::Save(std::string path)
 	{
 		if (!Buffer.size())
 			return;
 
-		Output.open("test.wav", std::ios_base::binary);
-		WAV::WriteHeader(Output, 1, 8000, Buffer.size());
+		Output.open(path, std::ios_base::binary);
+		WAV::WriteHeader(Output, 1, 8000, Buffer.size() * sizeof(short));
 
-		Output.write(reinterpret_cast<char*>(Buffer.data()), Buffer.size());
+		Output.write(reinterpret_cast<char*>(Buffer.data()), Buffer.size() * sizeof(short));
 	}
 }

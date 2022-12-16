@@ -8,5 +8,7 @@ target_sources(SR PUBLIC
 	Demo.cpp
 	Entity.hpp
 	Entity.cpp
+	Game.hpp
+	Game.cpp
 	Player.hpp
 	Player.cpp)

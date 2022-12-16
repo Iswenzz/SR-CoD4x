@@ -1,11 +1,18 @@
 #pragma once
+#include "Macros.hpp"
 #include "Audio.hpp"
+#include "Speex.hpp"
 
 #include <filesystem>
 #include <fstream>
 #include <string>
 #include <vector>
 #include <cstring>
+
+C_EXTERN
+{
+	#include <server.h>
+}
 
 namespace Iswenzz::CoD4x
 {
@@ -23,7 +30,7 @@ namespace Iswenzz::CoD4x
 		int Samples = 0;
 		int Rate = 0;
 
-		std::vector<short> StreamBuffer;
+		std::vector<VoicePacket_t> StreamPackets;
 		int StreamPosition = 0;
 
 		/// @brief Initialize streamable audio.
@@ -34,10 +41,18 @@ namespace Iswenzz::CoD4x
 		virtual void Open() = 0;
 
 		/// @brief Save file.
-		virtual void Save() = 0;
+		/// @param path - The file path.
+		virtual void Save(std::string path) = 0;
 
 		/// @brief Play the stream buffer in fragments.
 		/// @return
-		std::vector<short> Play();
+		VoicePacket_t Play();
+
+		/// @brief Process the buffer into streamable packets.
+		void ProcessPackets();
+
+		/// @brief Is stream end.
+		/// @return
+		bool IsStreamEnd();
 	};
 }

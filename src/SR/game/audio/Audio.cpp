@@ -22,9 +22,9 @@ namespace Iswenzz::CoD4x
 
 	std::vector<short> Audio::StereoToMono(short *data, int samples)
 	{
-		std::vector<short> mono(samples);
+		std::vector<short> mono(samples / 2);
 
-		for (int i = 0; i < samples / 2; i++)
+		for (int i = 0; i < mono.size(); i++)
 		{
 			short left = data[i * 2];
 			short right = data[i * 2 + 1];

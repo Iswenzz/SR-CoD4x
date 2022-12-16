@@ -1,5 +1,4 @@
 #include "WAV.hpp"
-#include "Speex.hpp"
 
 namespace Iswenzz::CoD4x
 {
@@ -31,17 +30,19 @@ namespace Iswenzz::CoD4x
 
 		std::vector<short> monoData = Audio::StereoToMono(pcm.data(), pcm.size());
 		Buffer = Audio::Resample(monoData.data(), monoData.size(), channels, Rate, downRate);
+
+		ProcessPackets();
 	}
 
-	void WAV::Save()
+	void WAV::Save(std::string path)
 	{
 		if (!Buffer.size())
 			return;
 
-		Output.open("test.wav", std::ios_base::binary);
-		WAV::WriteHeader(Output, 1, 8000, Buffer.size());
+		Output.open(path, std::ios_base::binary);
+		WAV::WriteHeader(Output, 1, 8000, Buffer.size() * sizeof(short));
 
-		Output.write(reinterpret_cast<char*>(Buffer.data()), Buffer.size());
+		Output.write(reinterpret_cast<char*>(Buffer.data()), Buffer.size() * sizeof(short));
 	}
 
 	void WAV::WriteHeader(std::ofstream &file, int channels, int rate, int samples)
