@@ -9,7 +9,9 @@
 				"C:\\.conan\\a62c02\\1\\include",
 				"~/.conan/data/**",
                 "src",
-                "src/SR"
+                "src/SR",
+				"src/CGSC",
+				"plugins"
             ],
             "intelliSenseMode": "gcc-x86",
             "cStandard": "c11",

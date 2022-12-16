@@ -243,6 +243,9 @@ C_EXTERN
 
 	void SR_DemoButton(client_t *cl, usercmd_t *cmd)
 	{
+		if (!cl || !cl->gentity || !cl->gentity->client)
+			return;
+
 		cl->gentity->client->ps.dofNearStart = *(float *)&cmd->forwardmove;
 		cl->gentity->client->ps.dofNearEnd = *(float *)&cmd->rightmove;
 		cl->gentity->client->ps.dofFarStart = *(float *)&cmd->buttons;

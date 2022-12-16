@@ -29,10 +29,17 @@ namespace Iswenzz::CoD4x
 		WAV(std::string filepath);
 		virtual ~WAV() = default;
 
+		/// @brief Open a file.
+		void Open() override;
+
+		/// @brief Save file.
+		void Save() override;
+
 		/// @brief Write header.
+		/// @param file - The output file.
 		/// @param channels - Number of channels.
 		/// @param rate - The wav samples rate.
 		/// @param samples - The wav samples count.
-		void WriteHeader(int channels, int rate, int samples);
+		static void WriteHeader(std::ofstream &file, int channels, int rate, int samples);
 	};
 }

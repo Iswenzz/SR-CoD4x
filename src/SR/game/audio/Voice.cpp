@@ -41,15 +41,16 @@ namespace Iswenzz::CoD4x
 					continue;
 				if (!voice_global->boolean && !OnSameTeam(entity, talker))
 					continue;
-				if (!voice_deadChat->boolean && entity->client->sess.sessionState == SESS_STATE_DEAD)
-					continue;
 
-				std::vector<short> proximityData = Proximity(voiceData, talker, entity);
-				VoicePacket_t newPacket = Speex::Encode(proximityData);
-				newPacket.talker = packet->talker;
-
+				if (entity->client->sess.sessionState == SESS_STATE_PLAYING)
+				{
+					std::vector<short> proximityData = Proximity(voiceData, talker, entity);
+					VoicePacket_t newPacket = Speex::Encode(proximityData);
+					newPacket.talker = packet->talker;
+					packet = &newPacket;
+				}
 				if (!SV_ClientHasClientMuted(i, talker->s.number) && SV_ClientWantsVoiceData(i))
-					SV_QueueVoicePacket(talker->s.number, i, &newPacket);
+					SV_QueueVoicePacket(talker->s.number, i, packet);
 			}
 		}
 	}

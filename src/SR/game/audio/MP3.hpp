@@ -11,5 +11,11 @@ namespace Iswenzz::CoD4x
 		/// @param filepath - The file path.
 		MP3(std::string filepath);
 		virtual ~MP3() = default;
+
+		/// @brief Open a file.
+		void Open() override;
+
+		/// @brief Save file.
+		void Save() override;
 	};
 }

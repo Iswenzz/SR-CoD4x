@@ -21,9 +21,9 @@ namespace Iswenzz::CoD4x
 	class Game
 	{
 	public:
-		std::unique_ptr<Server> Server;
-		std::unique_ptr<Netchan> Netchan;
-		std::unique_ptr<DemoContainer> DemoContainer;
+		std::unique_ptr<class Server> Server;
+		std::unique_ptr<class Netchan> Netchan;
+		std::unique_ptr<class DemoContainer> DemoContainer;
 
 		std::array<std::shared_ptr<Player>, MAX_CLIENTS> Players{ };
 		std::array<std::shared_ptr<Entity>, MAX_GENTITIES> Entities{ };

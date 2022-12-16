@@ -19,4 +19,49 @@ namespace Iswenzz::CoD4x
 		}
 		return dataAmplified;
 	}
+
+	std::vector<short> Audio::StereoToMono(short *data, int samples)
+	{
+		std::vector<short> mono(samples);
+
+		for (int i = 0; i < samples / 2; i++)
+		{
+			short left = data[i * 2];
+			short right = data[i * 2 + 1];
+			mono[i] = (left + right) / 2;
+		}
+		return mono;
+	}
+
+	std::vector<short> Audio::Resample(short *buffer, int samples, int channels, int rate, int newRate)
+	{
+		double ratio = static_cast<double>(newRate) / static_cast<double>(rate);
+		int newSamples = ceil(samples * ratio);
+		// libsndfile goes crazy with odd size in case of saving
+		if (newSamples % 2 != 0) newSamples++;
+
+		std::vector<float> decodedData(samples);
+		std::vector<float> sampledData(samples);
+
+		src_short_to_float_array(buffer, decodedData.data(), decodedData.size());
+
+		SRC_DATA data = { 0 };
+		data.end_of_input = 1;
+		data.data_in = decodedData.data();
+		data.data_out = sampledData.data();
+		data.input_frames = samples / channels;
+		data.output_frames = newSamples / channels;
+		data.src_ratio = ratio;
+
+		int error = src_simple(&data, SRC_LINEAR, channels);
+		if (error)
+		{
+			std::cout << "[Voice] Downsample error: %s" << src_strerror(error) << std::endl;
+			return { };
+		}
+
+		std::vector<short> resampledData(data.output_frames_gen * channels);
+		src_float_to_short_array(sampledData.data(), resampledData.data(), resampledData.size());
+		return resampledData;
+	}
 }

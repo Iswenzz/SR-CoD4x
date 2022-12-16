@@ -6,13 +6,48 @@ namespace Iswenzz::CoD4x
 	WAV::WAV(std::string filepath)
 	{
 		FilePath = filepath;
+		Open();
 	}
 
-	void WAV::WriteHeader(int channels, int rate, int samples)
+	void WAV::Open()
 	{
-		Output.seekp(0, Output.end);
-		int fileSize = Output.tellp();
-		Output.seekp(0, Output.beg);
+		if (!std::filesystem::exists(FilePath))
+			return;
+		Input.open(FilePath, std::ios_base::binary);
+
+		WavHeader header;
+		Input.read(reinterpret_cast<char*>(&header), sizeof(WavHeader));
+		Buffer.resize(FileSize);
+
+		Samples = header.subchunk2Size;
+		Rate = header.sampleRate;
+
+		int channels = 1;
+		int downRate = 8000;
+
+		std::vector<short> pcm(Samples / sizeof(short));
+		Input.read(reinterpret_cast<char*>(pcm.data()), Samples);
+
+		std::vector<short> monoData = Audio::StereoToMono(pcm.data(), pcm.size());
+		Buffer = Audio::Resample(monoData.data(), monoData.size(), channels, Rate, downRate);
+	}
+
+	void WAV::Save()
+	{
+		if (!Buffer.size())
+			return;
+
+		Output.open("test.wav", std::ios_base::binary);
+		WAV::WriteHeader(Output, 1, 8000, Buffer.size());
+
+		Output.write(reinterpret_cast<char*>(Buffer.data()), Buffer.size());
+	}
+
+	void WAV::WriteHeader(std::ofstream &file, int channels, int rate, int samples)
+	{
+		file.seekp(0, file.end);
+		int fileSize = file.tellp();
+		file.seekp(0, file.beg);
 
 		WavHeader wav;
 		std::memcpy(&wav.riff, "RIFF", 4);
@@ -29,6 +64,6 @@ namespace Iswenzz::CoD4x
 		std::memcpy(&wav.subchunk2ID, "data", 4);
 		wav.subchunk2Size = samples;
 
-		Output.write(reinterpret_cast<char *>(&wav), sizeof(wav));
+		file.write(reinterpret_cast<char *>(&wav), sizeof(wav));
 	}
 }
