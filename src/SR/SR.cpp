@@ -1,5 +1,4 @@
 #include "SR.hpp"
-#include "game/audio/WAV.hpp"
 
 namespace Iswenzz::CoD4x
 {
@@ -17,9 +16,6 @@ namespace Iswenzz::CoD4x
 
 		CommandsContainer::Register();
 		Debug::Initialize();
-
-		WAV test{ "omg.wav" };
-		test.Save();
 	}
 
 	Game::~Game()

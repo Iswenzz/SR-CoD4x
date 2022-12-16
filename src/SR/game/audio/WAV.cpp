@@ -19,6 +19,7 @@ namespace Iswenzz::CoD4x
 		Input.read(reinterpret_cast<char*>(&header), sizeof(WavHeader));
 		Buffer.resize(FileSize);
 
+		FileSize = header.chunkSize;
 		Samples = header.subchunk2Size;
 		Rate = header.sampleRate;
 
