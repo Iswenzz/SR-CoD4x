@@ -1,11 +1,12 @@
 #pragma once
 #include "Macros.hpp"
 
+#include "game/demo/DemoContainer.hpp"
+#include "game/audio/Speex.hpp"
+
 #include "game/Server.hpp"
 #include "game/Entity.hpp"
 #include "game/Debug.hpp"
-#include "game/audio/Speex.hpp"
-#include "game/demo/DemoContainer.hpp"
 
 #include "net/Netchan.hpp"
 #include "commands/Container.hpp"
