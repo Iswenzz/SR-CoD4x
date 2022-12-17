@@ -298,7 +298,7 @@ void Scr_AddStockFunctions()
 	Scr_AddFunction("strctrlstrip", GScr_StrCtrlStrip, 0 );
 	Scr_AddFunction("toupper", GScr_ToUpper, 0 );
 	Scr_AddFunction("strreplace", GScr_StrReplace, 0 );
-	
+
 }
 
 void Scr_AddStockMethods()
@@ -847,12 +847,13 @@ __cdecl unsigned int Scr_LoadScriptInternal(const char *scriptname, PrecacheEntr
         oldSourceBuf = gScrParserPub.sourceBuf;
 
         /*
+		SR version (gsr)
         Try to load our extended scriptfile (gsx) first.
         This allows to create mod- and mapscripts with our extended functionality
         while it is still possible to fall back to default script if our extended functionality is not available.
         */
 
-        Com_sprintf(filepath, sizeof(filepath), "%s.gsx", SL_ConvertToString(handle));
+        Com_sprintf(filepath, sizeof(filepath), "%s.gsr", SL_ConvertToString(handle));
         scr_buffer_handle = Scr_AddSourceBuffer(SL_ConvertToString(handle), filepath, TempMalloc(0), 1);
         if (!scr_buffer_handle)
         {
@@ -868,7 +869,7 @@ __cdecl unsigned int Scr_LoadScriptInternal(const char *scriptname, PrecacheEntr
             --callScriptStackPtr;
             return 0;
         }
-		
+
 		Scr_ScriptPreCompile( scr_buffer_handle, filepath );
 
         oldAnimTreeNames = gScrAnimPub.animTreeNames;
@@ -905,7 +906,7 @@ void Scr_ScriptPreCompile( void *scr_buffer_handle, char *filepath )
 			p = strstr( p + 1, "#if" );
 			continue;
 		}
-		
+
 		char * end = strchr( p, '\n' );
 		if( end )
 			*end = '\0';
@@ -913,10 +914,10 @@ void Scr_ScriptPreCompile( void *scr_buffer_handle, char *filepath )
 		Cmd_TokenizeString( p );
 		const char * func = Cmd_Argv( 1 );
 		const char * arg = Cmd_Argv( 2 );
-		
+
 		qboolean result = qfalse;
 		qboolean negated = qfalse;
-		
+
 		if( *func == '!' )
 		{
 			++func;
@@ -954,7 +955,7 @@ void Scr_ScriptPreCompile( void *scr_buffer_handle, char *filepath )
 		{
 			Com_Error( ERR_SCRIPT, "****** Script Pre-Compile Error ******\nUnknown macro function: %s \n%s", func, filepath );
 		}
-			
+
 		Cmd_EndTokenizedString();
 
 		if( end )
@@ -962,12 +963,12 @@ void Scr_ScriptPreCompile( void *scr_buffer_handle, char *filepath )
 
 		char * el = strstr( p, "#else" );
 		p = strstr( p, "#endif" );
-			
+
 		if( p == NULL )
 		{
 			Com_Error( ERR_SCRIPT, "****** Script Pre-Compile Error ******\nExpected #endif, none found\n%s", filepath );
 		}
-			
+
 		int pos1, pos2;
 		pos1 = pos2 = 0;
 		if( el != NULL )
@@ -986,7 +987,7 @@ void Scr_ScriptPreCompile( void *scr_buffer_handle, char *filepath )
 				}
 			}
 		}
-			
+
 		if( el == NULL || pos2 > pos1 )
 		{
 			if( result )
