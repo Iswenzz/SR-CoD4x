@@ -17,6 +17,8 @@ A compatible client modification can be found here: [client](https://github.com/
 * FPS calculation
 * Demo player
 * Netcode optimization
+* Voice chat proximity feature
+* Radio MP3 & WAV streaming
 
 ## CoD4x Features
 * Administration commands
