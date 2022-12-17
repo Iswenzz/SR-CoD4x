@@ -32,6 +32,7 @@ namespace Iswenzz::CoD4x
 
 		std::vector<VoicePacket_t> StreamPackets;
 		int StreamPosition = 0;
+		bool IsLoaded = false;
 
 		/// @brief Initialize streamable audio.
 		Streamable() = default;

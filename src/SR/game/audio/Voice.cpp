@@ -68,6 +68,7 @@ namespace Iswenzz::CoD4x
 		for (i = 0, cl = svs.clients; i < level.maxclients; i++, cl++)
 		{
 			entity = &level.gentities[i];
+
 			if (cl && cl->state == CS_ACTIVE && entity->client
 				&& entity->client->sess.sessionState != SESS_STATE_INTERMISSION)
 			{

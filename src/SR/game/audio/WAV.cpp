@@ -5,7 +5,8 @@ namespace Iswenzz::CoD4x
 	WAV::WAV(std::string filepath)
 	{
 		FilePath = filepath;
-		Open();
+
+		AsyncCall(this, OpenAsync, &AsyncNull);
 	}
 
 	void WAV::Open()
@@ -32,6 +33,11 @@ namespace Iswenzz::CoD4x
 		Buffer = Audio::Resample(monoData.data(), monoData.size(), channels, Rate, downRate);
 
 		ProcessPackets();
+	}
+
+	void WAV::OpenAsync(uv_work_t *req)
+	{
+
 	}
 
 	void WAV::Save(std::string path)

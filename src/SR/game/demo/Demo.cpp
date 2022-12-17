@@ -8,7 +8,7 @@ namespace Iswenzz::CoD4x
 		ID = id;
 		Reader = std::make_unique<Iswenzz::CoD4::DM1::DemoReader>(path);
 
-		AsyncCall(this, Open, nullptr);
+		AsyncCall(this, OpenAsync, &AsyncNull);
 	}
 
 	Demo::~Demo()
@@ -19,60 +19,65 @@ namespace Iswenzz::CoD4x
 	void Demo::Initialize()
 	{
 		Iswenzz::CoD4::DM1::Huffman::InitMain();
-		uv_mutex_init(&Demo::Mutex);
+		uv_mutex_init(&Mutex);
 	}
 
-	void Demo::Open(uv_work_t* req)
+	void Demo::Open()
 	{
-		uv_mutex_lock(&Demo::Mutex);
-
-		Demo *demo = (Demo *)req->data;
-		demo->IsLoading = true;
+		IsLoaded = false;
+		DemoFrame previousFrame = { 0 };
 
 		try
 		{
-			DemoFrame previousFrame = { 0 };
-
-			while (demo->Reader->Next())
+			while (Reader->Next())
 			{
 				DemoFrame frame = { 0 };
 
-				if (demo->Reader->DemoFile->CurrentMessageType == Iswenzz::CoD4::DM1::MSGType::MSG_FRAME)
+				if (Reader->DemoFile->CurrentMessageType == Iswenzz::CoD4::DM1::MSGType::MSG_FRAME)
 					continue;
-				if (!demo->Reader->GetCurrentSnapshot().valid)
+				if (!Reader->GetCurrentSnapshot().valid)
 					continue;
 
-				auto ps = demo->Reader->GetCurrentSnapshot().ps;
-				auto archive = demo->Reader->GetCurrentFrame();
+				auto ps = Reader->GetCurrentSnapshot().ps;
+				auto archive = Reader->GetCurrentFrame();
 
-				frame.chat = demo->ProcessChat();
-				frame.time = demo->Reader->GetTimeMilliseconds();
-				frame.fps = demo->Reader->GetFPS();
+				frame.chat = ProcessChat();
+				frame.time = Reader->GetTimeMilliseconds();
+				frame.fps = Reader->GetFPS();
 				frame.ps = *reinterpret_cast<playerState_t *>(&ps);
-				frame.playerName = demo->Reader->GetPlayerName().netname;
+				frame.playerName = Reader->GetPlayerName().netname;
 				frame.entities = previousFrame.entities;
 				frame.forwardmove = *(char *)&ps.dofNearStart;
 				frame.rightmove = *(char *)&ps.dofNearEnd;
 				frame.buttons = *(int *)&ps.dofFarStart;
 
-				for (auto &ent : demo->Reader->GetLastUpdatedEntities())
+				for (auto &ent : Reader->GetLastUpdatedEntities())
 				{
 					if (ent.eType == ET_SCRIPTMOVER)
 						frame.entities[ent.number] = *reinterpret_cast<entityState_t*>(&ent);
 				}
 
 				previousFrame = frame;
-				demo->Frames.push_back(frame);
+				Frames.push_back(frame);
 			}
 
-			demo->ConfigStrings = demo->Reader->DemoFile->ConfigStrings;
-			demo->Weapons = Utils::SplitString(demo->Reader->GetConfigString("defaultweapon_mp"), ' ');
+			ConfigStrings = Reader->DemoFile->ConfigStrings;
+			Weapons = Utils::SplitString(Reader->GetConfigString("defaultweapon_mp"), ' ');
 		}
 		catch (...) { }
 
-		demo->Reader->Close();
-		demo->IsLoading = false;
-		uv_mutex_unlock(&Demo::Mutex);
+		Reader->Close();
+		IsLoaded = true;
+	}
+
+	void Demo::OpenAsync(uv_work_t *req)
+	{
+		uv_mutex_lock(&Mutex);
+
+		Demo *demo = reinterpret_cast<Demo*>(req->data);
+		demo->Open();
+
+		uv_mutex_unlock(&Mutex);
 	}
 
 	std::vector<std::string> Demo::ProcessChat()

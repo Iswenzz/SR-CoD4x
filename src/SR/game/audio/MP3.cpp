@@ -12,7 +12,8 @@ namespace Iswenzz::CoD4x
 	MP3::MP3(std::string filepath)
 	{
 		FilePath = filepath;
-		Open();
+
+		AsyncCall(this, OpenAsync, &AsyncNull);
 	}
 
 	void MP3::Open()
@@ -41,6 +42,11 @@ namespace Iswenzz::CoD4x
 
 		free(fileInfo.buffer);
 		ProcessPackets();
+	}
+
+	void MP3::OpenAsync(uv_work_t *req)
+	{
+
 	}
 
 	void MP3::Save(std::string path)

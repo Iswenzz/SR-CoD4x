@@ -36,7 +36,7 @@ namespace Iswenzz::CoD4x
 		std::vector<DemoFrame> Frames{ };
 		std::array<std::string, MAX_CONFIGSTRINGS + 1> ConfigStrings{ };
 		std::vector<std::string> Weapons{ };
-		bool IsLoading = false;
+		bool IsLoaded = false;
 
 		/// @brief Initialize a new Demo.
 		/// @param id - The demo id.
@@ -48,14 +48,17 @@ namespace Iswenzz::CoD4x
 		static void Initialize();
 
 		/// @brief Open a demo.
+		void Open();
+
+		/// @brief Open a demo async.
 		/// @param req - The worker request.
-		static void Open(uv_work_t *req);
+		static void OpenAsync(uv_work_t *req);
 
 		/// @brief Process chat messages.
 		/// @return
 		std::vector<std::string> ProcessChat();
 
 	private:
-		inline static uv_mutex_t Mutex;
+		static inline uv_mutex_t Mutex;
 	};
 }
