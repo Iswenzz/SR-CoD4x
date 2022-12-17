@@ -10,7 +10,7 @@ namespace Iswenzz::CoD4x
 {
 	void Netchan::Packet(netadr_t *from, client_t* cl, msg_t *msg)
 	{
-		if (!cl || !cl->gentity)
+		if (!IsDefinedClient(cl))
 			return;
 
 		auto player = SR->Players[cl->gentity->client->ps.clientNum];

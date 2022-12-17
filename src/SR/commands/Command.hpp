@@ -1,5 +1,6 @@
 #pragma once
 #include "Macros.hpp"
+#include "player/Player.hpp"
 
 C_EXTERN
 {

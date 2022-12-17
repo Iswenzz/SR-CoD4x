@@ -10,6 +10,10 @@ C_EXTERN
 	#include <server.h>
 }
 
+#define IsDefinedClient(cl) 		(cl && cl->gentity && cl->gentity->client)
+#define IsDefinedClientNum(num) 	(SR->Players[num] && SR->Players[num]->cl->gentity && SR->Players[num]->cl->gentity->client)
+#define IsDefinedGClient(client) 	(client)
+
 namespace Iswenzz::CoD4x
 {
 	/// @brief Player class.
@@ -62,5 +66,9 @@ namespace Iswenzz::CoD4x
 		/// @brief Get the last player frame.
 		/// @return clientSnapshot_t*
 		clientSnapshot_t *GetFrame();
+
+		/// @brief Get a player.
+		/// @param num - The player num.
+		static std::shared_ptr<Player> Get(int num);
 	};
 }

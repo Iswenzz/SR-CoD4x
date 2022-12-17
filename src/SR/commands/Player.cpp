@@ -16,87 +16,85 @@ namespace Iswenzz::CoD4x
 
 	void PlayerCommands::VoiceChatButtonPressed(scr_entref_t num)
 	{
-		gentity_t *ent = VM_GetGEntityForNum(num);
+		std::shared_ptr<Player> player = Player::Get(num.entnum);
 
-		if (!ent || !ent->client)
+		if (!player)
 		{
-			Scr_ObjectError("not a client\n");
+			Scr_ObjectError("Player not found.\n");
 			return;
 		}
-
-		auto player = SR->Players[num.entnum];
 		Scr_AddBool(player->Voice);
 	}
 
 	void PlayerCommands::SurfaceFlags(scr_entref_t num)
 	{
-		gentity_t *ent = VM_GetGEntityForNum(num);
+		std::shared_ptr<Player> player = Player::Get(num.entnum);
 
-		if (!ent || !ent->client)
+		if (!player)
 		{
-			Scr_ObjectError("not a client\n");
+			Scr_ObjectError("Player not found.\n");
 			return;
 		}
-		Scr_AddInt(SR->Players[ent->client->ps.clientNum]->SurfaceFlags);
+		Scr_AddInt(player->SurfaceFlags);
 	}
 
 	void PlayerCommands::GetViewHeightLerpDown(scr_entref_t num)
 	{
-		gentity_t *ent = VM_GetGEntityForNum(num);
+		std::shared_ptr<Player> player = Player::Get(num.entnum);
 
-		if (!ent || !ent->client)
+		if (!player)
 		{
-			Scr_ObjectError("not a client\n");
+			Scr_ObjectError("Player not found.\n");
 			return;
 		}
-		Scr_AddInt(ent->client->ps.viewHeightLerpDown);
+		Scr_AddInt(player->ps->viewHeightLerpDown);
 	}
 
 	void PlayerCommands::GetViewHeightLerpTarget(scr_entref_t num)
 	{
-		gentity_t *ent = VM_GetGEntityForNum(num);
+		std::shared_ptr<Player> player = Player::Get(num.entnum);
 
-		if (!ent || !ent->client)
+		if (!player)
 		{
-			Scr_ObjectError("not a client\n");
+			Scr_ObjectError("Player not found.\n");
 			return;
 		}
-		Scr_AddInt(ent->client->ps.viewHeightLerpTarget);
+		Scr_AddInt(player->ps->viewHeightLerpTarget);
 	}
 
 	void PlayerCommands::GetViewHeightLerpTime(scr_entref_t num)
 	{
-		gentity_t *ent = VM_GetGEntityForNum(num);
+		std::shared_ptr<Player> player = Player::Get(num.entnum);
 
-		if (!ent || !ent->client)
+		if (!player)
 		{
-			Scr_ObjectError("not a client\n");
+			Scr_ObjectError("Player not found.\n");
 			return;
 		}
-		Scr_AddInt(ent->client->ps.viewHeightLerpTime);
+		Scr_AddInt(player->ps->viewHeightLerpTime);
 	}
 
 	void PlayerCommands::GetDamageTimer(scr_entref_t num)
 	{
-		gentity_t *ent = VM_GetGEntityForNum(num);
+		std::shared_ptr<Player> player = Player::Get(num.entnum);
 
-		if (!ent || !ent->client)
+		if (!player)
 		{
-			Scr_ObjectError("not a client\n");
+			Scr_ObjectError("Player not found.\n");
 			return;
 		}
-		Scr_AddInt(ent->client->ps.damageTimer);
+		Scr_AddInt(player->ps->damageTimer);
 	}
 
 	void PlayerCommands::GetWeaponState(scr_entref_t num)
 	{
-		gentity_t *ent = VM_GetGEntityForNum(num);
+		std::shared_ptr<Player> player = Player::Get(num.entnum);
 
-		if (!ent || !ent->client)
+		if (!player)
 		{
-			Scr_ObjectError("not a client\n");
+			Scr_ObjectError("Player not found.\n");
 			return;
 		}
-		Scr_AddInt(ent->client->ps.weaponstate);
+		Scr_AddInt(player->ps->weaponstate);
 	}
 }

@@ -229,8 +229,9 @@ C_EXTERN
 {
 	qboolean SR_DemoIsPlaying(client_t *cl)
 	{
-		if (!cl || !cl->gentity || !cl->gentity->client)
+		if (!IsDefinedClient(cl))
 			return qfalse;
+
 		auto player = SR->Players[cl->gentity->client->ps.clientNum];
 		return static_cast<qboolean>(player && !!player->DemoPlayer->Demo);
 	}
@@ -243,7 +244,7 @@ C_EXTERN
 
 	void SR_DemoButton(client_t *cl, usercmd_t *cmd)
 	{
-		if (!cl || !cl->gentity || !cl->gentity->client)
+		if (!IsDefinedClient(cl))
 			return;
 
 		cl->gentity->client->ps.dofNearStart = *(float *)&cmd->forwardmove;

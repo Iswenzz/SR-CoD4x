@@ -11,6 +11,8 @@ namespace Iswenzz::CoD4x
 	void GameCommands::Register()
 	{
 		Scr_AddFunction("radioplay", RadioPlay, qfalse);
+		Scr_AddMethod("radioenable", RadioEnable, qfalse);
+		Scr_AddMethod("proximityenable", ProximityEnable, qfalse);
 	}
 
 	void GameCommands::RadioPlay()
@@ -53,5 +55,31 @@ namespace Iswenzz::CoD4x
 		SR->Server->Voice->Radio = file;
 
 		Log::WriteLine("[Radio] Playing %s", name.c_str());
+	}
+
+	void GameCommands::RadioEnable(scr_entref_t num)
+	{
+		CHECK_PARAMS(1, "Usage: RadioEnable()");
+
+		std::shared_ptr<Player> player = Player::Get(num.entnum);
+
+		if (!player)
+		{
+			Scr_ObjectError("Player not found.\n");
+			return;
+		}
+	}
+
+	void GameCommands::ProximityEnable(scr_entref_t num)
+	{
+		CHECK_PARAMS(1, "Usage: RadioEnable()");
+
+		std::shared_ptr<Player> player = Player::Get(num.entnum);
+
+		if (!player)
+		{
+			Scr_ObjectError("Player not found.\n");
+			return;
+		}
 	}
 }

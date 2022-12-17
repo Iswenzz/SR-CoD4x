@@ -82,29 +82,36 @@ namespace Iswenzz::CoD4x
 	{
 		return &cl->frames[cl->netchan.outgoingSequence & PACKET_MASK];
 	}
+
+	std::shared_ptr<Player> Player::Get(int num)
+	{
+		return IsDefinedClientNum(num) ? SR->Players[num] : nullptr;
+	}
 }
 
 C_EXTERN
 {
 	void SR_InitializePlayer(client_t *cl)
 	{
-		if (!cl || !cl->gentity || !cl->gentity->client) return;
+		if (!IsDefinedClient(cl))
+			return;
 
 		Log::WriteLine("[Player] Connected %d", cl->gentity->client->ps.clientNum);
-
 		SR->Players[cl->gentity->client->ps.clientNum] = std::make_shared<Player>(cl);
 	}
 
 	void SR_FreePlayer(client_t *cl)
 	{
-		if (!cl || !cl->gentity || !cl->gentity->client) return;
+		if (!IsDefinedClient(cl))
+			return;
 
 		Log::WriteLine("[Player] Disconnected %d", cl->gentity->client->ps.clientNum);
 	}
 
 	void SR_ClientSpawn(gclient_t *client)
 	{
-		if (!client) return;
+		if (!IsDefinedGClient(client))
+			return;
 
 		SR->Players[client->ps.clientNum]->Spawn();
 	}

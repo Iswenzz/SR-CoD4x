@@ -36,18 +36,16 @@ namespace Iswenzz::CoD4x
 	{
 		CHECK_PARAMS(1, "Usage: PlayDemo(<id>)");
 
-		gentity_t *ent = VM_GetGEntityForNum(num);
-
-		if (!ent || !ent->client)
-		{
-			Scr_ObjectError("not a client\n");
-			return;
-		}
+		std::shared_ptr<Player> player = Player::Get(num.entnum);
 		std::string id = Scr_GetString(0);
 
-		auto player = SR->Players[num.entnum];
-		auto demo = SR->DemoContainer->Demos.find(id);
+		if (!player)
+		{
+			Scr_ObjectError("Player not found.\n");
+			return;
+		}
 
+		auto demo = SR->DemoContainer->Demos.find(id);
 		if (demo != std::end(SR->DemoContainer->Demos))
 		{
 			player->DemoPlayer->Play(demo->second);
@@ -60,8 +58,8 @@ namespace Iswenzz::CoD4x
 		CHECK_PARAMS(1, "Usage: IsDemoLoaded(<id>)");
 
 		std::string id = Scr_GetString(0);
-
 		auto demo = SR->DemoContainer->Demos.find(id);
+
 		if (demo != std::end(SR->DemoContainer->Demos))
 			Scr_AddBool(demo->second->IsLoaded);
 		else
@@ -72,14 +70,13 @@ namespace Iswenzz::CoD4x
 	{
 		CHECK_PARAMS(0, "Usage: IsDemoPlaying()");
 
-		gentity_t *ent = VM_GetGEntityForNum(num);
+		std::shared_ptr<Player> player = Player::Get(num.entnum);
 
-		if (!ent || !ent->client)
+		if (!player)
 		{
-			Scr_ObjectError("not a client\n");
+			Scr_ObjectError("Player not found.\n");
 			return;
 		}
-		auto player = SR->Players[num.entnum];
 		Scr_AddBool(!!player->DemoPlayer->Demo);
 	}
 
@@ -87,15 +84,13 @@ namespace Iswenzz::CoD4x
 	{
 		CHECK_PARAMS(0, "Usage: GetSpeedrunVelocity()");
 
-		gentity_t *ent = VM_GetGEntityForNum(num);
+		std::shared_ptr<Player> player = Player::Get(num.entnum);
 
-		if (!ent || !ent->client)
+		if (!player)
 		{
-			Scr_ObjectError("not a client\n");
+			Scr_ObjectError("Player not found.\n");
 			return;
 		}
-		auto player = SR->Players[num.entnum];
-
 		Scr_AddInt(player->DemoPlayer->Velocity);
 	}
 
@@ -103,32 +98,27 @@ namespace Iswenzz::CoD4x
 	{
 		CHECK_PARAMS(0, "Usage: StopDemo()");
 
-		gentity_t *ent = VM_GetGEntityForNum(num);
+		std::shared_ptr<Player> player = Player::Get(num.entnum);
 
-		if (!ent || !ent->client)
+		if (!player)
 		{
-			Scr_ObjectError("not a client\n");
+			Scr_ObjectError("Player not found.\n");
 			return;
 		}
-		auto player = SR->Players[num.entnum];
-		auto weapon = player->DemoPlayer->Weapon;
-
-		Scr_AddString(weapon.c_str());
+		Scr_AddString(player->DemoPlayer->Weapon.c_str());
 	}
 
 	void DemoCommands::GetDemoRightMove(scr_entref_t num)
 	{
 		CHECK_PARAMS(0, "Usage: GetDemoRightMove()");
 
-		gentity_t *ent = VM_GetGEntityForNum(num);
+		std::shared_ptr<Player> player = Player::Get(num.entnum);
 
-		if (!ent || !ent->client)
+		if (!player)
 		{
-			Scr_ObjectError("not a client\n");
+			Scr_ObjectError("Player not found.\n");
 			return;
 		}
-		auto player = SR->Players[num.entnum];
-
 		Scr_AddInt(player->DemoPlayer->Demo ? player->DemoPlayer->CurrentFrame.rightmove : 0);
 	}
 
@@ -136,15 +126,13 @@ namespace Iswenzz::CoD4x
 	{
 		CHECK_PARAMS(0, "Usage: GetDemoForwardMove()");
 
-		gentity_t *ent = VM_GetGEntityForNum(num);
+		std::shared_ptr<Player> player = Player::Get(num.entnum);
 
-		if (!ent || !ent->client)
+		if (!player)
 		{
-			Scr_ObjectError("not a client\n");
+			Scr_ObjectError("Player not found.\n");
 			return;
 		}
-		auto player = SR->Players[num.entnum];
-
 		Scr_AddInt(player->DemoPlayer->Demo ? player->DemoPlayer->CurrentFrame.forwardmove : 0);
 	}
 
@@ -152,15 +140,13 @@ namespace Iswenzz::CoD4x
 	{
 		CHECK_PARAMS(0, "Usage: GetDemoTimer()");
 
-		gentity_t *ent = VM_GetGEntityForNum(num);
+		std::shared_ptr<Player> player = Player::Get(num.entnum);
 
-		if (!ent || !ent->client)
+		if (!player)
 		{
-			Scr_ObjectError("not a client\n");
+			Scr_ObjectError("Player not found.\n");
 			return;
 		}
-		auto player = SR->Players[num.entnum];
-
 		Scr_AddInt(player->DemoPlayer->Demo ? player->DemoPlayer->CurrentFrame.time : 0);
 	}
 
@@ -168,15 +154,13 @@ namespace Iswenzz::CoD4x
 	{
 		CHECK_PARAMS(0, "Usage: GetDemoButtons()");
 
-		gentity_t *ent = VM_GetGEntityForNum(num);
+		std::shared_ptr<Player> player = Player::Get(num.entnum);
 
-		if (!ent || !ent->client)
+		if (!player)
 		{
-			Scr_ObjectError("not a client\n");
+			Scr_ObjectError("Player not found.\n");
 			return;
 		}
-		auto player = SR->Players[num.entnum];
-
 		Scr_AddInt(player->DemoPlayer->Demo ? player->DemoPlayer->CurrentFrame.buttons : 0);
 	}
 
@@ -184,15 +168,13 @@ namespace Iswenzz::CoD4x
 	{
 		CHECK_PARAMS(0, "Usage: StopDemo()");
 
-		gentity_t *ent = VM_GetGEntityForNum(num);
+		std::shared_ptr<Player> player = Player::Get(num.entnum);
 
-		if (!ent || !ent->client)
+		if (!player)
 		{
-			Scr_ObjectError("not a client\n");
+			Scr_ObjectError("Player not found.\n");
 			return;
 		}
-		auto player = SR->Players[num.entnum];
-
 		player->DemoPlayer->Stop();
 	}
 }
