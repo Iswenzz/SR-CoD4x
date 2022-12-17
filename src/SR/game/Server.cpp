@@ -26,7 +26,6 @@ namespace Iswenzz::CoD4x
 			if (player)
 				player->Frame();
 		}
-		Voice->Frame();
 	}
 }
 

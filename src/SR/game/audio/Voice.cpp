@@ -3,8 +3,9 @@
 #include "SR.hpp"
 
 #define VOICE_AMPLIFY 2
-#define VOICE_STREAM_ITERATION 4
 #define PROXIMITY_DISTANCE 1500
+
+int count = 0;
 
 namespace Iswenzz::CoD4x
 {
@@ -14,19 +15,34 @@ namespace Iswenzz::CoD4x
 
 		int i;
 		gentity_t* entity;
+		client_t *cl;
+		VoicePacket_t packet = { 0 };
 
-		for (int p = 0; p < VOICE_STREAM_ITERATION; p++)
+		// Most spastic sound sync
+		int iteration = 2;
+		if (count++ > 4)
 		{
-			VoicePacket_t packet = Radio->Play();
-			packet.talker = -1;
+			iteration = 6;
+			count = 0;
+		}
 
-			for (i = 0, entity = level.gentities; i < level.maxclients; i++, entity++)
+		for (int p = 0; p < iteration; p++)
+		{
+			packet = Radio->Play();
+
+			for (i = 0, cl = svs.clients; i < level.maxclients; i++, cl++)
 			{
-				if (entity->client && entity->client->sess.sessionState != SESS_STATE_INTERMISSION)
+				entity = &level.gentities[i];
+
+				if (cl && cl->state == CS_ACTIVE && entity->client
+					&& entity->client->sess.sessionState != SESS_STATE_INTERMISSION)
+				{
+					packet.talker = i;
 					SV_QueueVoicePacket(i, i, &packet);
+
+					Log::WriteLine("[Voice] %d %d %d", iteration, i, svs.clients[i].voicePacketCount);
+				}
 			}
-			if (Radio->IsStreamEnd())
-				break;
 		}
 	}
 
@@ -46,13 +62,16 @@ namespace Iswenzz::CoD4x
 	{
 		int i;
 		gentity_t* entity;
+		client_t *cl;
 
 		std::vector<short> voiceData = Speex::Decode(packet);
 		talker->client->lastVoiceTime = level.time;
 
-		for (i = 0, entity = level.gentities; i < level.maxclients; i++, entity++)
+		for (i = 0, cl = svs.clients; i < level.maxclients; i++, cl++)
 		{
-			if (entity->client && entity->client->sess.sessionState != SESS_STATE_INTERMISSION)
+			entity = &level.gentities[i];
+			if (cl && cl->state == CS_ACTIVE && entity->client
+				&& entity->client->sess.sessionState != SESS_STATE_INTERMISSION)
 			{
 				if (!voice_localEcho->boolean && entity == talker)
 					continue;
@@ -83,5 +102,10 @@ C_EXTERN
 	void SR_BroadcastVoice(gentity_t *talker, VoicePacket_t *packet)
 	{
 		SR->Server->Voice->BroadcastVoice(talker, packet);
+	}
+
+	void SR_VoiceFrame()
+	{
+		SR->Server->Voice->Frame();
 	}
 }

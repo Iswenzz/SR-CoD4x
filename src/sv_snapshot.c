@@ -1067,8 +1067,6 @@ static void SV_BuildClientSnapshot( client_t *client ) {
 }
 //#endif
 
-
-
 /*
  =======================
  SV_SendClientMessages
@@ -1138,6 +1136,8 @@ void SV_SendClientMessages( void ) {
 			SV_WriteSnapshotToClient( c, &msg );
 
 		SV_EndClientSnapshot(c, &msg);
+
+		SR_VoiceFrame();
 		SV_SendClientVoiceData( c );
 	}
 
