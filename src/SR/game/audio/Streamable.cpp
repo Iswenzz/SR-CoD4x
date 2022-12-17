@@ -23,8 +23,9 @@ namespace Iswenzz::CoD4x
 
 			auto start = Buffer.begin() + position;
 			auto end = start + stream.size();
-
 			std::copy(start, end, stream.begin());
+			stream.resize(SPEEX_FRAME_SIZE);
+
 			position += stream.size();
 			VoicePacket_t packet = Speex::Encode(stream);
 			StreamPackets.push_back(packet);

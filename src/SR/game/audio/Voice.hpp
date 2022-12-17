@@ -22,6 +22,7 @@ namespace Iswenzz::CoD4x
 	public:
 		std::map<std::string, std::shared_ptr<Streamable>> Audios;
 		std::shared_ptr<Streamable> Radio;
+		int RadioFragments = 0;
 
 		/// @brief Initialize the voice chat.
 		Voice() = default;

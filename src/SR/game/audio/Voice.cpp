@@ -5,8 +5,6 @@
 #define VOICE_AMPLIFY 2
 #define PROXIMITY_DISTANCE 1500
 
-int count = 0;
-
 namespace Iswenzz::CoD4x
 {
 	void Voice::Stream()
@@ -20,10 +18,10 @@ namespace Iswenzz::CoD4x
 
 		// Most spastic sound sync
 		int iteration = 2;
-		if (count++ > 4)
+		if (RadioFragments++ > 4)
 		{
 			iteration = 6;
-			count = 0;
+			RadioFragments = 0;
 		}
 
 		for (int p = 0; p < iteration; p++)
@@ -39,10 +37,10 @@ namespace Iswenzz::CoD4x
 				{
 					packet.talker = i;
 					SV_QueueVoicePacket(i, i, &packet);
-
-					Log::WriteLine("[Voice] %d %d %d", iteration, i, svs.clients[i].voicePacketCount);
 				}
 			}
+			if (Radio->IsStreamEnd())
+				break;
 		}
 	}
 
@@ -102,10 +100,5 @@ C_EXTERN
 	void SR_BroadcastVoice(gentity_t *talker, VoicePacket_t *packet)
 	{
 		SR->Server->Voice->BroadcastVoice(talker, packet);
-	}
-
-	void SR_VoiceFrame()
-	{
-		SR->Server->Voice->Frame();
 	}
 }
