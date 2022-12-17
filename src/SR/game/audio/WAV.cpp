@@ -13,7 +13,10 @@ namespace Iswenzz::CoD4x
 	{
 		if (!std::filesystem::exists(FilePath))
 			return;
+		IsLoaded = false;
 		Input.open(FilePath, std::ios_base::binary);
+
+		Log::WriteLine("[WAV] Opening %s", FilePath.c_str());
 
 		WavHeader header;
 		Input.read(reinterpret_cast<char*>(&header), sizeof(WavHeader));
@@ -33,11 +36,13 @@ namespace Iswenzz::CoD4x
 		Buffer = Audio::Resample(monoData.data(), monoData.size(), channels, Rate, downRate);
 
 		ProcessPackets();
+		IsLoaded = true;
 	}
 
 	void WAV::OpenAsync(uv_work_t *req)
 	{
-
+		WAV* wav = reinterpret_cast<WAV*>(req->data);
+		wav->Open();
 	}
 
 	void WAV::Save(std::string path)

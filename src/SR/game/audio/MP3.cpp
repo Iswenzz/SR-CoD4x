@@ -21,8 +21,11 @@ namespace Iswenzz::CoD4x
 		if (!std::filesystem::exists(FilePath))
 			return;
 
+		IsLoaded = false;
 		mp3dec_t mp3d;
     	mp3dec_init(&mp3d);
+
+		Log::WriteLine("[MP3] Opening %s", FilePath.c_str());
 
 		mp3dec_file_info_t fileInfo;
 		if (mp3dec_load(&mp3d, FilePath.c_str(), &fileInfo, nullptr, nullptr) || !fileInfo.buffer)
@@ -42,11 +45,13 @@ namespace Iswenzz::CoD4x
 
 		free(fileInfo.buffer);
 		ProcessPackets();
+		IsLoaded = true;
 	}
 
 	void MP3::OpenAsync(uv_work_t *req)
 	{
-
+		MP3* mp3 = reinterpret_cast<MP3*>(req->data);
+		mp3->Open();
 	}
 
 	void MP3::Save(std::string path)

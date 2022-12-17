@@ -20,6 +20,11 @@ namespace Iswenzz::CoD4x
 		std::string name = Scr_GetString(0);
 		std::string type = Scr_GetString(1);
 
+		if (name == "stop")
+		{
+			SR->Server->Voice->Radio = nullptr;
+			return;
+		}
 		if (type != "mp3" && type != "wav")
 		{
 			Scr_ObjectError("Radio type is wav or mp3.\n");
@@ -32,13 +37,21 @@ namespace Iswenzz::CoD4x
 		}
 		std::shared_ptr<Streamable> file;
 
-		if (type == "wav")
-			file = std::make_shared<WAV>(name);
-		else if (type == "mp3")
-			file = std::make_shared<MP3>(name);
-
-		if (SR->Server->Voice->Audios.find(name) != std::end(SR->Server->Voice->Audios))
+		auto streamable = SR->Server->Voice->Audios.find(name);
+		if (streamable == std::end(SR->Server->Voice->Audios))
+		{
+			if (type == "wav")
+				file = std::make_shared<WAV>(name);
+			else if (type == "mp3")
+				file = std::make_shared<MP3>(name);
 			SR->Server->Voice->Audios.insert({ name, file });
+		}
+		else
+			file = streamable->second;
+
+		file->StreamPosition = 0;
 		SR->Server->Voice->Radio = file;
+
+		Log::WriteLine("[Radio] Playing %s", name.c_str());
 	}
 }

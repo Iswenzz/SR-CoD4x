@@ -9,7 +9,7 @@ namespace Iswenzz::CoD4x
 {
 	void Voice::Stream()
 	{
-		if (!Radio || Radio->IsStreamEnd()) return;
+		if (!Radio || !Radio->IsLoaded || Radio->IsStreamEnd()) return;
 
 		int i;
 		gentity_t* entity;
