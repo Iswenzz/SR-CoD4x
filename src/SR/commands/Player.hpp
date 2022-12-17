@@ -29,5 +29,11 @@ namespace Iswenzz::CoD4x
 
 		/// @brief Get the weapon state.
 		static void GetWeaponState(scr_entref_t num);
+
+		/// @brief Enable radio for a player.
+		static void RadioEnable(scr_entref_t num);
+
+		/// @brief Enable proximity for a player.
+		static void ProximityEnable(scr_entref_t num);
 	};
 }

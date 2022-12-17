@@ -33,10 +33,14 @@ namespace Iswenzz::CoD4x
 		int FPS = 0;
 		int PreviousFPS = 0;
 		int SurfaceFlags = 0;
+
 		bool Voice = false;
 		int VoiceCount = 0;
 		int VoiceTime = 0;
 		int LastVoiceTime = 0;
+
+		bool ProximityEnabled = false;
+		bool RadioEnabled = false;
 
 		/// @brief Initialize a new player.
 		/// @param cl - The client.

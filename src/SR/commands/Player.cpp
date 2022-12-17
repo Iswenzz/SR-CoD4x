@@ -12,6 +12,8 @@ namespace Iswenzz::CoD4x
 		Scr_AddMethod("getdamagetimer", GetDamageTimer, qfalse);
 		Scr_AddMethod("weaponstate", GetWeaponState, qfalse);
 		Scr_AddMethod("voicechatbuttonpressed", VoiceChatButtonPressed, qfalse);
+		Scr_AddMethod("radioenable", RadioEnable, qfalse);
+		Scr_AddMethod("proximityenable", ProximityEnable, qfalse);
 	}
 
 	void PlayerCommands::VoiceChatButtonPressed(scr_entref_t num)
@@ -96,5 +98,33 @@ namespace Iswenzz::CoD4x
 			return;
 		}
 		Scr_AddInt(player->ps->weaponstate);
+	}
+
+	void PlayerCommands::RadioEnable(scr_entref_t num)
+	{
+		CHECK_PARAMS(1, "Usage: RadioEnable(<state>)");
+
+		std::shared_ptr<Player> player = Player::Get(num.entnum);
+
+		if (!player)
+		{
+			Scr_ObjectError("Player not found.\n");
+			return;
+		}
+		player->RadioEnabled = Scr_GetInt(0);
+	}
+
+	void PlayerCommands::ProximityEnable(scr_entref_t num)
+	{
+		CHECK_PARAMS(1, "Usage: ProximityEnable(<state>)");
+
+		std::shared_ptr<Player> player = Player::Get(num.entnum);
+
+		if (!player)
+		{
+			Scr_ObjectError("Player not found.\n");
+			return;
+		}
+		player->ProximityEnabled = Scr_GetInt(0);
 	}
 }
