@@ -4,7 +4,7 @@ namespace Iswenzz::CoD4x
 {
 	WAV::WAV(std::string filepath)
 	{
-		FilePath = std::filesystem::canonical(filepath).string();
+		FilePath = filepath;
 
 		AsyncCall(this, OpenAsync, &AsyncNull);
 	}
