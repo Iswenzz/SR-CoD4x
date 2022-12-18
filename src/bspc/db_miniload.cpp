@@ -712,7 +712,7 @@ qboolean __cdecl DB_ReadData()
 }
 
 //g_load.outstandingReads get increased by 1 when we have read data of amount 0x40000 or less on end of file
-//g_load.outstandingReads gets lowered by 1 when 
+//g_load.outstandingReads gets lowered by 1 when
 
 void DB_ReadXFileStage()
 {
@@ -2355,8 +2355,8 @@ void __cdecl DB_UnloadXZoneInternal(unsigned int zoneIndex, bool createDefault)
               || (debugname[0] && !Q_stricmp(DB_GetXAssetName(&assetEntry->asset), debugname)) )
             {
 
-              Com_Printf(CON_CHANNEL_SYSTEM, "DB_UnloadXZoneInternal: reverted to asset: '%s','%s' from %s\n", 
-		DB_GetXAssetTypeName(assetEntry->asset.type), DB_GetXAssetName(&assetEntry->asset), 
+              Com_Printf(CON_CHANNEL_SYSTEM, "DB_UnloadXZoneInternal: reverted to asset: '%s','%s' from %s\n",
+		DB_GetXAssetTypeName(assetEntry->asset.type), DB_GetXAssetName(&assetEntry->asset),
 		g_zones[(uint8_t)assetEntry->zoneIndex].zoneinfo.name);
             }
           }
@@ -2379,7 +2379,7 @@ void __cdecl DB_UnloadXZoneInternal(unsigned int zoneIndex, bool createDefault)
               if ( db_xassetdebugtype == -1 || db_xassetdebugtype == assetEntry->asset.type
                   || (debugname[0] && !Q_stricmp(DB_GetXAssetName(&assetEntry->asset), debugname)) )
               {
-                Com_Printf(CON_CHANNEL_SYSTEM, "DB_UnloadXZoneInternal: using default for asset: '%s','%s'\n", 
+                Com_Printf(CON_CHANNEL_SYSTEM, "DB_UnloadXZoneInternal: using default for asset: '%s','%s'\n",
                     DB_GetXAssetTypeName(assetEntry->asset.type), DB_GetXAssetName(&assetEntry->asset));
               }
             }
@@ -2739,7 +2739,7 @@ XAssetEntryPoolEntry *__cdecl DB_CreateDefaultEntry(XAssetType type, const char 
 bool __cdecl IsConfigFile(const char *name)
 {
   assert(name != NULL);
-  return strstr((char *)name, ".cfg") != NULL || strstr((char *)name, ".gsx") != NULL;
+  return strstr((char *)name, ".cfg") != NULL || strstr((char *)name, ".gsr") != NULL;
 }
 
 
@@ -2806,7 +2806,7 @@ XAssetHeader __cdecl DB_FindXAssetHeader(XAssetType type, const char *name, bool
     if ( namelen > bspextlen && !Q_strncmp(bspext, &name[namelen - bspextlen], bspextlen) )
     {
       for ( basename = &name[strlen(so_prefix)]; *basename && *basename != '_'; ++basename );
-      
+
       if ( !*basename )
       {
         Com_PrintError(CON_CHANNEL_ERROR, "Bad specop level name\n");
@@ -2883,7 +2883,7 @@ XAssetHeader __cdecl DB_FindXAssetHeader(XAssetType type, const char *name, bool
           }
         }
       }
-      
+
       if ( use_so_name )
       {
         Com_PrintWarning(CON_CHANNEL_SYSTEM, "Tried to use non loaded asset '%s'\n", so_name);
@@ -3041,7 +3041,7 @@ void __cdecl DB_DelayedCloneXAsset(XAssetEntry *newEntry)
   const char *assetname;
   const char *debugname;
   unsigned int i;
-  
+
   if ( g_sync )
   {
     if ( db_xassetdebug )
@@ -3079,7 +3079,7 @@ void __cdecl DB_DelayedCloneXAsset(XAssetEntry *newEntry)
         || (debugname[0] && !Q_stricmp(debugname, assetname)) )
       {
         assetname = DB_GetXAssetName(&newEntry->asset);
-        Com_Printf(CON_CHANNEL_SYSTEM, "DB_DelayedCloneXAsset: postponed load asset: '%s','%s' from fastfile %s\n", 
+        Com_Printf(CON_CHANNEL_SYSTEM, "DB_DelayedCloneXAsset: postponed load asset: '%s','%s' from fastfile %s\n",
           DB_GetXAssetTypeName(newEntry->asset.type), assetname, g_zones[newEntry->zoneIndex].zoneinfo.name);
       }
     }
@@ -3295,7 +3295,7 @@ XAssetEntryPoolEntry *__cdecl DB_LinkXAssetEntry(XAssetEntry *argNewEntry, int a
           || (debugname[0] && !Q_stricmp(name, debugname)) )
         {
           locname = DB_GetXAssetTypeName(newEntry->entry.asset.type);
-          Com_Printf(CON_CHANNEL_SYSTEM, "DB_LinkXAssetEntry: swapping existing asset: '%s','%s' with new asset loaded from fastfile: '%s'\n", 
+          Com_Printf(CON_CHANNEL_SYSTEM, "DB_LinkXAssetEntry: swapping existing asset: '%s','%s' with new asset loaded from fastfile: '%s'\n",
             locname, name, g_zones[newEntry->entry.zoneIndex].zoneinfo.name);
         }
       }
@@ -3368,7 +3368,7 @@ void __cdecl Load_MaterialHandle(bool atStreamStart)
 
   Load_Stream(atStreamStart, varMaterialHandle, 4);
   DB_PushStreamPos(0);
-  value = (signed int)*varMaterialHandle; 
+  value = (signed int)*varMaterialHandle;
   if ( value )
   {
     if ( value != -1 && value != -2 )

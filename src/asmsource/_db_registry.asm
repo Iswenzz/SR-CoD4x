@@ -4560,7 +4560,7 @@ _cstring_waited_i_msec_fo1:		db "Waited %i msec for missing asset ",22h,"%s",22h
 _cstring_ss1:		db "%s,%s",0ah,0
 _cstring_smps:		db "%s,mp/%s",0ah,0
 _cstring_cfg:		db ".cfg",0
-_cstring_gsx:		db ".gsx",0
+_cstring_gsx:		db ".gsr",0
 _cstring_localized_:		db "localized_",0
 _cstring_s_load:		db "%s_load",0
 _cstring_space:		db " ",0

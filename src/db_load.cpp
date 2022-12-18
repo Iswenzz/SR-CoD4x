@@ -3357,7 +3357,7 @@ XAssetEntryPoolEntry *__cdecl DB_CreateDefaultEntry(XAssetType type, const char 
 bool __cdecl IsConfigFile(const char *name)
 {
   assert(name != NULL);
-  return strstr((char *)name, ".cfg") != NULL || strstr((char *)name, ".gsx") != NULL;
+  return strstr((char *)name, ".cfg") != NULL || strstr((char *)name, ".gsr") != NULL;
 }
 
 
