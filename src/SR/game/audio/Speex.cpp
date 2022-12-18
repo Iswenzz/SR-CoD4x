@@ -4,7 +4,7 @@ namespace Iswenzz::CoD4x
 {
 	void Speex::Initialize()
 	{
-		bool perceptualEnhancement = true;
+		bool perceptualEnhancement = false;
 
 		speex_bits_init(&Bits);
 
