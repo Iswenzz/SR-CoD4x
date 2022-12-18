@@ -43,7 +43,10 @@ namespace Iswenzz::CoD4x
 				}
 			}
 			if (Radio->IsStreamEnd())
+			{
+				Radio = nullptr;
 				break;
+			}
 		}
 	}
 
