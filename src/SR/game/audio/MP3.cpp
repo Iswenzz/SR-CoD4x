@@ -12,7 +12,7 @@ namespace Iswenzz::CoD4x
 {
 	MP3::MP3(std::string filepath)
 	{
-		FilePath = filepath;
+		FilePath = std::filesystem::canonical(filepath).string();
 
 		AsyncCall(this, OpenAsync, &AsyncNull);
 	}
