@@ -3,6 +3,7 @@
 #include "utils/Log.hpp"
 
 #define MINIMP3_ONLY_MP3
+#define MINIMP3_NO_STDIO
 #define MINIMP3_IMPLEMENTATION
 
 #include <minimp3_ex.h>
@@ -25,10 +26,18 @@ namespace Iswenzz::CoD4x
 		mp3dec_t mp3d;
     	mp3dec_init(&mp3d);
 
+		Input.open(FilePath, std::ios_base::binary);
 		Log::WriteLine("[MP3] Opening %s", FilePath.c_str());
 
+		Input.seekg(0, Input.end);
+		FileSize = Input.tellg();
+		Input.seekg(0, Input.beg);
+
+		std::vector<unsigned char> buffer(FileSize);
+		Input.read(reinterpret_cast<char*>(buffer.data()), buffer.size());
+
 		mp3dec_file_info_t fileInfo;
-		if (mp3dec_load(&mp3d, FilePath.c_str(), &fileInfo, nullptr, nullptr) || !fileInfo.buffer)
+		if (mp3dec_load_buf(&mp3d, buffer.data(), buffer.size(), &fileInfo, nullptr, nullptr))
 		{
 			Log::WriteLine("[MP3] Error opening %s", FilePath.c_str());
 			return;
@@ -41,7 +50,6 @@ namespace Iswenzz::CoD4x
 
 		std::vector<short> monoData = Audio::StereoToMono(fileInfo.buffer, fileInfo.samples);
 		Buffer = Audio::Resample(monoData.data(), monoData.size(), channels, fileInfo.hz, downRate);
-		FileSize = Buffer.size() * channels;
 
 		free(fileInfo.buffer);
 		ProcessPackets();
