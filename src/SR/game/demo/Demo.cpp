@@ -53,8 +53,6 @@ namespace Iswenzz::CoD4x
 				frame.rightmove = *reinterpret_cast<char *>(&ps.dofNearEnd);
 				frame.buttons = *reinterpret_cast<int *>(&ps.dofFarStart);
 
-				Log::WriteLine("[Demo] %d %f %f %f", frame.ps.commandTime, frame.ps.origin[0], frame.ps.origin[1], frame.ps.origin[2]);
-
 				// Entities
 				for (auto &ent : Reader->GetLastUpdatedEntities())
 				{
