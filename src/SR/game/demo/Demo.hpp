@@ -16,6 +16,7 @@ namespace Iswenzz::CoD4x
 {
 	struct DemoFrame
 	{
+		bool valid;
 		playerState_t ps;
 		int time;
 		int fps;
@@ -36,6 +37,7 @@ namespace Iswenzz::CoD4x
 		std::vector<DemoFrame> Frames{ };
 		std::array<std::string, MAX_CONFIGSTRINGS + 1> ConfigStrings{ };
 		std::vector<std::string> Weapons{ };
+		int LastValidFrame = 0;
 		bool IsLoaded = false;
 
 		/// @brief Initialize a new Demo.
@@ -53,6 +55,10 @@ namespace Iswenzz::CoD4x
 		/// @brief Open a demo async.
 		/// @param req - The worker request.
 		static void OpenAsync(uv_work_t *req);
+
+		/// @brief Interpolate invalid packets.
+		/// @param interpolateFrame - The last valid frame to interpolate the previous invalid frames.
+		void Interpolate(DemoFrame &interpolateFrame);
 
 		/// @brief Process chat messages.
 		/// @return
