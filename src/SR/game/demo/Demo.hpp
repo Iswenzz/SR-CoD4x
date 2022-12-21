@@ -23,6 +23,7 @@ namespace Iswenzz::CoD4x
 		std::string playerName;
 		std::vector<std::string> chat;
 		std::map<int, entityState_t> entities;
+		int velocity;
 		char forwardmove;
 		char rightmove;
 		int buttons;
@@ -59,6 +60,11 @@ namespace Iswenzz::CoD4x
 		/// @brief Interpolate invalid packets.
 		/// @param interpolateFrame - The last valid frame to interpolate the previous invalid frames.
 		void Interpolate(DemoFrame &interpolateFrame);
+
+		/// @brief Get the player velocity.
+		/// @param frame - The current frame.
+		/// @return
+		int GetVelocity(DemoFrame &frame);
 
 		/// @brief Process chat messages.
 		/// @return

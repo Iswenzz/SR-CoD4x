@@ -38,10 +38,6 @@ namespace Iswenzz::CoD4x
 		/// @brief Stop the demo.
 		void Stop();
 
-		/// @brief Retrieve the speedrun velocity.
-		/// @param frame - The demo frame.
-		void RetrieveSpeedrunVelocity();
-
 		/// @brief Update entities.
 		/// @param snapInfo - The snap info.
 		/// @param msg - The frame message.

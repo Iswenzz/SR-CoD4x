@@ -26,26 +26,6 @@ namespace Iswenzz::CoD4x
 		Demo.reset();
 	}
 
-	void DemoPlayer::RetrieveSpeedrunVelocity()
-	{
-		int frameVelocity = 0;
-		if (CurrentFrame.ps.velocity[0] != 0 || CurrentFrame.ps.velocity[1] != 0 || CurrentFrame.ps.velocity[2] != 0)
-			frameVelocity = sqrtl((CurrentFrame.ps.velocity[0] * CurrentFrame.ps.velocity[0]) + (CurrentFrame.ps.velocity[1] * CurrentFrame.ps.velocity[1]));
-
-		hudelem_t velocityHud;
-		for (int i = 0; i < MAX_HUDELEMENTS; i++)
-		{
-			if ((std::abs(CurrentFrame.ps.hud.current[i].fontScale - 1.6) <= 0.05 ||
-				std::abs(CurrentFrame.ps.hud.current[i].fontScale - 1.8) <= 0.05) &&
-				CurrentFrame.ps.hud.current[i].value > 0)
-			{
-				velocityHud = CurrentFrame.ps.hud.current[i];
-				break;
-			}
-		}
-		Velocity = frameVelocity >= velocityHud.value ? frameVelocity : velocityHud.value;
-	}
-
 	void DemoPlayer::UpdateEntity(snapshotInfo_t *snapInfo, msg_t* msg, const int time, entityState_t* from, entityState_t* to, qboolean force)
 	{
 		if (!from || !to)
@@ -140,6 +120,9 @@ namespace Iswenzz::CoD4x
 		float interpolate = static_cast<float>(SlowmoThreshold) / 10;
 		interpolate = SlowmoIndex > FrameIndex ? interpolate : 1.0 - interpolate;
 
+		frame.forwardmove = std::lerp(frame.forwardmove, interpolateFrame.forwardmove, interpolate);
+		frame.rightmove = std::lerp(frame.rightmove, interpolateFrame.rightmove, interpolate);
+		frame.velocity = std::lerp(frame.velocity, interpolateFrame.velocity, interpolate);
 		frame.ps.commandTime = std::lerp(frame.ps.commandTime, interpolateFrame.ps.commandTime, interpolate);
 
 		frame.ps.origin[0] = std::lerp(frame.ps.origin[0], interpolateFrame.ps.origin[0], interpolate);
@@ -217,7 +200,7 @@ namespace Iswenzz::CoD4x
 		// Movement
 		VectorCopy(CurrentFrame.ps.origin, frame->ps.origin);
 		SetClientViewAngle(Player->cl->gentity, CurrentFrame.ps.viewangles);
-		RetrieveSpeedrunVelocity();
+		Velocity = CurrentFrame.velocity;
 
 		// Commands
 		for (const std::string &message : CurrentFrame.chat)
@@ -247,8 +230,8 @@ C_EXTERN
 		if (!IsDefinedClient(cl))
 			return;
 
-		cl->gentity->client->ps.dofNearStart = *(float *)&cmd->forwardmove;
-		cl->gentity->client->ps.dofNearEnd = *(float *)&cmd->rightmove;
-		cl->gentity->client->ps.dofFarStart = *(float *)&cmd->buttons;
+		cl->gentity->client->ps.dofNearStart = *reinterpret_cast<float *>(&cmd->forwardmove);
+		cl->gentity->client->ps.dofNearEnd = *reinterpret_cast<float *>(&cmd->rightmove);
+		cl->gentity->client->ps.dofFarStart = *reinterpret_cast<float *>(&cmd->buttons);
 	}
 }
