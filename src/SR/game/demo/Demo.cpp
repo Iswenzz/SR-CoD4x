@@ -35,6 +35,8 @@ namespace Iswenzz::CoD4x
 
 				if (Reader->DemoFile->CurrentMessageType == Iswenzz::CoD4::DM1::MSGType::MSG_FRAME)
 					continue;
+				if (!LastValidFrame && !Reader->GetCurrentSnapshot().valid)
+					continue;
 
 				auto ps = Reader->GetCurrentSnapshot().ps;
 				auto archive = Reader->GetCurrentFrame();
@@ -50,6 +52,8 @@ namespace Iswenzz::CoD4x
 				frame.forwardmove = *reinterpret_cast<char *>(&ps.dofNearStart);
 				frame.rightmove = *reinterpret_cast<char *>(&ps.dofNearEnd);
 				frame.buttons = *reinterpret_cast<int *>(&ps.dofFarStart);
+
+				Log::WriteLine("[Demo] %d %f %f %f", frame.ps.commandTime, frame.ps.origin[0], frame.ps.origin[1], frame.ps.origin[2]);
 
 				// Entities
 				for (auto &ent : Reader->GetLastUpdatedEntities())
