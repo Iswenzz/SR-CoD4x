@@ -138,7 +138,7 @@ __cdecl void SV_WriteSnapshotToClient(client_t* client, msg_t* msg){
         lastframe = 0;
         var_x = 0;
 
-    } else if(client->demoDeltaFrameCount <= 0 && client->demorecording){
+    } else if(client->demoDeltaFrameCount <= 0 && client->demorecording || client->deltaMessage < client->demoNonDeltaNum){
 
         oldframe = NULL;
         lastframe = 0;
@@ -148,6 +148,7 @@ __cdecl void SV_WriteSnapshotToClient(client_t* client, msg_t* msg){
         Com_DPrintf(CON_CHANNEL_SERVER,"Force a nondelta frame for %s for demo recording\n", client->name);
 
 	    client->demoDeltaFrameCount = client->demoMaxDeltaFrames;
+		client->demoNonDeltaNum = client->netchan.outgoingSequence;
     } else {
         oldframe = &client->frames[client->deltaMessage & PACKET_MASK];
         lastframe = client->netchan.outgoingSequence - client->deltaMessage;

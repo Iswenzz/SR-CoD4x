@@ -244,6 +244,7 @@ void SV_RecordClient( client_t* cl, char* basename ) {
 	cl->demoArchiveIndex = 0;
 	cl->demoMaxDeltaFrames = 1;
 	cl->demoDeltaFrameCount = 0;
+	cl->demoNonDeltaNum = 0;
 
 	// write out the gamestate message
 	MSG_Init( &msg, bufData, sizeof( bufData ) );

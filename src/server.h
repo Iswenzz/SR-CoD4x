@@ -140,6 +140,7 @@ struct client_s
 	int					demoArchiveIndex;
 	int					demoMaxDeltaFrames;
 	int					demoDeltaFrameCount;
+	int					demoNonDeltaNum;
 	qboolean				undercover;
 	int					bantime;
 	int					clienttimeout;
