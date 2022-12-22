@@ -43,7 +43,7 @@ namespace Iswenzz::CoD4x
 		}
 
 		Color.split = { r, g, b, a };
-		Material = SV_FindMaterial(name);
+		Material = G_FindMaterial(name);
 		return 0;
 	}
 

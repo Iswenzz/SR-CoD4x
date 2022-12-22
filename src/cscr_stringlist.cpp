@@ -1097,6 +1097,13 @@ float *__cdecl Scr_AllocVector(const float* vec)
   return avec;
 }
 
+int G_FindMaterial(const char* name)
+{
+	int stringIndex = SL_FindString(name);
+	if (stringIndex > 0)
+		return G_MaterialIndex(name);
+	return -1;
+}
 
 
 }

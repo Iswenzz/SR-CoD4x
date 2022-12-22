@@ -905,11 +905,3 @@ int SV_NumForSvEntity( svEntity_t *svEnt ) {
 	num = svEnt - sv.svEntities;
 	return num;
 }
-
-int SV_FindMaterial(const char* name)
-{
-	int stringIndex = SL_FindString(name);
-	if (stringIndex > 0)
-		return G_MaterialIndex(name);
-	return -1;
-}

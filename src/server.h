@@ -861,8 +861,6 @@ const char *__cdecl SV_GetMapBaseName(const char *mapname);
 void __cdecl SV_ResetSkeletonCache();
 void __cdecl SV_SetUserinfo(int clientIndex, const char *val);
 
-int SV_FindMaterial(const char* name);
-
 bool MSG_WriteDeltaArchivedEntity(snapshotInfo_t *snapInfo, msg_t *msg, const int time, archivedEntity_t *from, archivedEntity_t *to, enum DeltaFlags flags);
 int MSG_ReadDeltaArchivedEntity(msg_t *msg, const int time, archivedEntity_t *from, archivedEntity_t *to, int number);
 uint64_t __cdecl SV_GetPlayerXuid(unsigned int clientNum);

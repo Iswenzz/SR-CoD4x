@@ -10,7 +10,23 @@ namespace Iswenzz::CoD4x
 {
 	void GameCommands::Register()
 	{
+		Scr_AddFunction("isprecached", IsPrecached, qfalse);
 		Scr_AddFunction("radioplay", RadioPlay, qfalse);
+	}
+
+	void GameCommands::IsPrecached()
+	{
+		CHECK_PARAMS(2, "Usage: IsPrecached(<name>, <type>)");
+
+		const char *name = Scr_GetString(0);
+		std::string type = Scr_GetString(1);
+
+		if (type == "item")
+			Scr_AddInt(G_FindItem(name, 0));
+		else if (type == "material")
+			Scr_AddInt(G_FindMaterial(name) >= 0);
+		else
+			Scr_AddInt(-1);
 	}
 
 	void GameCommands::RadioPlay()

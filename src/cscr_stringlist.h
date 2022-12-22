@@ -27,6 +27,8 @@ unsigned int __cdecl SL_GetString_(const char *str, unsigned int user, int type)
 void SL_SetScriptCompile(bool active);
 void __cdecl SL_ShutdownSystem(unsigned int user);
 int G_MaterialIndex(char const* name);
+int G_FindItem(const char* name, int startIndex);
+int G_FindMaterial(const char* name);
 
 #ifdef __cplusplus
 };

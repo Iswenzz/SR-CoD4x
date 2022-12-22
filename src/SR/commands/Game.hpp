@@ -9,6 +9,9 @@ namespace Iswenzz::CoD4x
 		/// @brief Register commands.
 		static void Register();
 
+		/// @brief Is asset precached.
+		static void IsPrecached();
+
 		/// @brief Play audio on the radio.
 		static void RadioPlay();
 	};
