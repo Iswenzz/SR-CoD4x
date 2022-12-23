@@ -146,6 +146,10 @@ __cdecl void SV_WriteSnapshotToClient(client_t* client, msg_t* msg){
         client->demowaiting = qfalse;
 
         Com_DPrintf(CON_CHANNEL_SERVER,"Force a nondelta frame for %s for demo recording\n", client->name);
+		if (client->deltaMessage < client->demoNonDeltaNum) {
+			Com_DPrintf(CON_CHANNEL_SERVER,"%s: Delta request from out of date demo frame - delta frame %i against %i\n",
+				client->name, client->deltaMessage, client->demoNonDeltaNum);
+		}
 
 	    client->demoDeltaFrameCount = client->demoMaxDeltaFrames;
 		client->demoNonDeltaNum = client->netchan.outgoingSequence;
