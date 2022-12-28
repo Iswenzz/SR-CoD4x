@@ -1128,7 +1128,7 @@ __optimize3 __regparm3 void SV_UserMove( client_t *cl, msg_t *msg, qboolean delt
 
 		PHandler_Event(PLUGINS_ONCLIENTMOVECOMMAND, cl, &cmds[ i ]);
 
-		SR_CalculateFrame(SV_GameClientNum(cl - svs.clients));
+		SR_CalculateFrame(ps);
 
 		if(cl->demorecording && !cl->demowaiting && cl->demofile.handleFiles.file.o)
 			SV_WriteDemoArchive(cl);

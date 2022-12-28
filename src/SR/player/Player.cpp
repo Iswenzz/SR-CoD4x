@@ -96,8 +96,8 @@ C_EXTERN
 		if (!IsDefinedClient(cl))
 			return;
 
-		Log::WriteLine("[Player] Connected %d", cl->gentity->client->ps.clientNum);
-		SR->Players[cl->gentity->client->ps.clientNum] = std::make_shared<Player>(cl);
+		Log::WriteLine("[Player] Connected %d", cl->gentity->s.number);
+		SR->Players[cl->gentity->s.number] = std::make_shared<Player>(cl);
 	}
 
 	void SR_FreePlayer(client_t *cl)
