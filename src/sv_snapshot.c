@@ -138,7 +138,7 @@ __cdecl void SV_WriteSnapshotToClient(client_t* client, msg_t* msg){
         lastframe = 0;
         var_x = 0;
 
-    } else if(client->demoDeltaFrameCount <= 0 && client->demorecording /*|| client->deltaMessage < client->demoNonDeltaNum*/){
+    } else if(client->demoDeltaFrameCount <= 0 && client->demorecording || client->deltaMessage < client->demoNonDeltaNum){
 
         oldframe = NULL;
         lastframe = 0;
@@ -146,13 +146,13 @@ __cdecl void SV_WriteSnapshotToClient(client_t* client, msg_t* msg){
         client->demowaiting = qfalse;
 
         Com_DPrintf(CON_CHANNEL_SERVER,"Force a nondelta frame for %s for demo recording\n", client->name);
-		// if (client->deltaMessage < client->demoNonDeltaNum) {
-		// 	Com_DPrintf(CON_CHANNEL_SERVER,"%s: Delta request from out of date demo frame - delta frame %i against %i\n",
-		// 		client->name, client->deltaMessage, client->demoNonDeltaNum);
-		// }
+		if (client->deltaMessage < client->demoNonDeltaNum) {
+			Com_DPrintf(CON_CHANNEL_SERVER,"%s: Delta request from out of date demo frame - delta frame %i against %i\n",
+				client->name, client->deltaMessage, client->demoNonDeltaNum);
+		}
 
-	    client->demoDeltaFrameCount = client->demoMaxDeltaFrames;
-		// client->demoNonDeltaNum = client->netchan.outgoingSequence;
+		client->demoNonDeltaNum = client->netchan.outgoingSequence;
+	    client->demoDeltaFrameCount = 1;
     } else {
         oldframe = &client->frames[client->deltaMessage & PACKET_MASK];
         lastframe = client->netchan.outgoingSequence - client->deltaMessage;
