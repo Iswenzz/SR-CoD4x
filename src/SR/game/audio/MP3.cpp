@@ -14,7 +14,7 @@ namespace Iswenzz::CoD4x
 	{
 		FilePath = filepath;
 
-		AsyncCall(this, OpenAsync, &AsyncNull);
+		AsyncWorker(this, OpenAsync, NULL, NULL);
 	}
 
 	void MP3::Open()
@@ -58,8 +58,10 @@ namespace Iswenzz::CoD4x
 
 	void MP3::OpenAsync(uv_work_t *req)
 	{
-		MP3* mp3 = reinterpret_cast<MP3*>(req->data);
+		MP3* mp3 = reinterpret_cast<MP3*>(AsyncWorkerData(req));
 		mp3->Open();
+
+		AsyncWorkerDone(req, ASYNC_SUCCESSFUL);
 	}
 
 	void MP3::Save(std::string path)

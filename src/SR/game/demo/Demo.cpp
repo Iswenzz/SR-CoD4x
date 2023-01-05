@@ -8,7 +8,7 @@ namespace Iswenzz::CoD4x
 		ID = id;
 		Reader = std::make_unique<Iswenzz::CoD4::DM1::DemoReader>(path);
 
-		AsyncCall(this, OpenAsync, &AsyncNull);
+		AsyncWorker(this, OpenAsync, NULL, NULL);
 	}
 
 	Demo::~Demo()
@@ -85,10 +85,12 @@ namespace Iswenzz::CoD4x
 	{
 		uv_mutex_lock(&Mutex);
 
-		Demo *demo = reinterpret_cast<Demo*>(req->data);
+		Demo *demo = reinterpret_cast<Demo*>(AsyncWorkerData(req));
 		demo->Open();
 
 		uv_mutex_unlock(&Mutex);
+
+		AsyncWorkerDone(req, ASYNC_SUCCESSFUL);
 	}
 
 	int Demo::GetVelocity(DemoFrame &frame)

@@ -1,6 +1,6 @@
 [requires]
 CoD4DM1/1.0.2
-CGSC/1.2.0
+CGSC/1.2.1
 speex/1.2.1
 boost/1.78.0
 libuv/1.44.2

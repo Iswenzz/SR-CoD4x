@@ -6,7 +6,7 @@ namespace Iswenzz::CoD4x
 	{
 		FilePath = filepath;
 
-		AsyncCall(this, OpenAsync, &AsyncNull);
+		AsyncWorker(this, OpenAsync, NULL, NULL);
 	}
 
 	void WAV::Open()
@@ -41,8 +41,10 @@ namespace Iswenzz::CoD4x
 
 	void WAV::OpenAsync(uv_work_t *req)
 	{
-		WAV* wav = reinterpret_cast<WAV*>(req->data);
+		WAV* wav = reinterpret_cast<WAV*>(AsyncWorkerData(req));
 		wav->Open();
+
+		AsyncWorkerDone(req, ASYNC_SUCCESSFUL);
 	}
 
 	void WAV::Save(std::string path)

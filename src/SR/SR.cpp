@@ -6,6 +6,7 @@ namespace Iswenzz::CoD4x
 	{
 		Log::WriteLine("[SR] Initialize");
 
+		AsyncInit();
 		Environment::Build();
 		Speex::Initialize();
 		Demo::Initialize();
