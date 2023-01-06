@@ -138,7 +138,7 @@ __cdecl void SV_WriteSnapshotToClient(client_t* client, msg_t* msg){
         lastframe = 0;
         var_x = 0;
 
-    } else if(client->demoDeltaFrameCount <= 0 && client->demorecording || client->deltaMessage < client->demoNonDeltaNum){
+    } else if(client->demorecording && client->demoDeltaFrameCount <= 0) {
 
         oldframe = NULL;
         lastframe = 0;
