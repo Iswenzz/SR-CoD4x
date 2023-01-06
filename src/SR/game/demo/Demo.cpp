@@ -8,7 +8,7 @@ namespace Iswenzz::CoD4x
 		ID = id;
 		Reader = std::make_unique<Iswenzz::CoD4::DM1::DemoReader>(path);
 
-		AsyncWorker(this, OpenAsync, NULL, NULL);
+		AsyncWorker(SR->AsyncHandler, this, OpenAsync, nullptr);
 	}
 
 	Demo::~Demo()

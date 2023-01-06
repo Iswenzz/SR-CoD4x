@@ -24,6 +24,7 @@ namespace Iswenzz::CoD4x
 		std::unique_ptr<class Server> Server;
 		std::unique_ptr<class Netchan> Netchan;
 		std::unique_ptr<class DemoContainer> DemoContainer;
+		async_handler *AsyncHandler;
 
 		std::array<std::shared_ptr<Player>, MAX_CLIENTS> Players{ };
 		std::array<std::shared_ptr<Entity>, MAX_GENTITIES> Entities{ };

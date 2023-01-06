@@ -14,7 +14,7 @@ namespace Iswenzz::CoD4x
 	{
 		FilePath = filepath;
 
-		AsyncWorker(this, OpenAsync, NULL, NULL);
+		AsyncWorker(SR->AsyncHandler, this, OpenAsync, nullptr);
 	}
 
 	void MP3::Open()
