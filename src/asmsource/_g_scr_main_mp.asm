@@ -504,7 +504,7 @@
 	global ScrCmd_Show
 	global GScr_Shutdown
 	global Scr_GetMethod
-	global Scr_LoadLevel
+	; global Scr_LoadLevel
 	global Scr_SetAngles
 	global Scr_SetHealth
 	global Scr_SetOrigin
@@ -13398,24 +13398,24 @@ GScr_Shutdown_10:
 
 
 ;Scr_LoadLevel()
-Scr_LoadLevel:
-	push ebp
-	mov ebp, esp
-	sub esp, 0x18
-	mov eax, [g_scr_data]
-	test eax, eax
-	jnz Scr_LoadLevel_10
-	leave
-	ret
-Scr_LoadLevel_10:
-	mov dword [esp+0x4], 0x0
-	mov [esp], eax
-	call Scr_ExecThread
-	movzx eax, ax
-	mov [esp], eax
-	call Scr_FreeThread
-	leave
-	ret
+; Scr_LoadLevel:
+; 	push ebp
+; 	mov ebp, esp
+; 	sub esp, 0x18
+; 	mov eax, [g_scr_data]
+; 	test eax, eax
+; 	jnz Scr_LoadLevel_10
+; 	leave
+; 	ret
+; Scr_LoadLevel_10:
+; 	mov dword [esp+0x4], 0x0
+; 	mov [esp], eax
+; 	call Scr_ExecThread
+; 	movzx eax, ax
+; 	mov [esp], eax
+; 	call Scr_FreeThread
+; 	leave
+; 	ret
 
 
 ;Scr_SetAngles(gentity_s*, int)

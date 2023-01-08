@@ -331,7 +331,12 @@ void __cdecl GScr_AddEntity(gentity_s *pEnt)
     }
 }
 
-
+void __cdecl Scr_LoadLevel()
+{
+	int32_t result = Scr_ExecThread(g_scr_data.levelscript, 0);
+	Scr_FreeThread(result);
+	Scr_NotifyLevel(GScr_AllocString("map_loaded"), 0);
+}
 
 void __cdecl Scr_PlayerKilled(gentity_s *self, gentity_s *inflictor, gentity_s *attacker, int damage, int meansOfDeath, int iWeapon, const float *vDir, hitLocation_t hitLoc, int psTimeOffset, int deathAnimDuration)
 {

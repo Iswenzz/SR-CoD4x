@@ -755,6 +755,7 @@ void __cdecl Scr_MakeArray( void );
 void __cdecl Scr_AddArrayKeys( unsigned int strIdx );
 void __cdecl Scr_Notify( gentity_t*, unsigned short, unsigned int);
 void __cdecl Scr_NotifyNum( int, unsigned int, unsigned int, unsigned int);
+void __cdecl Scr_NotifyLevel(int constString, unsigned int numArgs);
 
 int __cdecl Scr_GetFunctionHandle( const char* scriptName, const char* labelName);
 short __cdecl Scr_ExecEntThread( gentity_t* ent, int callbackHook, unsigned int numArgs);
