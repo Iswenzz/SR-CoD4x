@@ -6,6 +6,8 @@ namespace Iswenzz::CoD4x
 {
 	DemoContainer::DemoContainer()
 	{
+		Cvar_RegisterInt("sr_demo_version", 2, 0, 100, CVAR_ROM | CVAR_SERVERINFO, "SR demo version");
+
 		RegisterDemoFolder(Environment::ModDirectory / "demos");
 		RegisterDemoFolder(Environment::ModDirectory / "wrs");
 	}
