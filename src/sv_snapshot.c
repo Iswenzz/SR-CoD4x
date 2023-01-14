@@ -138,21 +138,17 @@ __cdecl void SV_WriteSnapshotToClient(client_t* client, msg_t* msg){
         lastframe = 0;
         var_x = 0;
 
-    } else if(client->demorecording && client->demoDeltaFrameCount <= 0) {
-
+    } else if(client->demorecording && !client->demoDeltaFrameCount) {
         oldframe = NULL;
         lastframe = 0;
         var_x = 0;
         client->demowaiting = qfalse;
 
         Com_DPrintf(CON_CHANNEL_SERVER,"Force a nondelta frame for %s for demo recording\n", client->name);
-		if (client->deltaMessage < client->demoNonDeltaNum) {
+		if (client->demoNonDeltaNum > client->deltaMessage) {
 			Com_DPrintf(CON_CHANNEL_SERVER,"%s: Delta request from out of date demo frame - delta frame %i against %i\n",
 				client->name, client->deltaMessage, client->demoNonDeltaNum);
 		}
-
-		client->demoNonDeltaNum = client->netchan.outgoingSequence;
-	    client->demoDeltaFrameCount = 1;
     } else {
         oldframe = &client->frames[client->deltaMessage & PACKET_MASK];
         lastframe = client->netchan.outgoingSequence - client->deltaMessage;
@@ -471,11 +467,16 @@ __cdecl void SV_SendMessageToClient( msg_t *msg, client_t *client ) {
 
 	if(client->demorecording && !client->demowaiting && client->demofile.handleFiles.file.o)
 	{
+		if (client->demoDeltaFrameCount != 1)
+		{
 #ifdef SV_SEND_HUFFMAN
-		SV_WriteDemoMessageForClient(svCompressBuf, len, client);
+			SV_WriteDemoMessageForClient(svCompressBuf, len, client);
 #else
-		SV_WriteDemoMessageForClient(msg->data, msg->cursize, client);
+			SV_WriteDemoMessageForClient(msg->data, msg->cursize, client);
 #endif
+		}
+		if (!client->demoDeltaFrameCount)
+			return;
 	}
 
 	// record information about the message
@@ -1135,12 +1136,27 @@ void SV_SendClientMessages( void ) {
 		if(snapClients[i] == 0)
 			continue;
 
-		SV_BeginClientSnapshot( c, &msg );
+		if (c->demorecording)
+		{
+			if (!c->demoDeltaFrameCount)
+			{
+				msg_t demoMsg;
 
+				SV_BeginClientSnapshot(c, &demoMsg);
+				if(c->state == CS_ACTIVE || c->state == CS_ZOMBIE)
+					SV_WriteSnapshotToClient(c, &demoMsg);
+				SV_EndClientSnapshot(c, &demoMsg);
+
+				c->demoNonDeltaNum = c->netchan.outgoingSequence;
+			}
+			c->demoDeltaFrameCount++;
+		}
+
+		SV_BeginClientSnapshot( c, &msg );
 		if(c->state == CS_ACTIVE || c->state == CS_ZOMBIE)
 			SV_WriteSnapshotToClient( c, &msg );
-
 		SV_EndClientSnapshot(c, &msg);
+
 		SV_SendClientVoiceData( c );
 	}
 
