@@ -23,6 +23,7 @@ namespace Iswenzz::CoD4x
 
 	void DemoPlayer::Stop()
 	{
+		Player->cl->deltaMessage = 0;
 		Demo.reset();
 	}
 
@@ -75,7 +76,7 @@ namespace Iswenzz::CoD4x
 		// EOF
 		if (FrameIndex >= Demo->Frames.size())
 		{
-			Demo.reset();
+			Stop();
 			return false;
 		}
 
