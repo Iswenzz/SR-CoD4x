@@ -38,6 +38,8 @@ namespace Iswenzz::CoD4x
 				if (!LastValidFrame && !Reader->GetCurrentSnapshot().valid)
 					continue;
 
+				GetVersion();
+
 				auto ps = Reader->GetCurrentSnapshot().ps;
 				auto archive = Reader->GetCurrentFrame();
 
@@ -91,6 +93,23 @@ namespace Iswenzz::CoD4x
 		uv_mutex_unlock(&Mutex);
 
 		AsyncWorkerDone(req, ASYNC_SUCCESSFUL);
+	}
+
+	void Demo::GetVersion()
+	{
+		if (Version != 0)
+			return;
+
+		std::vector<std::string> serverInfos = Utils::SplitString(Reader->DemoFile->ConfigStrings[0], '\\');
+		if (serverInfos.empty())
+			return;
+
+		int index = 0;
+		auto it = std::find(serverInfos.begin(), serverInfos.end(), "sr_demo_version");
+		if (it != serverInfos.end())
+			index = std::distance(serverInfos.begin(), it);
+
+		Version = index > 0 ? std::stoi(serverInfos[index + 1]) : 1;
 	}
 
 	int Demo::GetVelocity(DemoFrame &frame)

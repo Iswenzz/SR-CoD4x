@@ -35,10 +35,13 @@ namespace Iswenzz::CoD4x
 	public:
 		std::string ID;
 		std::unique_ptr<Iswenzz::CoD4::DM1::DemoReader> Reader;
+		int Version = 0;
+
 		std::vector<DemoFrame> Frames{ };
 		std::array<std::string, MAX_CONFIGSTRINGS + 1> ConfigStrings{ };
 		std::vector<std::string> Weapons{ };
 		int LastValidFrame = 0;
+
 		bool IsLoaded = false;
 
 		/// @brief Initialize a new Demo.
@@ -60,6 +63,9 @@ namespace Iswenzz::CoD4x
 		/// @brief Interpolate invalid packets.
 		/// @param interpolateFrame - The last valid frame to interpolate the previous invalid frames.
 		void Interpolate(DemoFrame &interpolateFrame);
+
+		/// @brief Get the demo version.
+		void GetVersion();
 
 		/// @brief Get the player velocity.
 		/// @param frame - The current frame.

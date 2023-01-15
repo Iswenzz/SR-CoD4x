@@ -8,6 +8,7 @@ namespace Iswenzz::CoD4x
 		Scr_AddMethod("playdemo", PlayDemo, qfalse);
 		Scr_AddMethod("isdemoplaying", IsDemoPlaying, qfalse);
 		Scr_AddMethod("getspeedrunvelocity", GetSpeedrunVelocity, qfalse);
+		Scr_AddMethod("getdemoversion", GetDemoVersion, qfalse);
 		Scr_AddMethod("getdemoweapon", GetDemoWeapon, qfalse);
 		Scr_AddMethod("getdemorightmove", GetDemoRightMove, qfalse);
 		Scr_AddMethod("getdemoforwardmove", GetDemoForwardMove, qfalse);
@@ -92,6 +93,20 @@ namespace Iswenzz::CoD4x
 			return;
 		}
 		Scr_AddInt(player->DemoPlayer->Velocity);
+	}
+
+	void DemoCommands::GetDemoVersion(scr_entref_t num)
+	{
+		CHECK_PARAMS(0, "Usage: GetDemoVersion()");
+
+		std::shared_ptr<Player> player = Player::Get(num.entnum);
+
+		if (!player)
+		{
+			Scr_ObjectError("Player not found.\n");
+			return;
+		}
+		Scr_AddInt(player->DemoPlayer->Demo ? player->DemoPlayer->Demo->Version : 1);
 	}
 
 	void DemoCommands::GetDemoWeapon(scr_entref_t num)
