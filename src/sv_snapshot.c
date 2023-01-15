@@ -1073,6 +1073,22 @@ static void SV_BuildClientSnapshot( client_t *client ) {
 }
 //#endif
 
+void SV_DemoFrame(client_t* c)
+{
+	if (!c->demoDeltaFrameCount)
+	{
+		msg_t demoMsg;
+
+		SV_BeginClientSnapshot(c, &demoMsg);
+		if(c->state == CS_ACTIVE || c->state == CS_ZOMBIE)
+			SV_WriteSnapshotToClient(c, &demoMsg);
+		SV_EndClientSnapshot(c, &demoMsg);
+
+		c->demoNonDeltaNum = c->netchan.outgoingSequence;
+	}
+	c->demoDeltaFrameCount++;
+}
+
 /*
  =======================
  SV_SendClientMessages
@@ -1137,20 +1153,7 @@ void SV_SendClientMessages( void ) {
 			continue;
 
 		if (c->demorecording)
-		{
-			if (!c->demoDeltaFrameCount)
-			{
-				msg_t demoMsg;
-
-				SV_BeginClientSnapshot(c, &demoMsg);
-				if(c->state == CS_ACTIVE || c->state == CS_ZOMBIE)
-					SV_WriteSnapshotToClient(c, &demoMsg);
-				SV_EndClientSnapshot(c, &demoMsg);
-
-				c->demoNonDeltaNum = c->netchan.outgoingSequence;
-			}
-			c->demoDeltaFrameCount++;
-		}
+			SV_DemoFrame(c);
 
 		SV_BeginClientSnapshot( c, &msg );
 		if(c->state == CS_ACTIVE || c->state == CS_ZOMBIE)
