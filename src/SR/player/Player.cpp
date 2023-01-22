@@ -96,7 +96,7 @@ C_EXTERN
 		if (!IsDefinedClient(cl))
 			return;
 
-		Log::WriteLine("[Player] Connected %d", cl->gentity->s.number);
+		Log::WriteLine("[Player] Connected %d %s", cl->gentity->s.number, cl->name);
 		SR->Players[cl->gentity->s.number] = std::make_shared<Player>(cl);
 	}
 
@@ -105,7 +105,7 @@ C_EXTERN
 		if (!IsDefinedClient(cl))
 			return;
 
-		Log::WriteLine("[Player] Disconnected %d", cl->gentity->client->ps.clientNum);
+		Log::WriteLine("[Player] Disconnected %d %s", cl->gentity->client->ps.clientNum, cl->name);
 	}
 
 	void SR_ClientSpawn(gclient_t *client)
