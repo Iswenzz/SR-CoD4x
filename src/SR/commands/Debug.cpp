@@ -13,6 +13,7 @@ namespace Iswenzz::CoD4x
 		Scr_AddFunction("debug_test", Test, qfalse);
 		Scr_AddFunction("debug_entity", Entity, qfalse);
 		Scr_AddFunction("debug_breakpoint", Breakpoint, qfalse);
+		Scr_AddFunction("debug_scriptusage", ScriptUsage, qfalse);
 	}
 
 	void DebugCommands::Test()
@@ -38,5 +39,12 @@ namespace Iswenzz::CoD4x
 		#else
 			raise(SIGINT);
 		#endif
+	}
+
+	void DebugCommands::ScriptUsage()
+	{
+		CHECK_PARAMS(0, "Usage: debug_scriptusage()");
+
+		Scr_AddInt(gScrVarPub.numScriptObjects + gScrVarPub.numScriptValues);
 	}
 }

@@ -17,5 +17,8 @@ namespace Iswenzz::CoD4x
 
 		/// @brief Debug breakpoint.
 		static void Breakpoint();
+
+		/// @brief Get the variables script usage.
+		static void ScriptUsage();
 	};
 }
