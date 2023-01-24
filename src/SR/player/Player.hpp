@@ -31,7 +31,6 @@ namespace Iswenzz::CoD4x
 		std::vector<int> FrameTimes{ };
 
 		int FPS = 0;
-		int PreviousFPS = 0;
 		int SurfaceFlags = 0;
 
 		bool Voice = false;

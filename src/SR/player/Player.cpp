@@ -34,12 +34,10 @@ namespace Iswenzz::CoD4x
 		if (FrameTimes.empty())
 			return;
 
-		PreviousFPS = FPS;
 		FPS = Utils::VectorAverageMode(FrameTimes);
 		FrameTimes.clear();
 
-		if (FPS == PreviousFPS)
-			cl->clFPS = FPS;
+		cl->clFPS = FPS;
 		cl->clFrames = 0;
 	}
 
