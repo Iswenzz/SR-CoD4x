@@ -2,6 +2,7 @@
 #include "PMove.hpp"
 #include "game/demo/DemoPlayer.hpp"
 
+#define PLAYER_FPS_STACK 20
 #define PMF_PRONING 0x1
 #define PMF_CROUCHING 0x2
 
@@ -28,7 +29,7 @@ namespace Iswenzz::CoD4x
 
 		int CurrentFrameTime = 0;
 		int PreviousFrameTime = 0;
-		std::vector<int> FrameTimes{ };
+		std::array<int, PLAYER_FPS_STACK> FrameTimes = { 0 };
 
 		int FPS = 0;
 		int SurfaceFlags = 0;

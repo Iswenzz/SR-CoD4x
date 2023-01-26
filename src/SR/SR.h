@@ -17,7 +17,7 @@ void SR_Frame();
 void SR_Packet(netadr_t *from, client_t* cl, msg_t *msg);
 void SR_BroadcastVoice(gentity_t *talker, struct VoicePacket_t *packet);
 void SR_ClientSpawn(gclient_t *client);
-void SR_CalculateFrame(playerState_t *ps);
+void SR_CalculateFrame(client_t *cl, usercmd_t *cmd);
 
 void SR_Print(conChannel_t channel, char *msg);
 

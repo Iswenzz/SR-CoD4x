@@ -1121,14 +1121,11 @@ __optimize3 __regparm3 void SV_UserMove( client_t *cl, msg_t *msg, qboolean delt
 	//		if ( cmds[i].serverTime > cmds[cmdCount-1].serverTime ) {
 			continue;   // from just before a map_restart
 		}
-
-		cl->clFrames++;
-
 		SV_ClientThink( cl, &cmds[ i ] );
 
 		PHandler_Event(PLUGINS_ONCLIENTMOVECOMMAND, cl, &cmds[ i ]);
 
-		SR_CalculateFrame(ps);
+		SR_CalculateFrame(cl, cmd);
 
 		if(cl->demorecording && !cl->demowaiting && cl->demofile.handleFiles.file.o)
 			SV_WriteDemoArchive(cl);
