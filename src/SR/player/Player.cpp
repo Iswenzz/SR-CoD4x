@@ -142,6 +142,6 @@ C_EXTERN
 		if (!IsDefinedClient(cl))
 			return;
 
-		SR->Players[cl->gentity->client->ps.clientNum]->CalculateFrame(cmd->serverTime);
+		SR->Players[cl->gentity->client->ps.clientNum]->CalculateFrame(cl->gentity->client->ps.commandTime);
 	}
 }
