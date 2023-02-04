@@ -1051,7 +1051,6 @@ static void SV_BuildClientSnapshot( client_t *client ) {
 
 void SV_DemoEndClientSnapshot(client_t *client, msg_t *msg)
 {
-	int rateMsec;
 	byte svCompressBuf[4 * 65536];
 
 	MSG_WriteByte(msg, svc_EOF);
