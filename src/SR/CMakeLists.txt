@@ -39,6 +39,7 @@ add_subdirectory(commands)
 add_subdirectory(game)
 add_subdirectory(net)
 add_subdirectory(player)
+add_subdirectory(sys)
 add_subdirectory(utils)
 
 target_sources(SR PUBLIC SR.cpp Macros.hpp)

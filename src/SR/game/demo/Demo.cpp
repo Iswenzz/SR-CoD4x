@@ -8,7 +8,7 @@ namespace Iswenzz::CoD4x
 		ID = id;
 		Reader = std::make_unique<Iswenzz::CoD4::DM1::DemoReader>(path);
 
-		AsyncWorker(SR->AsyncHandler, this, OpenAsync, nullptr);
+		SR->ThreadPool->GSC->Worker(this, OpenAsync);
 	}
 
 	Demo::~Demo()

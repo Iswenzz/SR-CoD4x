@@ -13,6 +13,8 @@ namespace Iswenzz::CoD4x
 	{
 		Log::WriteLine("[Server] Spawn server");
 
+		SR->ThreadPool->GSC->Restart();
+
 		SR->Players = { };
 		SR->Entities = { };
 

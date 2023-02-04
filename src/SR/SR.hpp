@@ -3,7 +3,6 @@
 
 #include "game/demo/DemoContainer.hpp"
 #include "game/audio/Speex.hpp"
-
 #include "game/Server.hpp"
 #include "game/Entity.hpp"
 #include "game/Debug.hpp"
@@ -11,9 +10,9 @@
 #include "net/Netchan.hpp"
 #include "commands/Container.hpp"
 #include "player/Player.hpp"
-
 #include "utils/Log.hpp"
-#include "utils/Environment.hpp"
+#include "sys/Environment.hpp"
+#include "sys/ThreadPool.hpp"
 
 namespace Iswenzz::CoD4x
 {
@@ -24,7 +23,7 @@ namespace Iswenzz::CoD4x
 		std::unique_ptr<class Server> Server;
 		std::unique_ptr<class Netchan> Netchan;
 		std::unique_ptr<class DemoContainer> DemoContainer;
-		async_handler *AsyncHandler;
+		std::unique_ptr<class ThreadPool> ThreadPool;
 
 		std::array<std::shared_ptr<Player>, MAX_CLIENTS> Players{ };
 		std::array<std::shared_ptr<Entity>, MAX_GENTITIES> Entities{ };

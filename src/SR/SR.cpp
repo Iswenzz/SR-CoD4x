@@ -13,7 +13,7 @@ namespace Iswenzz::CoD4x
 		Server = std::make_unique<class Server>();
 		Netchan = std::make_unique<class Netchan>();
 		DemoContainer = std::make_unique<class DemoContainer>();
-		AsyncHandler = AsyncInit();
+		ThreadPool = std::make_unique<class ThreadPool>();
 
 		CommandsContainer::Register();
 		Debug::Initialize();
@@ -24,7 +24,6 @@ namespace Iswenzz::CoD4x
 		Log::WriteLine("[SR] Shutdown");
 
 		Speex::Shutdown();
-		AsyncShutdown(AsyncHandler);
 	}
 }
 

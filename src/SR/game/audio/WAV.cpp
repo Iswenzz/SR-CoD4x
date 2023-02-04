@@ -6,7 +6,7 @@ namespace Iswenzz::CoD4x
 	{
 		FilePath = filepath;
 
-		AsyncWorker(SR->AsyncHandler, this, OpenAsync, nullptr);
+		SR->ThreadPool->Main->Worker(this, OpenAsync);
 	}
 
 	void WAV::Open()
