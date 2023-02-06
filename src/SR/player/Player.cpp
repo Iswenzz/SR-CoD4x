@@ -71,6 +71,9 @@ namespace Iswenzz::CoD4x
 
 	void Player::Frame()
 	{
+		if (!IsDefinedClient(cl))
+			return;
+
 		CalculateFPS();
 		VoiceChat();
 
