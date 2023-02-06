@@ -29,6 +29,7 @@ namespace Iswenzz::CoD4x
 				player->Frame();
 		}
 		Voice->Frame();
+		Debug::FPS();
 	}
 }
 
