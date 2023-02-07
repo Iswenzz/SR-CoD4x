@@ -264,6 +264,9 @@ char *CON_Input(void)
 
 		WORD event = inputRecord.Event.KeyEvent.wVirtualKeyCode;
 		char key = inputRecord.Event.KeyEvent.uChar.AsciiChar;
+		if (!key)
+			return NULL;
+
 		// We have something, backspace ?
 		// NOTE: TTimo testing a lot of values .. seems it's the only way to get it to work everywhere
 		if (event == VK_BACK || event == VK_DELETE)
