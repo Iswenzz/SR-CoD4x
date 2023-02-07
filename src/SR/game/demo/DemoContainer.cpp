@@ -17,7 +17,7 @@ namespace Iswenzz::CoD4x
 		Directories.push_back(path.string());
 	}
 
-	bool DemoContainer::RegisterSpeedrunDemo(const std::string &map,
+	int DemoContainer::RegisterSpeedrunDemo(const std::string &map,
 		const std::string &playerId, const std::string &run, const std::string &mode, const std::string &way)
 	{
 		std::vector<std::string> demos{ };
@@ -34,17 +34,21 @@ namespace Iswenzz::CoD4x
 					demos.push_back(entry.path().string());
 			}
 		}
-		if (demos.size())
+		bool exists = demos.size();
+		if (exists)
 		{
 			std::string id = fmt("times_%s_%s", mode.c_str(), way.c_str());
+			auto found = Demos.find(id);
 
-			if (Demos.count(id))
+			if (found != std::end(Demos))
+			{
+				if (!found->second->IsLoaded)
+					return 2;
 				Demos.erase(id);
-
+			}
 			Demos.insert({ id, std::make_shared<Demo>(id, demos.at(0)) });
-
 			Log::WriteLine("[DemoContainer] Register demo %s %s", id.c_str(), demos.at(0).c_str());
 		}
-		return demos.size();
+		return exists;
 	}
 }

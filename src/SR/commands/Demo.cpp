@@ -30,7 +30,7 @@ namespace Iswenzz::CoD4x
 		std::string mode = Scr_GetString(3);
 		std::string way = Scr_GetString(4);
 
-		Scr_AddBool(SR->DemoContainer->RegisterSpeedrunDemo(map, playerId, runId, mode, way));
+		Scr_AddInt(SR->DemoContainer->RegisterSpeedrunDemo(map, playerId, runId, mode, way));
 	}
 
 	void DemoCommands::PlayDemo(scr_entref_t num)
@@ -61,10 +61,7 @@ namespace Iswenzz::CoD4x
 		std::string id = Scr_GetString(0);
 		auto demo = SR->DemoContainer->Demos.find(id);
 
-		if (demo != std::end(SR->DemoContainer->Demos))
-			Scr_AddBool(demo->second->IsLoaded);
-		else
-			Scr_AddBool(qfalse);
+		Scr_AddBool(demo != std::end(SR->DemoContainer->Demos) ? demo->second->IsLoaded : qfalse);
 	}
 
 	void DemoCommands::IsDemoPlaying(scr_entref_t num)

@@ -25,7 +25,7 @@ namespace Iswenzz::CoD4x
 		/// @param run - The run id.
 		/// @param mode - The run mode.
 		/// @param way - The run way.
-		bool RegisterSpeedrunDemo(const std::string &map, const std::string &playerId, const std::string &run,
+		int RegisterSpeedrunDemo(const std::string &map, const std::string &playerId, const std::string &run,
 			const std::string &mode, const std::string &way);
 	};
 }
