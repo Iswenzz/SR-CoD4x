@@ -3,5 +3,6 @@
 #include "player.h"
 
 int SV_GetArchivedClientInfo(int clientNum, int *pArchiveTime, playerState_t *ps, clientState_t *cs, float *origin, int *health, int *otherFlags);
+void SV_UpdateConfigData(client_t* cl, msg_t* msg);
 
 #endif

@@ -138,13 +138,6 @@ __cdecl void SV_WriteSnapshotToClient(client_t* client, msg_t* msg){
         lastframe = 0;
         var_x = 0;
 
-    } else if(client->demorecording && !client->demoDeltaFrameCount) {
-        oldframe = NULL;
-        lastframe = 0;
-        var_x = 0;
-        client->demowaiting = qfalse;
-
-        Com_DPrintf(CON_CHANNEL_SERVER,"Force a nondelta frame for %s for demo recording\n", client->name);
     } else {
         oldframe = &client->frames[client->deltaMessage & PACKET_MASK];
         lastframe = client->netchan.outgoingSequence - client->deltaMessage;
@@ -1049,41 +1042,6 @@ static void SV_BuildClientSnapshot( client_t *client ) {
 
 }
 
-void SV_DemoEndClientSnapshot(client_t *client, msg_t *msg)
-{
-	byte svCompressBuf[4 * 65536];
-
-	MSG_WriteByte(msg, svc_EOF);
-
-#ifdef SV_SEND_HUFFMAN
-	int len;
-	*(int32_t*)svCompressBuf = *(int32_t*)msg->data;
-	len = MSG_WriteBitsCompress(msg->data + 4, (byte*)svCompressBuf + 4, msg->cursize - 4);
-	len += 4;
-#endif
-
-	if (client->demorecording && !client->demowaiting && client->demofile.handleFiles.file.o)
-	{
-#ifdef SV_SEND_HUFFMAN
-		SV_WriteDemoMessageForClient(svCompressBuf, len, client);
-#else
-		SV_WriteDemoMessageForClient(msg->data, msg->cursize, client);
-#endif
-	}
-}
-
-void SV_DemoFrame(client_t* cl)
-{
-	msg_t demoMsg;
-
-	SV_BeginClientSnapshot(cl, &demoMsg);
-	if(cl->state == CS_ACTIVE || cl->state == CS_ZOMBIE)
-		SV_WriteSnapshotToClient(cl, &demoMsg);
-	SV_DemoEndClientSnapshot(cl, &demoMsg);
-
-	cl->demoDeltaFrameCount = 1;
-}
-
 /*
  =======================
  SV_SendClientMessages
@@ -1147,8 +1105,7 @@ void SV_SendClientMessages( void ) {
 		if (snapClients[i] == 0)
 			continue;
 
-		if (c->demorecording)
-			SV_DemoFrame(c);
+		SR_DemoFrame(c);
 
 		SV_BeginClientSnapshot(c, &msg);
 		if(c->state == CS_ACTIVE || c->state == CS_ZOMBIE)

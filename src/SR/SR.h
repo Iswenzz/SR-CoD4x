@@ -21,6 +21,7 @@ void SR_CalculateFrame(client_t *cl, usercmd_t *cmd);
 
 void SR_Print(conChannel_t channel, char *msg);
 
+void SR_DemoFrame(client_t *cl);
 qboolean SR_DemoIsPlaying(client_t *cl);
 void SR_DemoButton(client_t *cl, usercmd_t *cmd);
 void SR_DemoUpdateEntity(client_t *cl, snapshotInfo_t *snapInfo, msg_t* msg, const int time, entityState_t* from, entityState_t* to, qboolean force);
