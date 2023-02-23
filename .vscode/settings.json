@@ -130,7 +130,8 @@
 		"span": "cpp",
 		"stack": "cpp",
 		"*.h++": "cpp",
-		"*.ch": "cpp"
+		"*.ch": "cpp",
+		"ranges": "cpp"
 	},
 	"C_Cpp.errorSquiggles": "Disabled"
 }

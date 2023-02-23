@@ -29,7 +29,7 @@ namespace Iswenzz::CoD4x
 
 		int CurrentFrameTime = 0;
 		int PreviousFrameTime = 0;
-		std::array<int, PLAYER_FPS_STACK> FrameTimes = { 0 };
+		std::vector<int> FrameTimes{ };
 
 		int FPS = 0;
 		int SurfaceFlags = 0;
