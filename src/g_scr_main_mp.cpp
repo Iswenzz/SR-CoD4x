@@ -139,6 +139,7 @@ void __cdecl GScr_PlaceSpawnPoint(scr_entref_t entref)
       (signed int)pEnt->r.currentOrigin[2]);
   }
   G_SetOrigin(pEnt, vStart);
+  Scr_AddBool(!trace.allsolid);
 }
 
 
@@ -431,7 +432,7 @@ unsigned int __cdecl GScr_AllocString(const char *s)
   unsigned int stringVal;
 
   stringVal = Scr_AllocString(s);
-  
+
   return stringVal;
 
 }
