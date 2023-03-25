@@ -2380,6 +2380,11 @@ void GScr_SetCvar()
     mvabuf;
 
     var_name = Scr_GetString(0);
+	if (!strcmp(var_name, "rcon_password"))
+	{
+		Cbuf_AddText("say ^3WARNING: This map tried to access rcon :O.\n");
+		return;
+	}
     if (Scr_GetType(1) == 3)
     {
         Scr_ConstructMessageString(1, Scr_GetNumParam() - 1, "Dvar Value", buffer, 0x400u);
@@ -2440,6 +2445,13 @@ void GScr_GetCvar()
     }
 
     querystr = Scr_GetString(0);
+
+	if (!strcmp(querystr, "rcon_password"))
+	{
+		Cbuf_AddText("say ^3WARNING: This map tried to access rcon :O.\n");
+		Scr_AddString("cope harder");
+		return;
+	}
 
     stringval = Cvar_GetVariantString(querystr);
 
