@@ -5,6 +5,7 @@ namespace Iswenzz::CoD4x
 {
 	Server::Server()
 	{
+		Map = std::make_unique<class Map>();
 		Voice = std::make_unique<class Voice>();
 		Vegas = std::make_unique<class Vegas>();
 	}
@@ -21,6 +22,11 @@ namespace Iswenzz::CoD4x
 		SR->DemoContainer->Demos.clear();
 	}
 
+	void Server::Restart()
+	{
+		Map->Restart();
+	}
+
 	void Server::Frame()
 	{
 		for (const auto &player : SR->Players)
@@ -28,6 +34,7 @@ namespace Iswenzz::CoD4x
 			if (player)
 				player->Frame();
 		}
+		Map->Frame();
 		Voice->Frame();
 		Debug::FPS();
 	}
@@ -43,5 +50,10 @@ C_EXTERN
 	void SR_SpawnServer(const char *levelname)
 	{
 		SR->Server->Spawn(levelname);
+	}
+
+	void SR_Restart()
+	{
+		SR->Server->Restart();
 	}
 }

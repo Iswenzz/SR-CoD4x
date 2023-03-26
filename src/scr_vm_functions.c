@@ -3630,3 +3630,27 @@ void GScr_StrReplace()
     assemblybuf[assemblypos] = 0;
     Scr_AddString(assemblybuf);
 }
+
+void Scr_AmbientPlay()
+{
+    int params = Scr_GetNumParam();
+	if (params < 1)
+		Scr_Error("USAGE: ambientPlay(<alias>, <fadetime>);");
+
+    const char* alias = Scr_GetString(0);
+	int volume = level.time;
+
+	if (alias[0] == '\0')
+		Scr_Error("ambientPlay: alias name cannot be the empty string... use stop or fade version");
+
+	if (params == 2)
+	{
+		float fadeTime = Scr_GetFloat(1);
+		if (fadeTime < 0)
+			Scr_Error("ambientPlay: fade time must be >= 0");
+
+		volume += (int)(floorf((fadeTime * 1000) + 0.5f));
+	}
+	SR_SetMapAmbient(alias, volume);
+	SV_SetConfigstring(0x335, va("n\\%s\\t\\%i", alias, volume));
+}

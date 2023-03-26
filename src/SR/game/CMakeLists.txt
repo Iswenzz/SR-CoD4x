@@ -6,6 +6,8 @@ target_sources(SR PUBLIC
 	Debug.cpp
 	Entity.hpp
 	Entity.cpp
+	Map.hpp
+	Map.cpp
 	Server.hpp
 	Server.cpp
 	Vegas.hpp

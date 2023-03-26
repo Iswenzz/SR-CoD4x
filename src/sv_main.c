@@ -3758,6 +3758,7 @@ void SV_MapRestart( qboolean fastRestart ){
 
     sv.restarting = qfalse;
     SV_PostFastRestart();
+	SR_Restart();
 }
 
 

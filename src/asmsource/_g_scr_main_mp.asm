@@ -324,7 +324,6 @@
 	global Scr_MusicPlay
 	global Scr_MusicStop
 	global Scr_SoundFade
-	global Scr_AmbientPlay
 	global Scr_AmbientStop
 	global Scr_PrecacheModel
 	global Scr_PrecacheShellShock
@@ -900,8 +899,8 @@ GScr_line_80:
 	xor edi, edi
 	jmp GScr_line_60
 	nop
-	
-	
+
+
 GScr_line_jumptab_0:
 	dd GScr_line_10
 	dd GScr_line_10
@@ -3964,82 +3963,6 @@ Scr_SoundFade_20:
 Scr_SoundFade_10:
 	xor eax, eax
 	jmp Scr_SoundFade_20
-
-
-;Scr_AmbientPlay()
-Scr_AmbientPlay:
-	push ebp
-	mov ebp, esp
-	push esi
-	push ebx
-	sub esp, 0x30
-	call Scr_GetNumParam
-	cmp eax, 0x1
-	jz Scr_AmbientPlay_10
-	cmp eax, 0x2
-	jz Scr_AmbientPlay_20
-	mov dword [esp], _cstring_usage_ambientpla
-	call va
-	mov [esp], eax
-	call Scr_Error
-	add esp, 0x30
-	pop ebx
-	pop esi
-	pop ebp
-	ret
-Scr_AmbientPlay_10:
-	xor ebx, ebx
-	mov dword [esp], 0x0
-	call Scr_GetString
-	mov esi, eax
-	cmp byte [eax], 0x0
-	jz Scr_AmbientPlay_30
-Scr_AmbientPlay_50:
-	test ebx, ebx
-	js Scr_AmbientPlay_40
-Scr_AmbientPlay_60:
-	mov eax, level
-	add ebx, [eax+0x1ec]
-	mov [esp+0x8], ebx
-	mov [esp+0x4], esi
-	mov dword [esp], _cstring_nsti
-	call va
-	mov [esp+0x4], eax
-	mov dword [esp], 0x335
-	call SV_SetConfigstring
-	add esp, 0x30
-	pop ebx
-	pop esi
-	pop ebp
-	ret
-Scr_AmbientPlay_20:
-	mov dword [esp], 0x1
-	call Scr_GetFloat
-	fstp dword [ebp-0x1c]
-	movss xmm0, dword [ebp-0x1c]
-	mulss xmm0, [_float_1000_00000000]
-	addss xmm0, [_float_0_50000000]
-	movss [esp], xmm0
-	call floorf
-	fstp dword [ebp-0xc]
-	cvttss2si ebx, [ebp-0xc]
-	mov dword [esp], 0x0
-	call Scr_GetString
-	mov esi, eax
-	cmp byte [eax], 0x0
-	jnz Scr_AmbientPlay_50
-Scr_AmbientPlay_30:
-	mov dword [esp], _cstring_ambientplay_alia
-	call va
-	mov [esp], eax
-	call Scr_Error
-	jmp Scr_AmbientPlay_50
-Scr_AmbientPlay_40:
-	mov dword [esp], _cstring_ambientplay_fade
-	call va
-	mov [esp], eax
-	call Scr_Error
-	jmp Scr_AmbientPlay_60
 
 
 ;Scr_AmbientStop()
