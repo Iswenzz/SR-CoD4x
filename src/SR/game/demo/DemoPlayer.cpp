@@ -14,7 +14,6 @@ namespace Iswenzz::CoD4x
 	{
 		Demo = demo;
 		FrameIndex = 0;
-		StartTime = Player->CurrentFrameTime;
 
 		Entity = G_Spawn();
     	Scr_SetString(&Entity->classname, scr_const.script_origin);

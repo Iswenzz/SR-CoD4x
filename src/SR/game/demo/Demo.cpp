@@ -45,7 +45,7 @@ namespace Iswenzz::CoD4x
 
 				frame.valid = Reader->GetCurrentSnapshot().valid;
 				frame.chat = ProcessChat();
-				frame.time = Reader->GetTimeMilliseconds();
+				frame.time = previousFrame.time + 50;
 				frame.fps = Reader->GetFPS();
 				frame.ps = *reinterpret_cast<playerState_t *>(&ps);
 				frame.velocity = GetVelocity(frame);

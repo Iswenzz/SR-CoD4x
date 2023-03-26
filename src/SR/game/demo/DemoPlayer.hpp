@@ -15,7 +15,6 @@ namespace Iswenzz::CoD4x
 		gentity_t *Entity;
 		DemoFrame CurrentFrame;
 
-		int StartTime = 0;
 		int FrameIndex = 0;
 		int PreviousFrameIndex = 0;
 
