@@ -3695,6 +3695,7 @@ void SV_MapRestart( qboolean fastRestart ){
     }
     Q_strncpyz(sv.gametype, sv_g_gametype->string, sizeof(sv.gametype));
     int pers = G_GetSavePersist();
+	SR_Restart();
 
 
     if(!fastRestart)
@@ -3758,7 +3759,6 @@ void SV_MapRestart( qboolean fastRestart ){
 
     sv.restarting = qfalse;
     SV_PostFastRestart();
-	SR_Restart();
 }
 
 
