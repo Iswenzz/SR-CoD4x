@@ -5,11 +5,13 @@
 #include "game/audio/MP3.hpp"
 
 #include <filesystem>
+#include <map>
 
 namespace Iswenzz::CoD4x
 {
 	void GameCommands::Register()
 	{
+		Scr_AddFunction("legacyweapon", LegacyWeapon, qfalse);
 		Scr_AddFunction("isprecached", IsPrecached, qfalse);
 		Scr_AddFunction("radioplay", RadioPlay, qfalse);
 	}
@@ -27,6 +29,34 @@ namespace Iswenzz::CoD4x
 			Scr_AddInt(G_FindMaterial(name) >= 0);
 		else
 			Scr_AddInt(-1);
+	}
+
+	void GameCommands::LegacyWeapon()
+	{
+		CHECK_PARAMS(1, "Usage: LegacyWeapon(<name>)");
+
+		static const std::map<std::string, std::string> legacyWeapons = {
+			{ "brecci_mp", "winchester1200_grip_mp" },
+			{ "remington700_silencer_mp", "winchester1200_reflex_mp" },
+			{ "mg42_mp", "mp5_reflex_mp" },
+			{ "chainsaw_mp", "mp5_acog_mp" },
+			{ "beretta_tactical_mp", "mp5_silencer_mp" },
+			{ "olympia_mp", "saw_acog_mp" },
+			{ "shovel_mp", "saw_mp" },
+			{ "wavegun_mp", "m60e4_grip_mp" },
+			{ "fn_rpg_mp", "m60e4_acog_mp" },
+			{ "bt_rpg_mp", "m60e4_reflex_mp" },
+			{ "pps42_mp", "saw_reflex_mp" },
+			{ "shop_mp", "cobra_FFAR_mp" },
+			{ "vip_mp", "cobra_20mm_mp" },
+			{ "rtd_mp", "hind_FFAR_mp" },
+			{ "owner_mp", "airstrike_mp" },
+			{ "shepherd_mp", "artillery_mp" }
+		};
+		const char *name = Scr_GetString(0);
+		auto newName = legacyWeapons.find(name);
+
+		Scr_AddString(newName != std::end(legacyWeapons) ? newName->second.c_str() : name);
 	}
 
 	void GameCommands::RadioPlay()
