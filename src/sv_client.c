@@ -1121,7 +1121,7 @@ __optimize3 __regparm3 void SV_UserMove( client_t *cl, msg_t *msg, qboolean delt
 	//		if ( cmds[i].serverTime > cmds[cmdCount-1].serverTime ) {
 			continue;   // from just before a map_restart
 		}
-		SR_CalculateFrame(cl, cmd);
+		SR_CalculateFrame(cl, &cmds[i]);
 
 		SV_ClientThink( cl, &cmds[ i ] );
 		PHandler_Event(PLUGINS_ONCLIENTMOVECOMMAND, cl, &cmds[ i ]);

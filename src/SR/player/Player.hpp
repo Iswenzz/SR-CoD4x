@@ -27,9 +27,8 @@ namespace Iswenzz::CoD4x
 		std::unique_ptr<PMove> PMove;
 		std::unique_ptr<DemoPlayer> DemoPlayer;
 
-		int CurrentFrameTime = 0;
-		int PreviousFrameTime = 0;
-		std::vector<int> FrameTimes{ };
+		int FrameStackIndex = 0;
+		std::array<int, PLAYER_FPS_STACK> FrameTimes{ };
 
 		int FPS = 0;
 		int SurfaceFlags = 0;

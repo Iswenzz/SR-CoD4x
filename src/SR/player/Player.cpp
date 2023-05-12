@@ -24,24 +24,35 @@ namespace Iswenzz::CoD4x
 
 	void Player::CalculateFrame(int time)
 	{
-		if (time > CurrentFrameTime)
-		{
-			PreviousFrameTime = CurrentFrameTime;
-			CurrentFrameTime = time;
-			FrameTimes.push_back(1000 / (CurrentFrameTime - PreviousFrameTime));
-		}
+		FrameTimes[FrameStackIndex++ % PLAYER_FPS_STACK] = time;
+		cl->clFrames++;
 	}
 
 	void Player::CalculateFPS()
 	{
-		if (FrameTimes.empty())
-			return;
+		int i = 0;
+		int maxOccurence = -1;
+		int value = -1;
 
-		FPS = Utils::VectorAverageMode(FrameTimes);
-		FrameTimes.clear();
-
-		cl->clFPS = FPS;
+		int possibleValues[1000] = { 0 };
+		for (i = 0; i < PLAYER_FPS_STACK; i++)
+		{
+			if (FrameTimes[i] <= 0 || FrameTimes[i] >= 1000)
+				continue;
+			possibleValues[FrameTimes[i]]++;
+		}
+		for (i = 0; i < 1000; i++)
+		{
+			if (possibleValues[i] == 0 || possibleValues[i] < maxOccurence)
+				continue;
+			maxOccurence = possibleValues[i];
+			value = i;
+		}
+		if (value > 0)
+			cl->clFPS = static_cast<int>(1000 / value);
 		cl->clFrames = 0;
+		FrameStackIndex = 0;
+		std::fill(this->FrameTimes.begin(), this->FrameTimes.end(), 0);
 	}
 
 	void Player::Packet(msg_t *msg)
@@ -125,6 +136,7 @@ C_EXTERN
 		if (!IsDefinedClient(cl))
 			return;
 
-		SR->Players[cl->gentity->client->ps.clientNum]->CalculateFrame(cl->gentity->client->ps.commandTime);
+		int time = cmd->serverTime - cl->lastUsercmd.serverTime;
+		SR->Players[cl->gentity->client->ps.clientNum]->CalculateFrame(time);
 	}
 }
