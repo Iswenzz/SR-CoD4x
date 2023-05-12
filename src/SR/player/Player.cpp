@@ -120,7 +120,7 @@ C_EXTERN
 		if (!IsDefinedClient(cl))
 			return;
 
-		Log::WriteLine("[Player] Disconnected %d %s", cl->gentity->client->ps.clientNum, cl->name);
+		Log::WriteLine("[Player] Disconnected %d %s", cl->gentity->s.number, cl->name);
 	}
 
 	void SR_ClientSpawn(gclient_t *client)
@@ -137,6 +137,6 @@ C_EXTERN
 			return;
 
 		int time = cmd->serverTime - cl->lastUsercmd.serverTime;
-		SR->Players[cl->gentity->client->ps.clientNum]->CalculateFrame(time);
+		SR->Players[cl->gentity->s.number]->CalculateFrame(time);
 	}
 }
