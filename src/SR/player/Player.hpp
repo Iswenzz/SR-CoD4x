@@ -18,6 +18,8 @@ C_EXTERN
 namespace Iswenzz::CoD4x
 {
 	/// @brief Player class.
+	/// @remarks cl->gentity->s.number is the client number.
+	/// @remarks cl->gentity->client->ps.clientNumber is the spectator client or client if not spectating.
 	class Player
 	{
 	public:

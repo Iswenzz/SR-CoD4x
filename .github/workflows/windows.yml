@@ -25,6 +25,8 @@ jobs:
 
     - name: Conan
       uses: turtlebrowser/get-conan@main
+      with:
+        version: 1.59.0
 
     - name: Checkout
       uses: actions/checkout@v2
