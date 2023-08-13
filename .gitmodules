@@ -4,3 +4,9 @@
 [submodule "plugins/gsclib"]
 	path = plugins/gsclib
 	url = git@github.com:Iswenzz/gsclib.git
+[submodule "deps/CoD4DM1"]
+	path = deps/CoD4DM1
+	url = git@github.com:Iswenzz/CoD4-DM1
+[submodule "deps/speex"]
+	path = deps/speex
+	url = git@github.com:Iswenzz/speex
