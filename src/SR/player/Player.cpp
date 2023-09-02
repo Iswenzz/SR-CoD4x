@@ -109,4 +109,9 @@ namespace Iswenzz::CoD4x
 	{
 		return IsDefinedClientNum(num) ? SR->Players[num] : nullptr;
 	}
+
+	void Player::Add(client_t *cl)
+	{
+		SR->Players[cl->gentity->s.number] = std::make_shared<Player>(cl);
+	}
 }

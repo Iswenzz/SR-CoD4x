@@ -18,7 +18,7 @@ C_EXTERN
 		if (!IsDefinedClient(cl))
 			return;
 
-		SR->Players[cl->gentity->s.number] = std::make_shared<Player>(cl);
+		Player::Add(cl);
 	}
 
 	void SR_FreePlayer(client_t *cl)
@@ -26,7 +26,7 @@ C_EXTERN
 		if (!IsDefinedClient(cl))
 			return;
 
-		SR->Players[cl->gentity->s.number]->Disconnect();
+		Player::Get(cl->gentity->s.number)->Disconnect();
 	}
 
 	void SR_ClientSpawn(gclient_t *client)
@@ -34,7 +34,7 @@ C_EXTERN
 		if (!IsDefinedGClient(client))
 			return;
 
-		SR->Players[client->ps.clientNum]->Spawn();
+		Player::Get(client->ps.clientNum)->Spawn();
 	}
 
 	void SR_CalculateFrame(client_t *cl, usercmd_t *cmd)
@@ -43,27 +43,20 @@ C_EXTERN
 			return;
 
 		int time = cmd->serverTime - cl->lastUsercmd.serverTime;
-		SR->Players[cl->gentity->s.number]->CalculateFrame(time);
+		Player::Get(cl->gentity->s.number)->CalculateFrame(time);
 	}
 
 	void SR_InitializeEntity(gentity_t *ent)
 	{
-		if (!ent) return;
-
-		int num = ent->s.number;
-		if (num < 0 || num >= MAX_GENTITIES)
+		if (!IsDefinedEntity(ent))
 			return;
 
-		SR->Entities[num] = std::make_shared<Entity>(ent);
+		Entity::Add(ent);
 	}
 
 	void SR_SetMapAmbient(const char *alias, int volume)
 	{
-		if (SR->Server->Map->AmbientStarted)
-			return;
-
-		SR->Server->Map->AmbientAlias = alias;
-		SR->Server->Map->AmbientVolume = volume + 1000;
+		SR->Server->Map->SetAmbient(alias, volume);
 	}
 
 	void SR_Frame()
@@ -91,13 +84,13 @@ C_EXTERN
 		if (!IsDefinedClient(cl))
 			return qfalse;
 
-		auto player = SR->Players[cl->gentity->client->ps.clientNum];
+		auto player = Player::Get(cl->gentity->client->ps.clientNum);
 		return static_cast<qboolean>(player && !!player->DemoPlayer->Demo);
 	}
 
 	void SR_DemoUpdateEntity(client_t *cl, snapshotInfo_t *snapInfo, msg_t* msg, const int time, entityState_t* from, entityState_t* to, qboolean force)
 	{
-		auto player = SR->Players[cl->gentity->client->ps.clientNum];
+		auto player = Player::Get(cl->gentity->client->ps.clientNum);
 		player->DemoPlayer->UpdateEntity(snapInfo, msg, time, from, to, force);
 	}
 
@@ -128,27 +121,27 @@ C_EXTERN
 
 	OPTIMIZE3 int Pmove_GetSpeed(playerState_t *ps)
 	{
-		return SR->Players[ps->clientNum]->PMove->GetSpeed();
+		return Player::Get(ps->clientNum)->PMove->GetSpeed();
 	}
 
 	float Pmove_GetSpeedScale(playerState_t *ps)
 	{
-		return SR->Players[ps->clientNum]->PMove->GetSpeedScale();
+		return Player::Get(ps->clientNum)->PMove->GetSpeedScale();
 	}
 
 	OPTIMIZE3 int Pmove_GetGravity(playerState_t *ps)
 	{
-		return SR->Players[ps->clientNum]->PMove->GetGravity();
+		return Player::Get(ps->clientNum)->PMove->GetGravity();
 	}
 
 	float Pmove_GetJumpHeight(unsigned int num)
 	{
-		return SR->Players[num]->PMove->GetJumpHeight();
+		return Player::Get(num)->PMove->GetJumpHeight();
 	}
 
 	void Jump_UpdateSurface(playerState_s *ps, pml_t *pml)
 	{
-		SR->Players[ps->clientNum]->PMove->JumpUpdateSurface(pml);
+		Player::Get(ps->clientNum)->PMove->JumpUpdateSurface(pml);
 	}
 
 	OPTIMIZE3 void StuckInClient(gentity_t* gen) { }

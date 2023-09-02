@@ -35,7 +35,7 @@ namespace Iswenzz::CoD4x
 				if (cl && cl->state == CS_ACTIVE && entity->client
 					&& entity->client->sess.sessionState != SESS_STATE_INTERMISSION)
 				{
-					if (!SR->Players[i]->RadioEnabled)
+					if (!Player::Get(i)->RadioEnabled)
 						continue;
 
 					packet.talker = i;
@@ -83,7 +83,7 @@ namespace Iswenzz::CoD4x
 				if (!voice_global->boolean && !OnSameTeam(entity, talker))
 					continue;
 
-				if (entity->client->sess.sessionState == SESS_STATE_PLAYING && SR->Players[i]->ProximityEnabled)
+				if (entity->client->sess.sessionState == SESS_STATE_PLAYING && Player::Get(i)->ProximityEnabled)
 				{
 					std::vector<short> proximityData = Proximity(voiceData, talker, entity);
 					VoicePacket_t newPacket = Speex::Encode(proximityData);

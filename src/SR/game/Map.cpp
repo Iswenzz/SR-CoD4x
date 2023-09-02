@@ -19,6 +19,15 @@ namespace Iswenzz::CoD4x
 		SV_SetConfigstring(0x335, fmt("n\\%s\\t\\%i", AmbientAlias.c_str(), AmbientVolume));
 	}
 
+	void Map::SetAmbient(std::string alias, int volume)
+	{
+		if (AmbientStarted)
+			return;
+
+		AmbientAlias = alias;
+		AmbientVolume = volume + 1000;
+	}
+
 	void Map::Frame()
 	{
 		Ambient();

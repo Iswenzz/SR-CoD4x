@@ -10,8 +10,7 @@ namespace Iswenzz::CoD4x
 		if (!IsDefinedClient(cl))
 			return;
 
-		auto player = SR->Players[cl->gentity->s.number];
-		if (player)
-			player->Packet(msg);
+		auto player = Player::Get(cl->gentity->s.number);
+		if (player) player->Packet(msg);
 	}
 }

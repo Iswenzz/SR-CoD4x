@@ -21,6 +21,11 @@ namespace Iswenzz::CoD4x
 		/// @brief Map ambient sound.
 		void Ambient();
 
+		/// @brief Set the map ambient sound.
+		/// @param alias - The sound alias.
+		/// @param volume - The volume.
+		void SetAmbient(std::string alias, int volume);
+
 		/// @brief The map render frame.
 		void Frame();
 	};

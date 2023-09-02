@@ -75,5 +75,9 @@ namespace Iswenzz::CoD4x
 		/// @brief Get a player.
 		/// @param num - The player num.
 		static std::shared_ptr<Player> Get(int num);
+
+		/// @brief Add a new player.
+		/// @param cl - The client.
+		static void Add(client_t *cl);
 	};
 }
