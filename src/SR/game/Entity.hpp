@@ -1,10 +1,5 @@
 #pragma once
-#include "Macros.hpp"
-
-C_EXTERN
-{
-	#include <entity.h>
-}
+#include <entity.h>
 
 namespace Iswenzz::CoD4x
 {

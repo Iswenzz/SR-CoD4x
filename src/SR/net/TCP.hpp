@@ -1,14 +1,8 @@
 #pragma once
-#include "Macros.hpp"
-
 #include <string>
 #include <memory>
-
-C_EXTERN
-{
-	#include <msg.h>
-	#include <net_game.h>
-}
+#include <msg.h>
+#include <net_game.h>
 
 namespace Iswenzz::CoD4x
 {

@@ -2,10 +2,7 @@
 #include "net/TCP.hpp"
 #include "player/Player.hpp"
 
-C_EXTERN
-{
-	#include <cvar.h>
-}
+#include <cvar.h>
 
 namespace Iswenzz::CoD4x
 {
@@ -13,7 +10,7 @@ namespace Iswenzz::CoD4x
 	class Vegas : public TCP
 	{
 	public:
-		inline static cvar_t* IsEnabled;
+		static inline cvar_t* IsEnabled;
 
 		hudelem_color_t Color = { 0 };
 		int Material = 0;
@@ -42,11 +39,4 @@ namespace Iswenzz::CoD4x
 		/// @param player
 		void Frame(Player *player);
 	};
-}
-
-C_EXTERN
-{
-	qboolean OnConnectVegas(netadr_t *from, msg_t *msg, int *connectionId);
-	void OnDisconnectVegas(netadr_t *from, int connectionId);
-	int OnMessageVegas(netadr_t *from, msg_t *msg, int connectionId);
 }

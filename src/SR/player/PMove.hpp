@@ -1,13 +1,8 @@
 #pragma once
-#include "Macros.hpp"
 #include <memory>
-
-C_EXTERN
-{
-	#include <g_shared.h>
-	#include <g_sv_shared.h>
-	#include <bg_public.h>
-}
+#include <g_shared.h>
+#include <g_sv_shared.h>
+#include <bg_public.h>
 
 namespace Iswenzz::CoD4x
 {

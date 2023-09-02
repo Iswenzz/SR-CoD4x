@@ -7,6 +7,8 @@ namespace Iswenzz::CoD4x
 {
 	Player::Player(client_t *cl)
 	{
+		Log::WriteLine("[Player] Connected %d %s", cl->gentity->s.number, cl->name);
+
 		this->cl = cl;
 		this->cl->clFrames = 0;
 		this->ps = &cl->gentity->client->ps;
@@ -15,6 +17,11 @@ namespace Iswenzz::CoD4x
 		this->PMove = std::make_unique<class PMove>(this);
 
 		std::fill(this->FrameTimes.begin(), this->FrameTimes.end(), 0);
+	}
+
+	void Player::Disconnect()
+	{
+		Log::WriteLine("[Player] Disconnected %d %s", cl->gentity->s.number, cl->name);
 	}
 
 	void Player::Spawn()
@@ -101,42 +108,5 @@ namespace Iswenzz::CoD4x
 	std::shared_ptr<Player> Player::Get(int num)
 	{
 		return IsDefinedClientNum(num) ? SR->Players[num] : nullptr;
-	}
-}
-
-C_EXTERN
-{
-	void SR_InitializePlayer(client_t *cl)
-	{
-		if (!IsDefinedClient(cl))
-			return;
-
-		Log::WriteLine("[Player] Connected %d %s", cl->gentity->s.number, cl->name);
-		SR->Players[cl->gentity->s.number] = std::make_shared<Player>(cl);
-	}
-
-	void SR_FreePlayer(client_t *cl)
-	{
-		if (!IsDefinedClient(cl))
-			return;
-
-		Log::WriteLine("[Player] Disconnected %d %s", cl->gentity->s.number, cl->name);
-	}
-
-	void SR_ClientSpawn(gclient_t *client)
-	{
-		if (!IsDefinedGClient(client))
-			return;
-
-		SR->Players[client->ps.clientNum]->Spawn();
-	}
-
-	void SR_CalculateFrame(client_t *cl, usercmd_t *cmd)
-	{
-		if (!IsDefinedClient(cl))
-			return;
-
-		int time = cmd->serverTime - cl->lastUsercmd.serverTime;
-		SR->Players[cl->gentity->s.number]->CalculateFrame(time);
 	}
 }

@@ -39,21 +39,3 @@ namespace Iswenzz::CoD4x
 		Debug::FPS();
 	}
 }
-
-C_EXTERN
-{
-	void SR_Frame()
-	{
-		SR->Server->Frame();
-	}
-
-	void SR_SpawnServer(const char *levelname)
-	{
-		SR->Server->Spawn(levelname);
-	}
-
-	void SR_Restart()
-	{
-		SR->Server->Restart();
-	}
-}

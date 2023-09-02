@@ -1,5 +1,4 @@
 #pragma once
-#include "Macros.hpp"
 #include "Audio.hpp"
 #include "Speex.hpp"
 
@@ -8,11 +7,7 @@
 #include <string>
 #include <vector>
 #include <cstring>
-
-C_EXTERN
-{
-	#include <server.h>
-}
+#include <server.h>
 
 namespace Iswenzz::CoD4x
 {

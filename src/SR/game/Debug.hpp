@@ -1,18 +1,13 @@
 #pragma once
-#include "Macros.hpp"
-
-C_EXTERN
-{
-	#include <cvar.h>
-}
+#include <cvar.h>
 
 namespace Iswenzz::CoD4x
 {
 	class Debug
 	{
 	public:
-		static inline cvar_t* DebugFrameTime;
-		static inline cvar_t* DebugPacketSize;
+		static inline cvar_t *DebugFrameTime;
+		static inline cvar_t *DebugPacketSize;
 
 		static inline std::chrono::high_resolution_clock::time_point FrameTime{ };
 		static inline std::chrono::high_resolution_clock::time_point PreviousFrameTime{ };

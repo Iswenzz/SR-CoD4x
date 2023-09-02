@@ -1,11 +1,6 @@
 #pragma once
-#include "Macros.hpp"
-
-C_EXTERN
-{
-	#include <netchan.h>
-	#include <server.h>
-}
+#include <netchan.h>
+#include <server.h>
 
 namespace Iswenzz::CoD4x
 {
@@ -21,6 +16,6 @@ namespace Iswenzz::CoD4x
 		/// @param from - The address.
 		/// @param cl - The client.
 		/// @param msg - The packet message.
-		void Packet(netadr_t *from, client_t* cl, msg_t *msg);
+		void Packet(netadr_t *from, client_t *cl, msg_t *msg);
 	};
 }

@@ -1,12 +1,7 @@
 #pragma once
-#include "Macros.hpp"
+#include <filesystem.h>
 #include <filesystem>
 #include <string>
-
-C_EXTERN
-{
-	#include <filesystem.h>
-}
 
 namespace Iswenzz::CoD4x
 {
@@ -14,8 +9,8 @@ namespace Iswenzz::CoD4x
 	class Environment
 	{
 	public:
-		inline static std::filesystem::path BaseDirectory;
-		inline static std::filesystem::path ModDirectory;
+		static inline std::filesystem::path BaseDirectory;
+		static inline std::filesystem::path ModDirectory;
 
 		/// @brief Build the environment.
 		static void Build();

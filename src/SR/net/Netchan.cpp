@@ -1,10 +1,7 @@
 #include "Netchan.hpp"
 #include "SR.hpp"
 
-C_EXTERN
-{
-	#include <huffman.h>
-}
+#include <huffman.h>
 
 namespace Iswenzz::CoD4x
 {
@@ -16,13 +13,5 @@ namespace Iswenzz::CoD4x
 		auto player = SR->Players[cl->gentity->s.number];
 		if (player)
 			player->Packet(msg);
-	}
-}
-
-C_EXTERN
-{
-	void SR_Packet(netadr_t *from, client_t* cl, msg_t *msg)
-	{
-		SR->Netchan->Packet(from, cl, msg);
 	}
 }

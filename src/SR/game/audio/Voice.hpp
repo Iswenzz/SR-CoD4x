@@ -1,18 +1,13 @@
 #pragma once
-#include "Macros.hpp"
 #include "Streamable.hpp"
 
 #include <vector>
 #include <map>
+#include <server.h>
 
-C_EXTERN
-{
-	#include <server.h>
-}
-
-extern cvar_t* voice_localEcho;
-extern cvar_t* voice_global;
-extern cvar_t* voice_deadChat;
+extern cvar_t *voice_localEcho;
+extern cvar_t *voice_global;
+extern cvar_t *voice_deadChat;
 
 namespace Iswenzz::CoD4x
 {

@@ -101,11 +101,3 @@ namespace Iswenzz::CoD4x
 		Stream();
 	}
 }
-
-C_EXTERN
-{
-	void SR_BroadcastVoice(gentity_t *talker, VoicePacket_t *packet)
-	{
-		SR->Server->Voice->BroadcastVoice(talker, packet);
-	}
-}

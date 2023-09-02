@@ -1,9 +1,11 @@
 add_subdirectory(demo)
+add_subdirectory(definitions)
 add_subdirectory(audio)
 
 target_sources(SR PUBLIC
 	Debug.hpp
 	Debug.cpp
+	Definitions.hpp
 	Entity.hpp
 	Entity.cpp
 	Map.hpp

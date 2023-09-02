@@ -1,10 +1,5 @@
 #pragma once
-#include "Macros.hpp"
-
-C_EXTERN
-{
-	#include <cgsc.h>
-}
+#include <cgsc.h>
 
 namespace Iswenzz::CoD4x
 {
@@ -24,7 +19,7 @@ namespace Iswenzz::CoD4x
 		/// @param callback - The worker callback.
 		/// @return
 		template <typename T>
-		async_worker* Worker(T* data, uv_work_cb callback)
+		async_worker *Worker(T *data, uv_work_cb callback)
 		{
 			return Worker(data, callback, nullptr);
 		}
@@ -36,7 +31,7 @@ namespace Iswenzz::CoD4x
 		/// @param afterCallback - The worker after callback.
 		/// @return
 		template <typename T>
-		async_worker* Worker(T* data, uv_work_cb callback, uv_after_work_cb afterCallback)
+		async_worker *Worker(T *data, uv_work_cb callback, uv_after_work_cb afterCallback)
 		{
 			return AsyncWorker(Handler, data, callback, afterCallback);
 		}

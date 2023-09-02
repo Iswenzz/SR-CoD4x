@@ -2,14 +2,11 @@
 #include "PMove.hpp"
 #include "game/demo/DemoPlayer.hpp"
 
+#include <server.h>
+
 #define PLAYER_FPS_STACK 20
 #define PMF_PRONING 0x1
 #define PMF_CROUCHING 0x2
-
-C_EXTERN
-{
-	#include <server.h>
-}
 
 #define IsDefinedClient(cl) 		(cl && cl->gentity && cl->gentity->client)
 #define IsDefinedClientNum(num) 	(SR->Players[num] && SR->Players[num]->cl->gentity && SR->Players[num]->cl->gentity->client)
@@ -47,6 +44,9 @@ namespace Iswenzz::CoD4x
 		/// @param cl - The client.
 		Player(client_t *cl);
 		~Player() = default;
+
+		/// @brief Player disconnect.
+		void Disconnect();
 
 		/// @brief Player spawn.
 		void Spawn();

@@ -40,11 +40,3 @@ namespace Iswenzz::CoD4x
 			Log::WriteLine("^2[Debug] Packet %d", size);
 	}
 }
-
-C_EXTERN
-{
-	void NetchanDebugSize(int size)
-	{
-		Debug::NetchanPacketSize(size);
-	}
-}

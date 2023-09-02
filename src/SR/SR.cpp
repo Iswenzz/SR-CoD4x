@@ -28,13 +28,3 @@ namespace Iswenzz::CoD4x
 }
 
 Game *SR;
-
-C_EXTERN void SR_Initialize()
-{
-	SR = new Game();
-}
-
-C_EXTERN void SR_Shutdown()
-{
-	SR->~Game();
-}

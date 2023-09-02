@@ -242,11 +242,3 @@ namespace Iswenzz::CoD4x
 		cl->demoDeltaFrameCount = 1;
 	}
 }
-
-C_EXTERN
-{
-	void SR_DemoFrame(client_t *cl)
-	{
-		DemoRecord::Frame(cl);
-	}
-}

@@ -16,23 +16,11 @@ namespace Iswenzz::CoD4x
 			return;
 		AmbientStarted = true;
 
-		SV_SetConfigstring(0x335, va("n\\%s\\t\\%i", AmbientAlias.c_str(), AmbientVolume));
+		SV_SetConfigstring(0x335, fmt("n\\%s\\t\\%i", AmbientAlias.c_str(), AmbientVolume));
 	}
 
 	void Map::Frame()
 	{
 		Ambient();
-	}
-}
-
-C_EXTERN
-{
-	void SR_SetMapAmbient(const char *alias, int volume)
-	{
-		if (SR->Server->Map->AmbientStarted)
-			return;
-
-		SR->Server->Map->AmbientAlias = alias;
-		SR->Server->Map->AmbientVolume = volume + 1000;
 	}
 }

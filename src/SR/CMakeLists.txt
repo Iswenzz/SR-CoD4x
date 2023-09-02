@@ -42,7 +42,7 @@ add_subdirectory(player)
 add_subdirectory(sys)
 add_subdirectory(utils)
 
-target_sources(SR PUBLIC SR.cpp Macros.hpp)
+target_sources(SR PUBLIC SR.cpp)
 target_link_libraries(SR PUBLIC ${CONAN_LIBS})
 target_include_directories(SR PUBLIC . .. ../version ../../plugins ../CGSC)
 target_precompile_headers(SR PUBLIC SR.hpp SR.h)

@@ -207,31 +207,3 @@ namespace Iswenzz::CoD4x
 			SV_SendServerCommand(Player->cl, "h \"^5[Demo] ^7%s\"", message.c_str());
 	}
 }
-
-C_EXTERN
-{
-	qboolean SR_DemoIsPlaying(client_t *cl)
-	{
-		if (!IsDefinedClient(cl))
-			return qfalse;
-
-		auto player = SR->Players[cl->gentity->client->ps.clientNum];
-		return static_cast<qboolean>(player && !!player->DemoPlayer->Demo);
-	}
-
-	void SR_DemoUpdateEntity(client_t *cl, snapshotInfo_t *snapInfo, msg_t* msg, const int time, entityState_t* from, entityState_t* to, qboolean force)
-	{
-		auto player = SR->Players[cl->gentity->client->ps.clientNum];
-		player->DemoPlayer->UpdateEntity(snapInfo, msg, time, from, to, force);
-	}
-
-	void SR_DemoButton(client_t *cl, usercmd_t *cmd)
-	{
-		if (!IsDefinedClient(cl))
-			return;
-
-		cl->gentity->client->ps.dofNearStart = *reinterpret_cast<float *>(&cmd->forwardmove);
-		cl->gentity->client->ps.dofNearEnd = *reinterpret_cast<float *>(&cmd->rightmove);
-		cl->gentity->client->ps.dofFarStart = *reinterpret_cast<float *>(&cmd->buttons);
-	}
-}

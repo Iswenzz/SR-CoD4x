@@ -1,14 +1,8 @@
 #pragma once
-#include "Macros.hpp"
-
 #include <vector>
 #include <cstring>
-
-C_EXTERN
-{
-	#include <server.h>
-	#include <speex/speex.h>
-}
+#include <server.h>
+#include <speex/speex.h>
 
 #define SPEEX_RATE 8000
 #define SPEEX_FRAME_SIZE 160

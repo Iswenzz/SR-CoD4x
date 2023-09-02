@@ -1,16 +1,11 @@
 #pragma once
-#include "Macros.hpp"
-
 #include <CoD4DM1/API/DemoReader.hpp>
 #include <CoD4DM1/Crypt/Huffman.hpp>
-#include <map>
+#include <cgsc.h>
 
-C_EXTERN
-{
-	#include <cgsc.h>
-	#include <server.h>
-	#include <q_math.h>
-}
+#include <map>
+#include <server.h>
+#include <q_math.h>
 
 namespace Iswenzz::CoD4x
 {
@@ -38,7 +33,7 @@ namespace Iswenzz::CoD4x
 		int Version = 0;
 
 		std::vector<DemoFrame> Frames{ };
-		std::array<std::string, MAX_CONFIGSTRINGS + 1> ConfigStrings{ };
+		std::array<std::string, MAX_CONFIGSTRINGS> ConfigStrings{ };
 		std::vector<std::string> Weapons{ };
 		int LastValidFrame = 0;
 

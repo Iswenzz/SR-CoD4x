@@ -1,11 +1,6 @@
 #pragma once
-#include "Macros.hpp"
-
-C_EXTERN
-{
-	#include <sv_snapshot.h>
-	#include <huffman.h>
-}
+#include <sv_snapshot.h>
+#include <huffman.h>
 
 namespace Iswenzz::CoD4x
 {
@@ -16,7 +11,7 @@ namespace Iswenzz::CoD4x
 		/// @brief Write a demo snapshot.
 		/// @param client - The client.
 		/// @param msg - The demo message.
-		static void WriteSnapshot(client_t *client, msg_t* msg);
+		static void WriteSnapshot(client_t *client, msg_t *msg);
 
 		/// @brief Begin a demo snapshot.
 		/// @param client - The client.
@@ -30,6 +25,6 @@ namespace Iswenzz::CoD4x
 
 		/// @brief Demo recording frame.
 		/// @param cl - The client.
-		static void Frame(client_t* cl);
+		static void Frame(client_t *cl);
 	};
 }

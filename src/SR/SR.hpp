@@ -1,7 +1,7 @@
 #pragma once
-#include "Macros.hpp"
-
+#include "game/Definitions.hpp"
 #include "game/demo/DemoContainer.hpp"
+#include "game/demo/DemoRecord.hpp"
 #include "game/audio/Speex.hpp"
 #include "game/Server.hpp"
 #include "game/Entity.hpp"

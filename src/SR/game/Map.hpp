@@ -1,5 +1,5 @@
 #pragma once
-#include "Macros.hpp"
+#include <string>
 
 namespace Iswenzz::CoD4x
 {
