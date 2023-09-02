@@ -1,12 +1,17 @@
 #!/bin/bash
-echo -e "[+] Compile CGSC"
+
+# CGSC
+echo -e "[+] CGSC"
 cmake --build src/CGSC/build
 
-echo -e "[+] Compile SR"
+# SR
+echo -e "[+] SR"
 cmake --build src/SR/build
 
-echo -e "[+] Compile CoD4x"
+# CoD4x
+echo -e "[+] CoD4x"
 make
 
-echo -e "[+] Copy Binary"
+# Binary
+echo -e "[+] Binary"
 cp -v bin/cod4x18_dedrun /home/cod4/cod4x18_dedrun && chmod u+x /home/cod4/cod4x18_dedrun
