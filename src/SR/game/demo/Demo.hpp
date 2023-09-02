@@ -30,13 +30,16 @@ namespace Iswenzz::CoD4x
 	public:
 		std::string ID;
 		std::unique_ptr<Iswenzz::CoD4::DM1::DemoReader> Reader;
-		int Version = 0;
-
 		std::vector<DemoFrame> Frames{ };
 		std::array<std::string, MAX_CONFIGSTRINGS> ConfigStrings{ };
 		std::vector<std::string> Weapons{ };
-		int LastValidFrame = 0;
 
+		std::string MapName;
+		std::string PlayerName;
+
+		int Version = 0;
+		int LastValidFrame = 0;
+		bool HasReadInformations = false;
 		bool IsLoaded = false;
 
 		/// @brief Initialize a new Demo.
@@ -55,6 +58,9 @@ namespace Iswenzz::CoD4x
 		/// @param req - The worker request.
 		static void OpenAsync(uv_work_t *req);
 
+		/// @brief Read the demo information.
+		void ReadDemoInformations();
+
 		/// @brief Interpolate invalid packets.
 		/// @param interpolateFrame - The last valid frame to interpolate the previous invalid frames.
 		void Interpolate(DemoFrame &interpolateFrame);
@@ -70,6 +76,10 @@ namespace Iswenzz::CoD4x
 		/// @brief Process chat messages.
 		/// @return
 		std::vector<std::string> ProcessChat();
+
+		/// @brief Can parse the snapshot.
+		/// @return
+		bool CanParseSnapshot();
 
 	private:
 		static inline uv_mutex_t Mutex;

@@ -33,19 +33,18 @@ namespace Iswenzz::CoD4x
 			{
 				DemoFrame frame = { 0 };
 
-				if (Reader->DemoFile->CurrentMessageType == Iswenzz::CoD4::DM1::MSGType::MSG_FRAME)
-					continue;
-				if (!LastValidFrame && !Reader->GetCurrentSnapshot().valid)
+				if (!CanParseSnapshot())
 					continue;
 
-				GetVersion();
+				ReadDemoInformations();
 
-				auto ps = Reader->GetCurrentSnapshot().ps;
+				auto snapshot = Reader->GetCurrentSnapshot();
 				auto archive = Reader->GetCurrentFrame();
+				auto ps = snapshot.ps;
 
-				frame.valid = Reader->GetCurrentSnapshot().valid;
+				frame.valid = snapshot.valid;
 				frame.chat = ProcessChat();
-				frame.time = previousFrame.time + 50;
+				frame.time = Reader->GetTimeMilliseconds();
 				frame.fps = Reader->GetFPS();
 				frame.ps = *reinterpret_cast<playerState_t *>(&ps);
 				frame.velocity = GetVelocity(frame);
@@ -73,9 +72,6 @@ namespace Iswenzz::CoD4x
 				previousFrame = frame;
 				Frames.push_back(frame);
 			}
-
-			ConfigStrings = Reader->DemoFile->ConfigStrings;
-			Weapons = Utils::SplitString(Reader->GetConfigString("defaultweapon_mp"), ' ');
 		}
 		catch (...) { }
 
@@ -95,11 +91,22 @@ namespace Iswenzz::CoD4x
 		AsyncWorkerDone(req, ASYNC_SUCCESSFUL);
 	}
 
+	void Demo::ReadDemoInformations()
+	{
+		if (HasReadInformations)
+			return;
+		HasReadInformations = true;
+
+		MapName = Reader->ParseConfigString("mapname");
+		PlayerName = Reader->GetPlayerName().netname;
+		ConfigStrings = Reader->DemoFile->ConfigStrings;
+		Weapons = Utils::SplitString(Reader->GetConfigString("defaultweapon_mp"), ' ');
+
+		GetVersion();
+	}
+
 	void Demo::GetVersion()
 	{
-		if (Version != 0)
-			return;
-
 		std::vector<std::string> serverInfos = Utils::SplitString(Reader->DemoFile->ConfigStrings[0], '\\');
 		if (serverInfos.empty())
 			return;
@@ -221,5 +228,14 @@ namespace Iswenzz::CoD4x
 				chat.push_back(command.substr(3, command.size() - 4));
 		}
 		return chat;
+	}
+
+	bool Demo::CanParseSnapshot()
+	{
+		if (Reader->DemoFile->CurrentMessageType != Iswenzz::CoD4::DM1::MSGType::MSG_FRAME)
+			return false;
+		if (!LastValidFrame && !Reader->GetCurrentSnapshot().valid)
+			return false;
+		return true;
 	}
 }
