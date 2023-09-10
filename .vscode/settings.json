@@ -131,7 +131,9 @@
 		"stack": "cpp",
 		"*.h++": "cpp",
 		"*.ch": "cpp",
-		"ranges": "cpp"
+		"ranges": "cpp",
+		"greatest.h": "c",
+		"mysql.h": "c"
 	},
 	"C_Cpp.errorSquiggles": "Disabled"
 }

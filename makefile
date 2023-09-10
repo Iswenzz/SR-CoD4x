@@ -54,7 +54,7 @@ DCFLAGS=-fno-pie -O1 -DNDEBUG
 endif
 
 WIN_LFLAGS=-m32 -g -Wl,--nxcompat,--stack,0x800000 -mwindows -static-libgcc -static -lm
-WIN_LLIBS=tomcrypt mbedtls mbedcrypto mbedx509 ws2_32 wsock32 iphlpapi gdi32 winmm crypt32 dbghelp ole32 stdc++ SR CoD4DM1 speex samplerate
+WIN_LLIBS=tomcrypt mbedtls mbedcrypto mbedx509 ws2_32 wsock32 iphlpapi gdi32 winmm crypt32 stdc++ dbghelp ole32 CoD4DM1 speex samplerate
 LINUX_LFLAGS=-m32 -g -static-libgcc -rdynamic -Wl,-rpath=./
 LINUX_LLIBS=tomcrypt mbedtls mbedcrypto mbedx509 dl pthread m stdc++ SR CoD4DM1 speex samplerate
 BSD_LLIBS=tomcrypt mbedtls mbedcrypto mbedx509 pthread m execinfo stdc++
@@ -144,7 +144,7 @@ ASSETS_OBJ=$(patsubst $(ASSETS_DIR)/%.c,$(OBJ_DIR)/%.o,$(ASSETS_SOURCES))
 ##################################
 # CGSC
 CGSC_DIR=$(SRC_DIR)/CGSC
-WIN_LLIBS:=$(WIN_LLIBS) CGSC uv iphlpapi psapi userenv ws2_32
+WIN_LLIBS:=$(WIN_LLIBS) CGSC uv iphlpapi psapi userenv ws2_32 ole32 uuid dbghelp
 LINUX_LLIBS:=$(LINUX_LLIBS) CGSC uv dl pthread rt
 BSD_LLIBS:=$(BSD_LLIBS) CGSC uv dl pthread rt
 

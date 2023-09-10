@@ -20,17 +20,14 @@ set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 set(CPACK_GENERATOR 7Z)
 include(CPack)
 
-# Conan
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
-
-# Tests
-if(ENABLE_TESTING)
-	include(CTest)
-	add_executable(SR.Tests)
-	target_link_libraries(SR.Tests PUBLIC ${CONAN_LIBS} SR)
-	add_test(NAME Tests COMMAND SR.Tests)
-endif()
+# Dependencies
+# find_package(cod4dm1 CONFIG REQUIRED)
+# find_path(CGSC_INCLUDE_DIRS "cgsc.h")
+# find_package(speex CONFIG REQUIRED)
+# find_package(boost CONFIG REQUIRED)
+# find_package(libuv CONFIG REQUIRED)
+# find_package(minimp3 CONFIG REQUIRED)
+# find_package(libsamplerate CONFIG REQUIRED)
 
 # Build
 add_library(SR)
@@ -43,8 +40,8 @@ add_subdirectory(sys)
 add_subdirectory(utils)
 
 target_sources(SR PUBLIC SR.cpp)
-target_link_libraries(SR PUBLIC ${CONAN_LIBS})
-target_include_directories(SR PUBLIC . .. ../version ../../plugins ../CGSC)
+target_link_libraries(SR PUBLIC)
+target_include_directories(SR PUBLIC . .. ../version ../../plugins ${CGSC_INCLUDE_DIRS})
 target_precompile_headers(SR PUBLIC SR.hpp SR.h)
 target_compile_definitions(SR PUBLIC COD4X18UPDATE)
 
