@@ -61,7 +61,6 @@ foreach(dependency ${STATIC_DEPENDENCIES})
 		COMMAND ${CMAKE_COMMAND} -E copy ${dependency} ../../../lib)
 endforeach()
 
-# Pack
+# Install
 install(TARGETS SR LIBRARY DESTINATION lib)
-install(DIRECTORY src/ DESTINATION lib/include/SR
-    FILES_MATCHING PATTERN "*.hpp" PATTERN "__test__" EXCLUDE)
+install(DIRECTORY src/ DESTINATION include/SR FILES_MATCHING PATTERN "*.hpp" PATTERN "__test__" EXCLUDE)

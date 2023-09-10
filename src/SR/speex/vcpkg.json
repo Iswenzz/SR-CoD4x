@@ -1,0 +1,10 @@
+{
+	"name": "speex",
+	"version": "1.2.1",
+	"description": "Speex voice codec.",
+  	"homepage": "https://gitlab.xiph.org/xiph/speex",
+	"dependencies": [
+		{ "name": "vcpkg-cmake", "host": true },
+		{ "name": "vcpkg-cmake-config", "host": true }
+	]
+}

@@ -4,13 +4,17 @@
 	"description": "SR CoD4x server source.",
   	"homepage": "https://github.com/Iswenzz/SR-CoD4x",
 	"dependencies": [
-		"cgsc"
+		"cgsc",
+		"cod4dm1",
+		"speex",
+		"libuv",
+		"minimp3",
+		"libsamplerate"
 	],
 	"overrides": [
-        { "name": "cod4dm1", "version": "1.0.4" },
-        { "name": "cgsc", "version": "1.2.3" },
-        { "name": "speex", "version": "1.2.1#1" },
-        { "name": "boost", "version": "1.82.0#2" },
+		{ "name": "cgsc", "version": "1.2.3" },
+        { "name": "cod4dm1", "version": "1.0.5" },
+        { "name": "speex", "version": "1.2.1" },
         { "name": "libuv", "version": "1.46.0" },
         { "name": "minimp3", "version": "2021-11-30" },
         { "name": "libsamplerate", "version": "0.2.2#1" }
