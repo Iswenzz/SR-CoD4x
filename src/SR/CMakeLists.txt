@@ -21,13 +21,13 @@ set(CPACK_GENERATOR 7Z)
 include(CPack)
 
 # Dependencies
-# find_package(cod4dm1 CONFIG REQUIRED)
-# find_path(CGSC_INCLUDE_DIRS "cgsc.h")
-# find_package(speex CONFIG REQUIRED)
-# find_package(boost CONFIG REQUIRED)
-# find_package(libuv CONFIG REQUIRED)
-# find_package(minimp3 CONFIG REQUIRED)
-# find_package(libsamplerate CONFIG REQUIRED)
+set(COD4DM1_LIBRARY ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/libCoD4DM1.a)
+set(COD4DM1_INCLUDE_DIRS ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/CoD4DM1)
+set(SPEEX_LIBRARY ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/libspeex.a)
+find_path(CGSC_INCLUDE_DIRS "CGSC/cgsc.h")
+find_path(MINIMP3_INCLUDE_DIRS "minimp3/minimp3.h")
+find_package(libuv CONFIG REQUIRED)
+find_package(SampleRate CONFIG REQUIRED)
 
 # Build
 add_library(SR)
@@ -40,21 +40,32 @@ add_subdirectory(sys)
 add_subdirectory(utils)
 
 target_sources(SR PUBLIC SR.cpp)
-target_link_libraries(SR PUBLIC)
-target_include_directories(SR PUBLIC . .. ../version ../../plugins ${CGSC_INCLUDE_DIRS})
 target_precompile_headers(SR PUBLIC SR.hpp SR.h)
 target_compile_definitions(SR PUBLIC COD4X18UPDATE)
+
+target_link_libraries(SR PUBLIC
+	${COD4DM1_LIBRARY}
+	${SPEEX_LIBRARY}
+	libuv::uv_a
+	SampleRate::samplerate)
+
+target_include_directories(SR PUBLIC . .. ../version ../../plugins
+	${CGSC_INCLUDE_DIRS}
+	${COD4DM1_INCLUDE_DIRS}
+	${MINIMP3_INCLUDE_DIRS})
 
 get_target_property(SOURCES SR SOURCES)
 set_target_properties(SR PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../../../lib)
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES})
 
-# Dependencies
+get_target_property(SAMPLERATE_LIBRARY SampleRate::samplerate LOCATION)
+get_target_property(LIBUV_LIBRARY libuv::uv_a LOCATION)
+
 set(STATIC_DEPENDENCIES
-	# ${CONAN_LIB_DIRS_COD4DM1}/libCoD4DM1.a # Missing exported methods on conan package
-	${CONAN_LIB_DIRS_LIBUV}/libuv.a
-	${CONAN_LIB_DIRS_SPEEX}/libspeex.a
-	${CONAN_LIB_DIRS_LIBSAMPLERATE}/libsamplerate.a)
+	${COD4DM1_LIBRARY}
+	${SPEEX_LIBRARY}
+	${SAMPLERATE_LIBRARY}
+	${LIBUV_LIBRARY})
 
 foreach(dependency ${STATIC_DEPENDENCIES})
 	add_custom_command(TARGET SR POST_BUILD

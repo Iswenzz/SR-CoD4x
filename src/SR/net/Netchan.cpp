@@ -1,7 +1,10 @@
 #include "Netchan.hpp"
 #include "SR.hpp"
 
-#include <huffman.h>
+C_EXTERN
+{
+	#include <huffman.h>
+}
 
 namespace Iswenzz::CoD4x
 {

@@ -1,2 +1,2 @@
 #pragma once
-#include "game/Definitions.hpp"
+#include "game/definitions/Server.hpp"

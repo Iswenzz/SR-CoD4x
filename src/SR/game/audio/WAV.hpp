@@ -1,7 +1,7 @@
 #pragma once
 #include "Streamable.hpp"
 
-typedef struct
+struct WavHeader
 {
 	uint8_t riff[4];				// Header "RIFF"
 	uint32_t chunkSize;				// FileSize - 8
@@ -16,7 +16,7 @@ typedef struct
 	uint16_t bitsPerSample;			// Number of bits per sample
 	uint8_t subchunk2ID[4]; 		// Section "data" string
 	uint32_t subchunk2Size;			// NumSamples * NumChannels * BitsPerSample / 8
-} WavHeader;
+};
 
 namespace Iswenzz::CoD4x
 {

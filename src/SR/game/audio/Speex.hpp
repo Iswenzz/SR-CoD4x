@@ -1,8 +1,12 @@
 #pragma once
 #include <vector>
 #include <cstring>
-#include <server.h>
 #include <speex/speex.h>
+
+C_EXTERN
+{
+	#include <g_public.h>
+}
 
 #define SPEEX_RATE 8000
 #define SPEEX_FRAME_SIZE 160

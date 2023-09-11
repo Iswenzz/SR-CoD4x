@@ -1,7 +1,5 @@
 #include "Player.hpp"
 #include "SR.hpp"
-#include "utils/Utils.hpp"
-#include "utils/Log.hpp"
 
 namespace Iswenzz::CoD4x
 {

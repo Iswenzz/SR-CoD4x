@@ -2,7 +2,10 @@
 #include "net/TCP.hpp"
 #include "player/Player.hpp"
 
-#include <cvar.h>
+C_EXTERN
+{
+	#include <cvar.h>
+}
 
 namespace Iswenzz::CoD4x
 {

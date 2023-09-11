@@ -1,6 +1,5 @@
 #include "PMove.hpp"
 #include "Player.hpp"
-#include "SR.hpp"
 
 namespace Iswenzz::CoD4x
 {

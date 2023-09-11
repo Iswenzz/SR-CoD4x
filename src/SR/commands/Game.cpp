@@ -1,5 +1,4 @@
 #include "Game.hpp"
-#include "SR.hpp"
 
 #include "game/audio/WAV.hpp"
 #include "game/audio/MP3.hpp"

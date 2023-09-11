@@ -1,6 +1,5 @@
 #include "Voice.hpp"
 #include "Streamable.hpp"
-#include "SR.hpp"
 
 #define VOICE_AMPLIFY 2
 #define PROXIMITY_DISTANCE 1500

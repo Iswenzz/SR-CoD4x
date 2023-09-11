@@ -1,6 +1,9 @@
 #pragma once
-#include <netchan.h>
-#include <server.h>
+
+C_EXTERN
+{
+	#include <server.h>
+}
 
 namespace Iswenzz::CoD4x
 {

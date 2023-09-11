@@ -1,6 +1,10 @@
 #pragma once
-#include <sv_snapshot.h>
-#include <huffman.h>
+
+C_EXTERN
+{
+	#include <sv_snapshot.h>
+	#include <huffman.h>
+}
 
 namespace Iswenzz::CoD4x
 {

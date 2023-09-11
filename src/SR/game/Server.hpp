@@ -3,7 +3,10 @@
 #include "game/Vegas.hpp"
 #include "game/audio/Voice.hpp"
 
-#include <sys_main.h>
+C_EXTERN
+{
+	#include <sys_main.h>
+}
 
 namespace Iswenzz::CoD4x
 {

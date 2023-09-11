@@ -2,8 +2,12 @@
 
 #include <iostream>
 #include <string>
-#include <q_shared.h>
-#include <qcommon_logprint.h>
+
+C_EXTERN
+{
+	#include <q_shared.h>
+	#include <qcommon_logprint.h>
+}
 
 namespace Iswenzz::CoD4x
 {

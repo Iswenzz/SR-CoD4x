@@ -1,3 +1,4 @@
 target_sources(SR PUBLIC
-	Functions.hpp
-	Functions.cpp)
+	Macros.hpp
+	Server.cpp
+	Server.hpp)

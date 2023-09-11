@@ -1,8 +1,12 @@
 #pragma once
 #include <memory>
-#include <g_shared.h>
-#include <g_sv_shared.h>
-#include <bg_public.h>
+
+C_EXTERN
+{
+	#include <g_shared.h>
+	#include <g_sv_shared.h>
+	#include <bg_public.h>
+}
 
 namespace Iswenzz::CoD4x
 {

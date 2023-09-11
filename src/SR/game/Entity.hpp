@@ -1,5 +1,9 @@
 #pragma once
-#include <entity.h>
+
+C_EXTERN
+{
+	#include <entity.h>
+}
 
 #define IsDefinedEntity(ent)		(ent && ent->s.number > 0 && ent->s.number < MAX_GENTITIES)
 #define IsDefinedEntityNum(num)		(SR->Entities[num] && SR->Entities[num]->g)

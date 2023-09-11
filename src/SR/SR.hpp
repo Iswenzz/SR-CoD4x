@@ -7,12 +7,21 @@
 #include "game/Entity.hpp"
 #include "game/Debug.hpp"
 
-#include "net/Netchan.hpp"
 #include "commands/Container.hpp"
 #include "player/Player.hpp"
 #include "utils/Log.hpp"
+#include "utils/Utils.hpp"
+#include "net/Netchan.hpp"
+
+#include "sys/AsyncHandler.hpp"
 #include "sys/Environment.hpp"
 #include "sys/ThreadPool.hpp"
+
+C_EXTERN
+{
+	#include <server.h>
+	#include <cscr_stringlist.h>
+}
 
 namespace Iswenzz::CoD4x
 {

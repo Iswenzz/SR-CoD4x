@@ -7,7 +7,11 @@
 #include <string>
 #include <vector>
 #include <cstring>
-#include <server.h>
+
+C_EXTERN
+{
+	#include <g_public.h>
+}
 
 namespace Iswenzz::CoD4x
 {

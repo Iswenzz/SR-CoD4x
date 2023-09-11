@@ -1,7 +1,9 @@
 #pragma once
-#include <server.h>
+#include "Macros.hpp"
 
 C_EXTERN_START
+
+#include <server.h>
 
 void SR_Initialize();
 void SR_Shutdown();
@@ -19,7 +21,6 @@ void SR_ClientSpawn(gclient_t *client);
 void SR_CalculateFrame(client_t *cl, usercmd_t *cmd);
 
 void SR_Print(conChannel_t channel, char *msg);
-char *fmt(char *format, ...);
 
 void SR_DemoFrame(client_t *cl);
 qboolean SR_DemoIsPlaying(client_t *cl);

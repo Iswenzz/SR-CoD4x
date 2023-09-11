@@ -1,11 +1,15 @@
 #pragma once
 #include <CoD4DM1/API/DemoReader.hpp>
 #include <CoD4DM1/Crypt/Huffman.hpp>
-#include <cgsc.h>
-
+#include <CGSC/cgsc.h>
 #include <map>
-#include <server.h>
-#include <q_math.h>
+
+C_EXTERN
+{
+	#include <player.h>
+	#include <entity.h>
+	#include <q_math.h>
+}
 
 namespace Iswenzz::CoD4x
 {
@@ -31,7 +35,7 @@ namespace Iswenzz::CoD4x
 		std::string ID;
 		std::unique_ptr<Iswenzz::CoD4::DM1::DemoReader> Reader;
 		std::vector<DemoFrame> Frames{ };
-		std::array<std::string, MAX_CONFIGSTRINGS> ConfigStrings{ };
+		std::array<std::string, MAX_CONFIGSTRINGS + 1> ConfigStrings{ };
 		std::vector<std::string> Weapons{ };
 
 		std::string MapName;

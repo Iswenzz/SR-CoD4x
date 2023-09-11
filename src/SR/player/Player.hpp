@@ -2,7 +2,10 @@
 #include "PMove.hpp"
 #include "game/demo/DemoPlayer.hpp"
 
-#include <server.h>
+C_EXTERN
+{
+	#include <server.h>
+}
 
 #define PLAYER_FPS_STACK 20
 #define PMF_PRONING 0x1

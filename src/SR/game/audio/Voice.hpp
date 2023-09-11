@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <map>
-#include <server.h>
 
 extern cvar_t *voice_localEcho;
 extern cvar_t *voice_global;

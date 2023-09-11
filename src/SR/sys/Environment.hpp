@@ -1,7 +1,11 @@
 #pragma once
-#include <filesystem.h>
 #include <filesystem>
 #include <string>
+
+C_EXTERN
+{
+	#include <filesystem.h>
+}
 
 namespace Iswenzz::CoD4x
 {

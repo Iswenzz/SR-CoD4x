@@ -1,12 +1,12 @@
 #include "MP3.hpp"
 #include "WAV.hpp"
-#include "utils/Log.hpp"
+#include "SR.hpp"
 
 #define MINIMP3_ONLY_MP3
 #define MINIMP3_NO_STDIO
 #define MINIMP3_IMPLEMENTATION
 
-#include <minimp3_ex.h>
+#include <minimp3/minimp3_ex.h>
 
 namespace Iswenzz::CoD4x
 {
