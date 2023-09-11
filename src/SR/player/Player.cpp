@@ -11,10 +11,10 @@ namespace Iswenzz::CoD4x
 		this->cl->clFrames = 0;
 		this->ps = &cl->gentity->client->ps;
 
-		this->DemoPlayer = std::make_unique<class DemoPlayer>(this);
-		this->PMove = std::make_unique<class PMove>(this);
+		DemoPlayer = std::make_unique<class DemoPlayer>(shared_from_this());
+		PMove = std::make_unique<class PMove>(shared_from_this());
 
-		std::fill(this->FrameTimes.begin(), this->FrameTimes.end(), 0);
+		std::fill(FrameTimes.begin(), FrameTimes.end(), 0);
 	}
 
 	void Player::Disconnect()

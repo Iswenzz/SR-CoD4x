@@ -5,9 +5,9 @@
 
 namespace Iswenzz::CoD4x
 {
-	DemoPlayer::DemoPlayer(class Player *player)
+	DemoPlayer::DemoPlayer(std::shared_ptr<class Player> player)
 	{
-		this->Player = player;
+		Player = player;
 	}
 
 	void DemoPlayer::Play(const std::shared_ptr<class Demo>& demo)

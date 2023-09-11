@@ -20,7 +20,7 @@
 	extern MatrixMultiply
 	extern memset
 	extern Pmove
-	extern Pmove_GetSpeed
+	extern SR_PmoveGetSpeed
 	extern Player_UpdateActivate
 	extern Scr_Notify
 	extern Scr_AddVector
@@ -210,7 +210,7 @@ ClientThink_real_100:
 	; mov eax, [eax+0xc]				; eax = g_speed.integer;
 	;
 	mov ecx, [edi+0x24]					; playerState_t* ps
-	call Pmove_GetSpeed					; __cdecl __optimize3 int Pmove_GetSpeed(playerState_t *ps)
+	call SR_PmoveGetSpeed				; int SR_PmoveGetSpeed(playerState_t *ps)
 	; -------------------------- SR Pmove_Extended --------------------------
 	mov [edi+0x60], eax
 	lea edx, [ebp-0x3c]

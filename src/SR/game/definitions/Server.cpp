@@ -119,34 +119,32 @@ C_EXTERN
 		Log::Write(channel, msg);
 	}
 
-	OPTIMIZE3 int Pmove_GetSpeed(playerState_t *ps)
+	OPTIMIZE3 int SR_PmoveGetSpeed(playerState_t *ps)
 	{
 		return Player::Get(ps->clientNum)->PMove->GetSpeed();
 	}
 
-	float Pmove_GetSpeedScale(playerState_t *ps)
+	float SR_PmoveGetSpeedScale(playerState_t *ps)
 	{
 		return Player::Get(ps->clientNum)->PMove->GetSpeedScale();
 	}
 
-	OPTIMIZE3 int Pmove_GetGravity(playerState_t *ps)
+	OPTIMIZE3 int SR_PmoveGetGravity(playerState_t *ps)
 	{
 		return Player::Get(ps->clientNum)->PMove->GetGravity();
 	}
 
-	float Pmove_GetJumpHeight(unsigned int num)
+	float SR_PmoveGetJumpHeight(unsigned int num)
 	{
 		return Player::Get(num)->PMove->GetJumpHeight();
 	}
 
-	void Jump_UpdateSurface(playerState_s *ps, pml_t *pml)
+	void SR_JumpUpdateSurface(playerState_s *ps, pml_t *pml)
 	{
 		Player::Get(ps->clientNum)->PMove->JumpUpdateSurface(pml);
 	}
 
-	OPTIMIZE3 void StuckInClient(gentity_t* gen) { }
-
-	void NetchanDebugSize(int size)
+	void SR_NetchanDebugSize(int size)
 	{
 		Debug::NetchanPacketSize(size);
 	}

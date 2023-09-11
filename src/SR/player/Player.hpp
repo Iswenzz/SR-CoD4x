@@ -20,14 +20,14 @@ namespace Iswenzz::CoD4x
 	/// @brief Player class.
 	/// @remarks cl->gentity->s.number is the client number.
 	/// @remarks cl->gentity->client->ps.clientNumber is the spectator client or client if not spectating.
-	class Player
+	class Player : public std::enable_shared_from_this<Player>
 	{
 	public:
 		client_t* cl;
 		playerState_t* ps;
 
-		std::unique_ptr<PMove> PMove;
-		std::unique_ptr<DemoPlayer> DemoPlayer;
+		std::unique_ptr<class PMove> PMove;
+		std::unique_ptr<class DemoPlayer> DemoPlayer;
 
 		int FrameStackIndex = 0;
 		std::array<int, PLAYER_FPS_STACK> FrameTimes{ };

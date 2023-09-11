@@ -20,6 +20,7 @@
 C_EXTERN
 {
 	#include <server.h>
+	#include <bg_public.h>
 	#include <cscr_stringlist.h>
 }
 
@@ -43,5 +44,4 @@ namespace Iswenzz::CoD4x
 	};
 }
 
-using namespace Iswenzz::CoD4x;
 extern Game *SR;

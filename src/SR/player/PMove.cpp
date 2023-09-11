@@ -3,9 +3,9 @@
 
 namespace Iswenzz::CoD4x
 {
-	PMove::PMove(class Player *Player)
+	PMove::PMove(std::shared_ptr<class Player> player)
 	{
-		this->Player = Player;
+		Player = player;
 	}
 
 	void PMove::Initialize()
@@ -39,6 +39,4 @@ namespace Iswenzz::CoD4x
 	{
 		Player->SurfaceFlags = pml->groundTrace.sflags;
 	}
-
-	void PMove::StuckInClient() { }
 }

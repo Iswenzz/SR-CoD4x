@@ -4,6 +4,7 @@
 C_EXTERN_START
 
 #include <server.h>
+#include <bg_public.h>
 
 void SR_Initialize();
 void SR_Shutdown();
@@ -27,8 +28,13 @@ qboolean SR_DemoIsPlaying(client_t *cl);
 void SR_DemoButton(client_t *cl, usercmd_t *cmd);
 void SR_DemoUpdateEntity(client_t *cl, snapshotInfo_t *snapInfo, msg_t *msg, const int time, entityState_t *from, entityState_t *to, qboolean force);
 
-float Pmove_GetJumpHeight(unsigned int num);
-float Pmove_GetSpeedScale(playerState_t *ps);
+OPTIMIZE3 int SR_PmoveGetSpeed(playerState_t *ps);
+float SR_PmoveGetSpeedScale(playerState_t *ps);
+OPTIMIZE3 int SR_PmoveGetGravity(playerState_t *ps);
+float SR_PmoveGetJumpHeight(unsigned int num);
+void SR_JumpUpdateSurface(playerState_s *ps, pml_t *pml);
+
+void SR_NetchanDebugSize(int size);
 
 qboolean VegasConnect(netadr_t *from, msg_t *msg, int *connectionId);
 void VegasDisconnect(netadr_t *from, int connectionId);

@@ -1,18 +1,17 @@
 #pragma once
 #include "Demo.hpp"
+#include "player/Player.hpp"
 
 namespace Iswenzz::CoD4x
 {
-	class Player;
-
 	/// @brief Play a demo on a player.
 	class DemoPlayer
 	{
 	public:
-		std::shared_ptr<Demo> Demo;
-
-		Player *Player;
+		std::shared_ptr<class Demo> Demo;
+		std::shared_ptr<class Player> Player;
 		gentity_t *Entity;
+
 		DemoFrame CurrentFrame;
 
 		int FrameIndex = 0;
@@ -27,7 +26,7 @@ namespace Iswenzz::CoD4x
 
 		/// @brief Initialize the DemoPlayer.
 		/// @param player - The player.
-		DemoPlayer(class Player *player);
+		DemoPlayer(std::shared_ptr<class Player> player);
 		~DemoPlayer() = default;
 
 		/// @brief Play a demo on a player.

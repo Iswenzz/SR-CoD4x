@@ -54,7 +54,6 @@
 	extern SV_EntityContact
 	extern BG_PlayerTouchesItem
 	extern BG_GetSpeed
-	extern Pmove_GetSpeed
 	extern g_speed
 	extern BG_CalculateViewAngles
 	extern BG_GetWeaponDef

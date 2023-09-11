@@ -1,4 +1,5 @@
 #pragma once
+#include "Player.hpp"
 #include <memory>
 
 C_EXTERN
@@ -10,17 +11,15 @@ C_EXTERN
 
 namespace Iswenzz::CoD4x
 {
-	class Player;
-
 	/// @brief Player movement.
 	class PMove
 	{
 	public:
-		Player *Player;
+		std::shared_ptr<class Player> Player;
 
 		/// @brief Initialier a new PMove.
 		/// @param player - The player.
-		PMove(class Player *player);
+		PMove(std::shared_ptr<class Player> player);
 		virtual ~PMove() = default;
 
 		/// @brief Initialize the player movement.
@@ -41,8 +40,5 @@ namespace Iswenzz::CoD4x
 		/// @brief Update the player surface type on jump.
 		/// @param pml - The player movement.
 		void JumpUpdateSurface(pml_t *pml);
-
-		/// @brief Entity stuck in client.
-		void StuckInClient();
 	};
 }

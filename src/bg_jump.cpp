@@ -17,9 +17,11 @@ extern "C" cvar_t* jump_spreadAdd;
 
 extern "C" void Jump_UpdateSurface(playerState_t* ps, pml_t* pml);
 
+extern "C" __cdecl __optimize3 void StuckInClient( gentity_t* gen ) { }
+
 __cdecl __optimize3 float Jump_GetHeight( playerState_t *ps) {
 
-    float jumph = Pmove_GetJumpHeight(ps->clientNum);
+    float jumph = SR_PmoveGetJumpHeight(ps->clientNum);
 	if(jumph > 0)
     {
         return jumph;
@@ -263,7 +265,7 @@ qboolean __cdecl Jump_Check(pmove_t *pm, pml_t *pml)
   ps = pm->ps;
   assert(ps);
 
-  Jump_UpdateSurface(ps, pml);
+  SR_JumpUpdateSurface(ps, pml);
 
   if ( ps->pm_flags & 0x80000 )
   {

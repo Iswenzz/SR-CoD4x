@@ -98,8 +98,6 @@ int NET_TcpReceiveData( int sock, msg_t* msg);
 void NET_CookieInit();
 int NET_CookieHash(netadr_t*);
 
-void NetchanDebugSize(int size);
-
 #ifdef __cplusplus
 }
 #endif

@@ -20,7 +20,7 @@ namespace Iswenzz::CoD4x
 
 		/// @brief Initialize a new Vegas TCP link.
 		Vegas();
-		~Vegas() = default;
+		virtual ~Vegas() = default;
 
 		/// @brief User connection.
 		/// @param from - The address.

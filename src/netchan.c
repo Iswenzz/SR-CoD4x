@@ -353,7 +353,7 @@ qboolean Netchan_Transmit( netchan_t *chan, int length, const byte *data ) {
 	qboolean sendsucc;
 	byte send_buf[MAX_PACKETLEN];
 
-	NetchanDebugSize(length);
+	SR_NetchanDebugSize(length);
 
 	if ( length > chan->unsentBufferSize ) {
 		Com_Error( ERR_DROP, "Netchan_Transmit: length = %i", length );
