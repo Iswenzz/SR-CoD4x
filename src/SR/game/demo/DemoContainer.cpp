@@ -39,7 +39,7 @@ namespace Iswenzz::CoD4x
 		bool exists = demos.size();
 		if (exists)
 		{
-			std::string id = std::format("times_%s_%s", mode, way);
+			std::string id = std::format("times_{}_{}", mode, way);
 			auto found = Demos.find(id);
 
 			if (found != std::end(Demos))

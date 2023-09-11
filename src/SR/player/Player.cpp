@@ -5,16 +5,19 @@ namespace Iswenzz::CoD4x
 {
 	Player::Player(client_t *cl)
 	{
-		Log::WriteLine("[Player] Connected %d %s", cl->gentity->s.number, cl->name);
-
 		this->cl = cl;
 		this->cl->clFrames = 0;
 		this->ps = &cl->gentity->client->ps;
 
+		std::fill(FrameTimes.begin(), FrameTimes.end(), 0);
+	}
+
+	void Player::Initialize()
+	{
+		Log::WriteLine("[Player] Connected %d %s", cl->gentity->s.number, cl->name);
+
 		DemoPlayer = std::make_unique<class DemoPlayer>(shared_from_this());
 		PMove = std::make_unique<class PMove>(shared_from_this());
-
-		std::fill(FrameTimes.begin(), FrameTimes.end(), 0);
 	}
 
 	void Player::Disconnect()
@@ -110,6 +113,8 @@ namespace Iswenzz::CoD4x
 
 	void Player::Add(client_t *cl)
 	{
-		SR->Players[cl->gentity->s.number] = std::make_shared<Player>(cl);
+		std::shared_ptr<Player> player = std::make_shared<Player>(cl);
+		player->Initialize();
+		SR->Players[cl->gentity->s.number] = player;
 	}
 }

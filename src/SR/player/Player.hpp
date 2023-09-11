@@ -48,6 +48,9 @@ namespace Iswenzz::CoD4x
 		Player(client_t *cl);
 		~Player() = default;
 
+		/// @brief Initialize the player.
+		void Initialize();
+
 		/// @brief Player disconnect.
 		void Disconnect();
 

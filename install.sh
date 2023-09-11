@@ -1,31 +1,12 @@
 #!/bin/bash
 ROOT="$(pwd)"
-CONAN=--profile $ROOT/.conan/linux.conf --build missing -s compiler.version=11
-
-# Dependencies
-echo -e "[+] Dependencies"
-conan create deps/speex $CONAN
-
-# CoD4DM1
-echo -e "[+] CoD4DM1"
-cd deps/CoD4DM1
-conan create . $CONAN
-mkdir build
-cd build
-conan install .. $CONAN
-cmake ..
-cmake --build .
-cp -v lib/libCoD4DM1.a $ROOT/lib
-cd $ROOT
 
 # CGSC
 echo -e "[+] CGSC"
 cd src/CGSC
-conan create . $CONAN
 mkdir build
 cd build
-conan install .. $CONAN
-cmake ..
+cmake .. -DCMAKE_TOOLCHAIN_FILE=.vcpkg/linux.cmake -DCOD4X=True
 cmake --build .
 cd $ROOT
 
@@ -34,8 +15,7 @@ echo -e "[+] SR"
 cd src/SR
 mkdir build
 cd build
-conan install .. $CONAN
-cmake ..
+cmake .. -DCMAKE_TOOLCHAIN_FILE=.vcpkg/linux.cmake
 cmake --build .
 cd $ROOT
 

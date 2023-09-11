@@ -32,7 +32,7 @@ OPTIMIZE3 int SR_PmoveGetSpeed(playerState_t *ps);
 float SR_PmoveGetSpeedScale(playerState_t *ps);
 OPTIMIZE3 int SR_PmoveGetGravity(playerState_t *ps);
 float SR_PmoveGetJumpHeight(unsigned int num);
-void SR_JumpUpdateSurface(playerState_s *ps, pml_t *pml);
+void SR_JumpUpdateSurface(playerState_t *ps, struct pml_t *pml);
 
 void SR_NetchanDebugSize(int size);
 
