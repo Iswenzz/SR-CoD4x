@@ -6,7 +6,6 @@
                 "COD4X18UPDATE"
             ],
             "includePath": [
-				"~/.conan/data/**",
                 "src",
                 "src/SR",
 				"src/CGSC",
