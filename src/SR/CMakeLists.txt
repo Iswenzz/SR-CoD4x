@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "-fpermissive -m32 -Wall -msse2 -mfpmath=sse -fno-omit-frame-pointer -fno-pie -O1 -Wno-packed-not-aligned -Wp,-w")
 
 # NASM
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if(WIN32)
 	set(CMAKE_ASM_NASM_FLAGS "-dWin32 --prefix _")
 	set(CMAKE_ASM_NASM_OBJECT_FORMAT "win32")
 else()
@@ -21,17 +21,19 @@ set(CPACK_GENERATOR 7Z)
 include(CPack)
 
 # Dependencies
-set(COD4DM1_LIBRARY ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/libCoD4DM1.a)
-set(COD4DM1_INCLUDE_DIRS ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/CoD4DM1)
-set(SPEEX_LIBRARY ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/libspeex.a)
 find_path(CGSC_INCLUDE_DIRS "CGSC/cgsc.h")
+find_path(COD4DM1_INCLUDE_DIRS "CoD4DM1")
 find_path(MINIMP3_INCLUDE_DIRS "minimp3/minimp3.h")
+find_library(COD4DM1_LIBRARY libCoD4DM1.a)
+find_library(SPEEX_LIBRARY libspeex.a)
+find_library(SAMPLERATE_LIBRARY libsamplerate.a)
 find_package(libuv CONFIG REQUIRED)
-find_package(SampleRate CONFIG REQUIRED)
+
+# Includes
+string(APPEND COD4DM1_INCLUDE_DIRS "/CoD4DM1")
 
 # Build
 add_library(SR)
-
 add_subdirectory(commands)
 add_subdirectory(game)
 add_subdirectory(net)
@@ -46,8 +48,8 @@ target_compile_definitions(SR PUBLIC COD4X18UPDATE)
 target_link_libraries(SR PUBLIC
 	${COD4DM1_LIBRARY}
 	${SPEEX_LIBRARY}
-	libuv::uv_a
-	SampleRate::samplerate)
+	${SAMPLERATE_LIBRARY}
+	libuv::uv_a)
 
 target_include_directories(SR PUBLIC . .. ../version ../../plugins
 	${CGSC_INCLUDE_DIRS}
@@ -58,7 +60,6 @@ get_target_property(SOURCES SR SOURCES)
 set_target_properties(SR PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../../../lib)
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES})
 
-get_target_property(SAMPLERATE_LIBRARY SampleRate::samplerate LOCATION)
 get_target_property(LIBUV_LIBRARY libuv::uv_a LOCATION)
 
 set(STATIC_DEPENDENCIES

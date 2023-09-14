@@ -45,7 +45,7 @@ CC=gcc
 CPP=g++
 WIN_DEFINES=WINVER=0x501
 LINUX_DEFINES=_GNU_SOURCE
-CFLAGS=-m32 -msse2 -mfpmath=sse -Wall -fno-omit-frame-pointer -fmax-errors=15 -Isrc -Isrc/SR
+CFLAGS=-m32 -msse2 -mfpmath=sse -Wall -fno-omit-frame-pointer -fmax-errors=15 -Isrc -Isrc/SR -Wno-packed-not-aligned
 
 ifeq ($(DEBUG), true)
 DCFLAGS=-fno-pie -O0 -g

@@ -12,7 +12,7 @@ C_EXTERN
 namespace Iswenzz::CoD4x
 {
 	/// @brief Log utility class.
-	/// @remark No support for <format>.
+	/// @remark No support for <format> with MinGW.
 	class Log
 	{
 	public:

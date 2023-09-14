@@ -2,8 +2,6 @@
 #include "sys/Environment.hpp"
 #include "utils/Log.hpp"
 
-#include <format>
-
 namespace Iswenzz::CoD4x
 {
 	DemoContainer::DemoContainer()
@@ -39,7 +37,7 @@ namespace Iswenzz::CoD4x
 		bool exists = demos.size();
 		if (exists)
 		{
-			std::string id = std::format("times_{}_{}", mode, way);
+			std::string id = fmt("times_%s_%s", mode.c_str(), way.c_str());
 			auto found = Demos.find(id);
 
 			if (found != std::end(Demos))
