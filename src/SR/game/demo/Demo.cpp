@@ -232,7 +232,7 @@ namespace Iswenzz::CoD4x
 
 	bool Demo::CanParseSnapshot()
 	{
-		if (Reader->DemoFile->CurrentMessageType != Iswenzz::CoD4::DM1::MSGType::MSG_FRAME)
+		if (Reader->DemoFile->CurrentMessageType != Iswenzz::CoD4::DM1::MSGType::MSG_SNAPSHOT)
 			return false;
 		if (!LastValidFrame && !Reader->GetCurrentSnapshot().valid)
 			return false;

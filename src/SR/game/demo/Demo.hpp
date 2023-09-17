@@ -11,6 +11,8 @@ C_EXTERN
 	#include <q_math.h>
 }
 
+#define DEMO_MAX_CONFIGSTRINGS 2 * 2442
+
 namespace Iswenzz::CoD4x
 {
 	struct DemoFrame
@@ -35,7 +37,7 @@ namespace Iswenzz::CoD4x
 		std::string ID;
 		std::unique_ptr<Iswenzz::CoD4::DM1::DemoReader> Reader;
 		std::vector<DemoFrame> Frames{ };
-		std::array<std::string, MAX_CONFIGSTRINGS + 1> ConfigStrings{ };
+		std::array<std::string, DEMO_MAX_CONFIGSTRINGS> ConfigStrings{ };
 		std::vector<std::string> Weapons{ };
 
 		std::string MapName;

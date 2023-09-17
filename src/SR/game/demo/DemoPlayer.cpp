@@ -147,7 +147,7 @@ namespace Iswenzz::CoD4x
 		playerState_t originalPS = *Player->ps;
 
 		// Copy the demo frame to the player without huds.
-		memcpy(Player->ps, &CurrentFrame.ps, sizeof(playerState_t) - sizeof(CurrentFrame.ps.hud));
+		memcpy(Player->ps, &CurrentFrame.ps, sizeof(playerState_t) - sizeof(hudElemState_t));
 		Player->cl->clFPS = CurrentFrame.fps;
 
 		// State
