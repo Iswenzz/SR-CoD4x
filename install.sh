@@ -4,6 +4,7 @@ ROOT="$(pwd)"
 # CGSC
 echo -e "[+] CGSC"
 cd src/CGSC
+rm -r build
 mkdir build
 cd build
 cmake .. -DCMAKE_TOOLCHAIN_FILE=.vcpkg/linux.cmake -DCOD4X=True
@@ -13,6 +14,17 @@ cd $ROOT
 # SR
 echo -e "[+] SR"
 cd src/SR
+rm -r build
+mkdir build
+cd build
+cmake .. -DCMAKE_TOOLCHAIN_FILE=.vcpkg/linux.cmake
+cmake --build .
+cd $ROOT
+
+# gsclib
+echo -e "[+] gsclib"
+cd plugins/gsclib
+rm -r build
 mkdir build
 cd build
 cmake .. -DCMAKE_TOOLCHAIN_FILE=.vcpkg/linux.cmake

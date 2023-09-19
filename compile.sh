@@ -8,6 +8,10 @@ cmake --build src/CGSC/build
 echo -e "[+] SR"
 cmake --build src/SR/build
 
+# gsclib
+echo -e "[+] gsclib"
+cmake --build plugins/gsclib/build
+
 # CoD4x
 echo -e "[+] CoD4x"
 make

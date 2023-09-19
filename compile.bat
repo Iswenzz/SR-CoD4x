@@ -2,11 +2,15 @@
 
 :: CGSC
 echo [+] CGSC
-cmake --build src\CGSC\build
+cmake --build src/CGSC/build
 
 :: SR
 echo [+] SR
-cmake --build src\SR\build
+cmake --build src/SR/build
+
+:: gsclib
+echo [+] gsclib
+cmake --build plugins/gsclib/build
 
 :: CoD4x
 echo [+] CoD4x
