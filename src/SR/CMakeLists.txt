@@ -23,10 +23,10 @@ include(CPack)
 # Dependencies
 find_path(CGSC_INCLUDE_DIRS "CGSC/cgsc.h")
 find_path(MINIMP3_INCLUDE_DIRS "minimp3/minimp3.h")
-find_library(SPEEX_LIBRARY libspeex.a)
 find_library(SAMPLERATE_LIBRARY libsamplerate.a)
 find_package(CoD4DM1 CONFIG REQUIRED)
 find_package(libuv CONFIG REQUIRED)
+find_package(speex CONFIG REQUIRED)
 
 # Build
 add_library(SR)
@@ -44,7 +44,7 @@ target_compile_definitions(SR PUBLIC COD4X18UPDATE)
 target_link_libraries(SR PUBLIC
 	CoD4DM1::CoD4DM1
 	libuv::uv_a
-	${SPEEX_LIBRARY}
+	speex::speex
 	${SAMPLERATE_LIBRARY})
 
 target_include_directories(SR PUBLIC . .. ../version ../../plugins
@@ -57,6 +57,7 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES})
 
 get_target_property(COD4DM1_LIBRARY CoD4DM1::CoD4DM1 LOCATION)
 get_target_property(LIBUV_LIBRARY libuv::uv_a LOCATION)
+get_target_property(SPEEX_LIBRARY speex::speex LOCATION)
 
 set(STATIC_DEPENDENCIES
 	${COD4DM1_LIBRARY}
