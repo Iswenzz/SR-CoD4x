@@ -8,13 +8,13 @@ cmake --build src/CGSC/build
 echo [+] SR
 cmake --build src/SR/build
 
-:: gsclib
-echo [+] gsclib
-cmake --build plugins/gsclib/build
-
 :: CoD4x
 echo [+] CoD4x
 mingw32-make
+
+:: gsclib
+echo [+] gsclib
+cmake --build plugins/gsclib/build
 
 :: Binary
 echo [+] Binary

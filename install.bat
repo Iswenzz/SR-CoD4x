@@ -21,6 +21,10 @@ cmake .. -G "MinGW Makefiles" -DCMAKE_TOOLCHAIN_FILE=.vcpkg/windows.cmake
 cmake --build .
 cd %ROOT%
 
+:: CoD4x
+echo [+] CoD4x
+mingw32-make
+
 :: gsclib
 echo [+] gsclib
 cd plugins/gsclib
@@ -30,10 +34,6 @@ cd build
 cmake .. -G "MinGW Makefiles" -DCMAKE_TOOLCHAIN_FILE=.vcpkg/windows.cmake
 cmake --build .
 cd %ROOT%
-
-:: CoD4x
-echo [+] CoD4x
-mingw32-make
 
 :: Binary
 echo [+] Binary

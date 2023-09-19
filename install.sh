@@ -21,6 +21,10 @@ cmake .. -DCMAKE_TOOLCHAIN_FILE=.vcpkg/linux.cmake
 cmake --build .
 cd $ROOT
 
+# CoD4x
+echo -e "[+] CoD4x"
+make
+
 # gsclib
 echo -e "[+] gsclib"
 cd plugins/gsclib
@@ -30,10 +34,6 @@ cd build
 cmake .. -DCMAKE_TOOLCHAIN_FILE=.vcpkg/linux.cmake
 cmake --build .
 cd $ROOT
-
-# CoD4x
-echo -e "[+] CoD4x"
-make
 
 # Binary
 echo -e "[+] Binary"
