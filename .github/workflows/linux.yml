@@ -18,10 +18,10 @@ jobs:
         fetch-depth: 0
         submodules: "recursive"
 
-    - name: Conan
-      uses: turtlebrowser/get-conan@main
+    - name: Vcpkg
+      uses: lukka/run-vcpkg@v11
       with:
-        version: 1.59.0
+        vcpkgGitCommitId: 4a600e9fea71bd7872080cbb716797e04d30e6d3
 
     - name: Dependencies
       run: |
@@ -29,52 +29,5 @@ jobs:
         sudo dpkg --add-architecture i386
         sudo apt-get install nasm:i386 paxctl:i386 libtommath-dev:i386
 
-    - name: CGSC
-      working-directory: src/CGSC
-      run: |
-        mkdir build && cd build
-        conan install .. --build missing --profile ../.conan/linux.conf
-        cmake .. -DCONAN_DISABLE_CHECK_COMPILER=True
-        cmake --build .
-
     - name: Build
-      run: make
-
-    - name: Version
-      if: ${{ !github.head_ref }}
-      run: |
-        ver=$(grep '\#define SYS_COMMONVERSION' src/version/version.c | cut -d' ' -f3)
-        git checkout HEAD~1 src/version/version.c
-        ver_last=$(grep '\#define SYS_COMMONVERSION' src/version/version.c | cut -d' ' -f3)
-        if [[ $ver != $ver_last ]]; then
-            echo "publish_tag=${ver}" >> $GITHUB_ENV
-        fi
-
-    - name: Build Plugins
-      if: ${{ env.publish_tag }}
-      run: make plugins
-
-    - name: Pack Plugins
-      if: ${{ env.publish_tag }}
-      run: |
-        cd plugins
-        mkdir plugins
-        cp screenshotsender/nehoscreenshotuploader.so plugins/
-        cp censor/censor.so plugins/
-        cp cod4x_b3hide/b3hide.so plugins/
-        cp simplebanlist/simplebanlist.so plugins/
-        cp pchat/pchat.so plugins/
-        cp sourcebansplugin/sourcebansplugin.so plugins/
-        cp warn/warn.so plugins/
-        cp legacybanlist/legacybanlist.so plugins/
-        7z a plugins_linux.zip plugins/*
-        cd ../
-
-    - name: Publish
-      if: ${{ env.publish_tag }}
-      uses: ncipollo/release-action@v1
-      with:
-        allowUpdates: true
-        tag: ${{ env.publish_tag }}
-        artifacts: "bin/cod4x18_dedrun,plugins/plugins_linux.zip"
-        token: ${{ secrets.GITHUB_TOKEN }}
+      run: ./install.sh

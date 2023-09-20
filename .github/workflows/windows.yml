@@ -12,6 +12,12 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        submodules: "recursive"
+
     - name: MinGW
       run: |
         $Uri = "https://downloads.sourceforge.net/mingw-w64/i686-8.1.0-release-posix-dwarf-rt_v6-rev0.7z"
@@ -23,16 +29,10 @@ jobs:
     - name: NASM
       uses: ilammy/setup-nasm@v1
 
-    - name: Conan
-      uses: turtlebrowser/get-conan@main
+    - name: Vcpkg
+      uses: lukka/run-vcpkg@v11
       with:
-        version: 1.59.0
-
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-        submodules: "recursive"
+        vcpkgGitCommitId: 4a600e9fea71bd7872080cbb716797e04d30e6d3
 
     - name: Pexports
       run: |
@@ -40,63 +40,9 @@ jobs:
         7z x pexports.tar.xz
         7z x pexports.tar
 
-    - name: CGSC
-      working-directory: src/CGSC
-      run: |
-        mkdir build && cd build
-        conan install .. --build missing --profile ../.conan/windows.conf
-        cmake .. -G "MinGW Makefiles" -DCONAN_DISABLE_CHECK_COMPILER=True
-        cmake --build .
-
     - name: Build
       run: |
         $path = $env:Path
         $env:Path = "C:\mingw32\bin;"
         $env:Path += $path
-        mingw32-make
-
-    - name: Version
-      if: ${{ !github.head_ref }}
-      run: |
-        $line = Get-Content src/version/version.c | Select-String -Pattern "#define SYS_COMMONVERSION"
-        $ver = $line.Line.Split( ' ' )[ 2 ]
-        git checkout HEAD~1 src/version/version.c
-        $line = Get-Content src/version/version.c | Select-String -Pattern "#define SYS_COMMONVERSION"
-        $ver_last = $line.Line.Split( ' ' )[ 2 ]
-        if( $ver -ne $ver_last )
-        {
-           echo "publish_tag=$ver" >> $env:GITHUB_ENV
-        }
-
-    - name: Build Plugins
-      if: ${{ env.publish_tag }}
-      run: |
-        $path = $env:Path
-        $env:Path = "C:\mingw32\bin;"
-        $env:Path += $path
-        mingw32-make plugins
-
-    - name: Pack Plugins
-      if: ${{ env.publish_tag }}
-      run: |
-        cd plugins
-        mkdir plugins
-        Copy-Item -Path screenshotsender/nehoscreenshotuploader.dll -Destination plugins/
-        Copy-Item -Path censor/censor.dll -Destination plugins/
-        Copy-Item -Path cod4x_b3hide/b3hide.dll -Destination plugins/
-        Copy-Item -Path simplebanlist/simplebanlist.dll -Destination plugins/
-        Copy-Item -Path pchat/pchat.dll -Destination plugins/
-        Copy-Item -Path sourcebansplugin/sourcebansplugin.dll -Destination plugins/
-        Copy-Item -Path warn/warn.dll -Destination plugins/
-        Copy-Item -Path legacybanlist/legacybanlist.dll -Destination plugins/
-        7z a plugins_windows.zip plugins/*
-        cd ../
-
-    - name: Publish
-      if: ${{ env.publish_tag }}
-      uses: ncipollo/release-action@v1
-      with:
-        allowUpdates: true
-        tag: ${{ env.publish_tag }}
-        artifacts: "bin/cod4x18_dedrun.exe,plugins/plugins_windows.zip"
-        token: ${{ secrets.GITHUB_TOKEN }}
+        ./install.bat
