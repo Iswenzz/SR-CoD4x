@@ -23,7 +23,7 @@ include(CPack)
 # Dependencies
 find_path(CGSC_INCLUDE_DIRS "CGSC/cgsc.h")
 find_path(MINIMP3_INCLUDE_DIRS "minimp3/minimp3.h")
-find_library(SAMPLERATE_LIBRARY libsamplerate.a)
+find_library(SAMPLERATE_LIBRARY libsamplerate)
 find_package(CoD4DM1 CONFIG REQUIRED)
 find_package(libuv CONFIG REQUIRED)
 find_package(speex CONFIG REQUIRED)
