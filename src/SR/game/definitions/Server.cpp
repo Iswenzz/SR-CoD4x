@@ -26,7 +26,9 @@ C_EXTERN
 		if (!IsDefinedClient(cl))
 			return;
 
-		Player::Get(cl->gentity->s.number)->Disconnect();
+		auto player = Player::Get(cl->gentity->s.number);
+		if (player)
+			player->Disconnect();
 	}
 
 	void SR_ClientSpawn(gclient_t *client)
