@@ -69,7 +69,3 @@ foreach(dependency ${STATIC_DEPENDENCIES})
 	add_custom_command(TARGET SR POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy ${dependency} ../../../lib)
 endforeach()
-
-# Install
-install(TARGETS SR LIBRARY DESTINATION lib)
-install(DIRECTORY src/ DESTINATION include/SR FILES_MATCHING PATTERN "*.hpp" PATTERN "__test__" EXCLUDE)
