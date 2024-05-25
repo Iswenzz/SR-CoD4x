@@ -12,21 +12,31 @@
 	#define STDCALL __stdcall
 #endif
 
+// clang-format off
 #ifndef IZ_C
 	#ifdef __cplusplus
 		#define IZ_C extern "C"
+		#define IZ_C_START IZ_C {
+		#define IZ_C_END }
 	#else
 		#define IZ_C
+		#define IZ_C_START
+		#define IZ_C_END
 	#endif
 #endif
 
 #ifndef IZ_CPP
 	#ifdef __cplusplus
 		#define IZ_CPP extern "C++"
+		#define IZ_CPP_START IZ_CPP {
+		#define IZ_CPP_END }
 	#else
 		#define IZ_CPP
+		#define IZ_CPP_START
+		#define IZ_CPP_END
 	#endif
 #endif
+// clang-format on
 
 #define CHECK_PARAMS(count, message) \
 	if (Scr_GetNumParam() != count)  \
