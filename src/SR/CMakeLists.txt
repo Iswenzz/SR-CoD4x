@@ -14,6 +14,10 @@ else()
 endif()
 enable_language(ASM_NASM)
 
+# CMake
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+include(ClangTools)
+
 # CPack
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
@@ -29,43 +33,4 @@ find_package(libuv CONFIG REQUIRED)
 find_package(speex CONFIG REQUIRED)
 
 # Build
-add_library(SR)
-add_subdirectory(commands)
-add_subdirectory(game)
-add_subdirectory(net)
-add_subdirectory(player)
-add_subdirectory(sys)
-add_subdirectory(utils)
-
-target_sources(SR PUBLIC SR.cpp)
-target_precompile_headers(SR PUBLIC SR.hpp SR.h)
-target_compile_definitions(SR PUBLIC COD4X18UPDATE)
-
-target_link_libraries(SR PUBLIC
-	CoD4DM1::CoD4DM1
-	libuv::uv_a
-	speex::speex
-	${SAMPLERATE_LIBRARY})
-
-target_include_directories(SR PUBLIC . .. ../version ../../plugins
-	${CGSC_INCLUDE_DIRS}
-	${MINIMP3_INCLUDE_DIRS})
-
-get_target_property(SOURCES SR SOURCES)
-set_target_properties(SR PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../../../lib)
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES})
-
-get_target_property(COD4DM1_LIBRARY CoD4DM1::CoD4DM1 LOCATION)
-get_target_property(LIBUV_LIBRARY libuv::uv_a LOCATION)
-get_target_property(SPEEX_LIBRARY speex::speex LOCATION)
-
-set(STATIC_DEPENDENCIES
-	${COD4DM1_LIBRARY}
-	${SPEEX_LIBRARY}
-	${SAMPLERATE_LIBRARY}
-	${LIBUV_LIBRARY})
-
-foreach(dependency ${STATIC_DEPENDENCIES})
-	add_custom_command(TARGET SR POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy ${dependency} ../../../lib)
-endforeach()
+add_subdirectory(src)
