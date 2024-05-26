@@ -4,19 +4,19 @@
 
 #include <stdarg.h>
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
-	void Log::Write(Channel channel, std::string msg)
+	void Log::Write(Channel channel, const std::string& msg)
 	{
 		Log::Write(msg);
 	}
 
-	void Log::Write(std::string fmt, ...)
+	void Log::Write(const std::string& fmt, ...)
 	{
 		va_list argptr;
 		char msg[4096];
 
-		const char *cfmt = fmt.c_str();
+		const char* cfmt = fmt.c_str();
 
 		va_start(argptr, cfmt);
 		Q_vsnprintf(msg, sizeof(msg), cfmt, argptr);
@@ -26,12 +26,12 @@ namespace Iswenzz::CoD4x
 		Com_PrintLogfile(msg);
 	}
 
-	void Log::WriteLine(std::string fmt, ...)
+	void Log::WriteLine(const std::string& fmt, ...)
 	{
 		va_list argptr;
 		char msg[4096];
 
-		const char *cfmt = fmt.c_str();
+		const char* cfmt = fmt.c_str();
 
 		va_start(argptr, cfmt);
 		Q_vsnprintf(msg, sizeof(msg), cfmt, argptr);

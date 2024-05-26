@@ -1,20 +1,19 @@
 #pragma once
 #include "Base.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	/// @brief Process network messages.
 	class Netchan
 	{
 	public:
-		/// @brief Initialize the network.
-		Netchan() = default;
-		~Netchan() = default;
+		/// @brief Initialize netchan.
+		static void Initialize();
 
 		/// @brief Received packet.
 		/// @param from - The address.
 		/// @param cl - The client.
 		/// @param msg - The packet message.
-		void Packet(netadr_t *from, client_t *cl, msg_t *msg);
+		static void Packet(netadr_t *from, client_t *cl, msg_t *msg);
 	};
 }

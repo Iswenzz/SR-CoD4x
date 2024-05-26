@@ -1,3 +1,3 @@
 #pragma once
-#include "Application.hpp"
+#include "Entity/Entity.hpp"
 #include "Player/Player.hpp"

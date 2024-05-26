@@ -1,6 +1,4 @@
-target_sources(SR PUBLIC
-	Debug.hpp
-	Debug.cpp
+target_sources(SR PRIVATE
 	Map.hpp
 	Map.cpp
 	Server.hpp

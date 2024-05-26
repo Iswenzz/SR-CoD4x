@@ -1,6 +1,6 @@
 #include "Player.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	void PlayerCommands::Register()
 	{
@@ -17,7 +17,7 @@ namespace Iswenzz::CoD4x
 
 	void PlayerCommands::VoiceChatButtonPressed(scr_entref_t num)
 	{
-		std::shared_ptr<Player> player = Player::Get(num.entnum);
+		Ref<Player> player = Player::Get(num.entnum);
 
 		if (!player)
 		{
@@ -29,7 +29,7 @@ namespace Iswenzz::CoD4x
 
 	void PlayerCommands::SurfaceFlags(scr_entref_t num)
 	{
-		std::shared_ptr<Player> player = Player::Get(num.entnum);
+		Ref<Player> player = Player::Get(num.entnum);
 
 		if (!player)
 		{
@@ -41,7 +41,7 @@ namespace Iswenzz::CoD4x
 
 	void PlayerCommands::GetViewHeightLerpDown(scr_entref_t num)
 	{
-		std::shared_ptr<Player> player = Player::Get(num.entnum);
+		Ref<Player> player = Player::Get(num.entnum);
 
 		if (!player)
 		{
@@ -53,7 +53,7 @@ namespace Iswenzz::CoD4x
 
 	void PlayerCommands::GetViewHeightLerpTarget(scr_entref_t num)
 	{
-		std::shared_ptr<Player> player = Player::Get(num.entnum);
+		Ref<Player> player = Player::Get(num.entnum);
 
 		if (!player)
 		{
@@ -65,7 +65,7 @@ namespace Iswenzz::CoD4x
 
 	void PlayerCommands::GetViewHeightLerpTime(scr_entref_t num)
 	{
-		std::shared_ptr<Player> player = Player::Get(num.entnum);
+		Ref<Player> player = Player::Get(num.entnum);
 
 		if (!player)
 		{
@@ -77,7 +77,7 @@ namespace Iswenzz::CoD4x
 
 	void PlayerCommands::GetDamageTimer(scr_entref_t num)
 	{
-		std::shared_ptr<Player> player = Player::Get(num.entnum);
+		Ref<Player> player = Player::Get(num.entnum);
 
 		if (!player)
 		{
@@ -89,7 +89,7 @@ namespace Iswenzz::CoD4x
 
 	void PlayerCommands::GetWeaponState(scr_entref_t num)
 	{
-		std::shared_ptr<Player> player = Player::Get(num.entnum);
+		Ref<Player> player = Player::Get(num.entnum);
 
 		if (!player)
 		{
@@ -103,7 +103,7 @@ namespace Iswenzz::CoD4x
 	{
 		CHECK_PARAMS(1, "Usage: RadioEnable(<state>)");
 
-		std::shared_ptr<Player> player = Player::Get(num.entnum);
+		Ref<Player> player = Player::Get(num.entnum);
 
 		if (!player)
 		{
@@ -117,7 +117,7 @@ namespace Iswenzz::CoD4x
 	{
 		CHECK_PARAMS(1, "Usage: ProximityEnable(<state>)");
 
-		std::shared_ptr<Player> player = Player::Get(num.entnum);
+		Ref<Player> player = Player::Get(num.entnum);
 
 		if (!player)
 		{

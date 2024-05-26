@@ -4,7 +4,7 @@
 
 #include <chrono>
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	void Debug::Initialize()
 	{

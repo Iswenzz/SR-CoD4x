@@ -4,9 +4,8 @@
 #include <cstring>
 #include <filesystem>
 #include <fstream>
-#include <vector>
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	/// @brief Stream buffer over VoIP.
 	class Streamable
@@ -32,6 +31,10 @@ namespace Iswenzz::CoD4x
 
 		/// @brief Open a file.
 		virtual void Open() = 0;
+
+		/// @brief Save file.
+		/// @param path - The file path.
+		virtual void Save(const std::string& path) = 0;
 
 		/// @brief Play the stream buffer in fragments.
 		/// @return

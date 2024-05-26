@@ -7,7 +7,7 @@ cd src/CGSC
 rmdir build /s /q
 mkdir build
 cd build
-cmake .. -G "MinGW Makefiles" -DCMAKE_TOOLCHAIN_FILE=.vcpkg/windows.cmake -DCOD4X=True
+cmake .. --preset windows
 cmake --build .
 cd %ROOT%
 
@@ -17,7 +17,7 @@ cd src/SR
 rmdir build /s /q
 mkdir build
 cd build
-cmake .. -G "MinGW Makefiles" -DCMAKE_TOOLCHAIN_FILE=.vcpkg/windows.cmake
+cmake .. --preset windows
 cmake --build .
 cd %ROOT%
 
@@ -31,7 +31,7 @@ cd plugins/gsclib
 rmdir build /s /q
 mkdir build
 cd build
-cmake .. -G "MinGW Makefiles" -DCMAKE_TOOLCHAIN_FILE=.vcpkg/windows.cmake
+cmake .. --preset windows
 cmake --build .
 cd %ROOT%
 

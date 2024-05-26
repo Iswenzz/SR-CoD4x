@@ -1,6 +1,6 @@
 #include "Map.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	void Map::Restart()
 	{
@@ -18,7 +18,7 @@ namespace Iswenzz::CoD4x
 		SV_SetConfigstring(0x335, fmt("n\\%s\\t\\%i", AmbientAlias.c_str(), AmbientVolume));
 	}
 
-	void Map::SetAmbient(std::string alias, int volume)
+	void Map::SetAmbient(const std::string& alias, int volume)
 	{
 		if (AmbientStarted)
 			return;

@@ -5,7 +5,7 @@
 	#include <debugapi.h>
 #endif
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	void DebugCommands::Register()
 	{

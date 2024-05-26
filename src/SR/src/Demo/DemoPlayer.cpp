@@ -1,13 +1,13 @@
 #include "DemoPlayer.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
-	DemoPlayer::DemoPlayer(std::shared_ptr<class Player> player)
+	DemoPlayer::DemoPlayer(const Ref<class Player> &player)
 	{
 		Player = player;
 	}
 
-	void DemoPlayer::Play(const std::shared_ptr<class Demo> &demo)
+	void DemoPlayer::Play(const Ref<class Demo> &demo)
 	{
 		Demo = demo;
 		FrameIndex = 0;
@@ -95,7 +95,6 @@ namespace Iswenzz::CoD4x
 			SlowmoThreshold = 0;
 			return;
 		}
-
 		// Interpolation range forward/backward
 		if (SlowmoThreshold > 10)
 		{

@@ -1,6 +1,8 @@
 #include "Demo.hpp"
 
-namespace Iswenzz::CoD4x
+#include "Demo/DemoContainer.hpp"
+
+namespace SR
 {
 	void DemoCommands::Register()
 	{
@@ -29,14 +31,14 @@ namespace Iswenzz::CoD4x
 		std::string mode = Scr_GetString(3);
 		std::string way = Scr_GetString(4);
 
-		Scr_AddInt(SR->DemoContainer->RegisterSpeedrunDemo(map, playerId, runId, mode, way));
+		Scr_AddInt(DemoContainer::RegisterSpeedrunDemo(map, playerId, runId, mode, way));
 	}
 
 	void DemoCommands::PlayDemo(scr_entref_t num)
 	{
 		CHECK_PARAMS(1, "Usage: PlayDemo(<id>)");
 
-		std::shared_ptr<Player> player = Player::Get(num.entnum);
+		Ref<Player> player = Player::Get(num.entnum);
 		std::string id = Scr_GetString(0);
 
 		if (!player)
@@ -45,8 +47,8 @@ namespace Iswenzz::CoD4x
 			return;
 		}
 
-		auto demo = SR->DemoContainer->Demos.find(id);
-		if (demo != std::end(SR->DemoContainer->Demos))
+		auto demo = DemoContainer::Demos.find(id);
+		if (demo != std::end(DemoContainer::Demos))
 		{
 			player->DemoPlayer->Play(demo->second);
 			Scr_AddEntity(player->DemoPlayer->Entity);
@@ -58,16 +60,16 @@ namespace Iswenzz::CoD4x
 		CHECK_PARAMS(1, "Usage: IsDemoLoaded(<id>)");
 
 		std::string id = Scr_GetString(0);
-		auto demo = SR->DemoContainer->Demos.find(id);
+		auto demo = DemoContainer::Demos.find(id);
 
-		Scr_AddBool(demo != std::end(SR->DemoContainer->Demos) ? demo->second->IsLoaded : qfalse);
+		Scr_AddBool(demo != std::end(DemoContainer::Demos) ? demo->second->IsLoaded : qfalse);
 	}
 
 	void DemoCommands::IsDemoPlaying(scr_entref_t num)
 	{
 		CHECK_PARAMS(0, "Usage: IsDemoPlaying()");
 
-		std::shared_ptr<Player> player = Player::Get(num.entnum);
+		Ref<Player> player = Player::Get(num.entnum);
 
 		if (!player)
 		{
@@ -81,7 +83,7 @@ namespace Iswenzz::CoD4x
 	{
 		CHECK_PARAMS(0, "Usage: GetSpeedrunVelocity()");
 
-		std::shared_ptr<Player> player = Player::Get(num.entnum);
+		Ref<Player> player = Player::Get(num.entnum);
 
 		if (!player)
 		{
@@ -95,7 +97,7 @@ namespace Iswenzz::CoD4x
 	{
 		CHECK_PARAMS(0, "Usage: GetDemoVersion()");
 
-		std::shared_ptr<Player> player = Player::Get(num.entnum);
+		Ref<Player> player = Player::Get(num.entnum);
 
 		if (!player)
 		{
@@ -109,7 +111,7 @@ namespace Iswenzz::CoD4x
 	{
 		CHECK_PARAMS(0, "Usage: StopDemo()");
 
-		std::shared_ptr<Player> player = Player::Get(num.entnum);
+		Ref<Player> player = Player::Get(num.entnum);
 
 		if (!player)
 		{
@@ -123,7 +125,7 @@ namespace Iswenzz::CoD4x
 	{
 		CHECK_PARAMS(0, "Usage: GetDemoRightMove()");
 
-		std::shared_ptr<Player> player = Player::Get(num.entnum);
+		Ref<Player> player = Player::Get(num.entnum);
 
 		if (!player)
 		{
@@ -137,7 +139,7 @@ namespace Iswenzz::CoD4x
 	{
 		CHECK_PARAMS(0, "Usage: GetDemoForwardMove()");
 
-		std::shared_ptr<Player> player = Player::Get(num.entnum);
+		Ref<Player> player = Player::Get(num.entnum);
 
 		if (!player)
 		{
@@ -151,7 +153,7 @@ namespace Iswenzz::CoD4x
 	{
 		CHECK_PARAMS(0, "Usage: GetDemoTimer()");
 
-		std::shared_ptr<Player> player = Player::Get(num.entnum);
+		Ref<Player> player = Player::Get(num.entnum);
 
 		if (!player)
 		{
@@ -165,7 +167,7 @@ namespace Iswenzz::CoD4x
 	{
 		CHECK_PARAMS(0, "Usage: GetDemoButtons()");
 
-		std::shared_ptr<Player> player = Player::Get(num.entnum);
+		Ref<Player> player = Player::Get(num.entnum);
 
 		if (!player)
 		{
@@ -179,7 +181,7 @@ namespace Iswenzz::CoD4x
 	{
 		CHECK_PARAMS(0, "Usage: StopDemo()");
 
-		std::shared_ptr<Player> player = Player::Get(num.entnum);
+		Ref<Player> player = Player::Get(num.entnum);
 
 		if (!player)
 		{

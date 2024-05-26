@@ -1,12 +1,12 @@
 #include "Game.hpp"
 
 #include "Audio/MP3.hpp"
+#include "Audio/Voice.hpp"
 #include "Audio/WAV.hpp"
 
 #include <filesystem>
-#include <map>
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	void GameCommands::Register()
 	{
@@ -56,7 +56,7 @@ namespace Iswenzz::CoD4x
 
 		if (name == "stop")
 		{
-			SR->Server->Voice->Radio = nullptr;
+			Voice::Radio = nullptr;
 			return;
 		}
 		if (type != "mp3" && type != "wav")
@@ -69,22 +69,22 @@ namespace Iswenzz::CoD4x
 			Scr_ObjectError(fmt("Radio file name %s doesn't exists.\n", name));
 			return;
 		}
-		std::shared_ptr<Streamable> file;
+		Ref<Streamable> file;
 
-		auto streamable = SR->Server->Voice->Audios.find(name);
-		if (streamable == std::end(SR->Server->Voice->Audios))
+		auto streamable = Voice::Audios.find(name);
+		if (streamable == std::end(Voice::Audios))
 		{
 			if (type == "wav")
-				file = std::make_shared<WAV>(name);
+				file = CreateRef<WAV>(name);
 			else if (type == "mp3")
-				file = std::make_shared<MP3>(name);
-			SR->Server->Voice->Audios.insert({ name, file });
+				file = CreateRef<MP3>(name);
+			Voice::Audios.insert({ name, file });
 		}
 		else
 			file = streamable->second;
 
 		file->StreamPosition = 0;
-		SR->Server->Voice->Radio = file;
+		Voice::Radio = file;
 
 		Log::WriteLine("[Radio] Playing %s", name.c_str());
 	}

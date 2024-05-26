@@ -1,30 +1,32 @@
 #include "Application.hpp"
 
-namespace Iswenzz::CoD4x
+#include "Audio/Speex.hpp"
+#include "Commands/Container.hpp"
+#include "Demo/DemoContainer.hpp"
+
+#include "Network/Netchan.hpp"
+#include "System/Debug.hpp"
+#include "System/Environment.hpp"
+
+namespace SR
 {
-	Application::Application()
+	void Application::Start()
 	{
-		Log::WriteLine("[SR] Initialize");
+		Log::WriteLine("[SR] Start");
 
 		Environment::Build();
+
+		Netchan::Initialize();
 		Speex::Initialize();
-		Demo::Initialize();
-
-		Server = std::make_unique<class Server>();
-		Netchan = std::make_unique<class Netchan>();
-		DemoContainer = std::make_unique<class DemoContainer>();
-		ThreadPool = std::make_unique<class ThreadPool>();
-
-		CommandsContainer::Register();
+		DemoContainer::Initialize();
+		CommandsContainer::Initialize();
 		Debug::Initialize();
 	}
 
-	Application::~Application()
+	void Application::Shutdown()
 	{
 		Log::WriteLine("[SR] Shutdown");
 
 		Speex::Shutdown();
 	}
 }
-
-Application *SR;

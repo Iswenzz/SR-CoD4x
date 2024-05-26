@@ -6,12 +6,7 @@
 #define PMF_PRONING 0x1
 #define PMF_CROUCHING 0x2
 
-#define IsDefinedClient(cl) (cl && cl->gentity && cl->gentity->client)
-#define IsDefinedClientNum(num) \
-	(SR->Players[num] && SR->Players[num]->cl->gentity && SR->Players[num]->cl->gentity->client)
-#define IsDefinedGClient(client) (client)
-
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	/// @brief Player class.
 	/// @remarks cl->gentity->s.number is the client number.
@@ -19,17 +14,17 @@ namespace Iswenzz::CoD4x
 	class Player : public std::enable_shared_from_this<Player>
 	{
 	public:
-		client_t *cl;
-		playerState_t *ps;
+		static inline std::array<Ref<Player>, MAX_CLIENTS> List{};
 
-		std::unique_ptr<class PMove> PMove;
-		std::unique_ptr<class DemoPlayer> DemoPlayer;
-
-		int FrameStackIndex = 0;
-		std::array<int, PLAYER_FPS_STACK> FrameTimes{};
+		client_t *cl = nullptr;
+		playerState_t *ps = nullptr;
+		Scope<class PMove> PMove;
+		Scope<class DemoPlayer> DemoPlayer;
+		int SurfaceFlags = 0;
 
 		int FPS = 0;
-		int SurfaceFlags = 0;
+		int FrameStackIndex = 0;
+		std::array<int, PLAYER_FPS_STACK> FrameTimes{};
 
 		bool Voice = false;
 		int VoiceCount = 0;
@@ -76,7 +71,7 @@ namespace Iswenzz::CoD4x
 
 		/// @brief Get a player.
 		/// @param num - The player num.
-		static std::shared_ptr<Player> Get(int num);
+		static Ref<Player> &Get(int num);
 
 		/// @brief Add a new player.
 		/// @param cl - The client.

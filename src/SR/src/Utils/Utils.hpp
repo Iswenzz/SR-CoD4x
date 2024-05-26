@@ -1,8 +1,7 @@
 #pragma once
-#include <string>
-#include <vector>
+#include "Base.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	/// @brief Utility class.
 	class Utils

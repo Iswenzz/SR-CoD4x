@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	void Environment::Build()
 	{

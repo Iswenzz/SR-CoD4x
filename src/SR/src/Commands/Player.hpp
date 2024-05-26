@@ -1,7 +1,7 @@
 #pragma once
 #include "Command.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	class PlayerCommands
 	{

@@ -10,13 +10,13 @@
 			"name": "windows",
 			"generator": "MinGW Makefiles",
 			"cacheVariables": {
-				"CMAKE_TOOLCHAIN_FILE": "engine/.vcpkg/windows.cmake"
+				"CMAKE_TOOLCHAIN_FILE": ".vcpkg/windows.cmake"
 			}
 		},
 		{
 			"name": "linux",
 			"cacheVariables": {
-				"CMAKE_TOOLCHAIN_FILE": "engine/.vcpkg/linux.cmake"
+				"CMAKE_TOOLCHAIN_FILE": ".vcpkg/linux.cmake"
 			}
 		}
 	]

@@ -133,7 +133,8 @@
 		"*.ch": "cpp",
 		"ranges": "cpp",
 		"greatest.h": "c",
-		"mysql.h": "c"
+		"mysql.h": "c",
+		"cscr_variable.h": "c"
 	},
 	"C_Cpp.errorSquiggles": "Disabled"
 }

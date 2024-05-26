@@ -1,26 +1,22 @@
 #include "Demo.hpp"
 
-#include "Application.hpp"
+#include "DemoContainer.hpp"
+#include "System/ThreadPool.hpp"
+#include "Utils/Utils.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
-	Demo::Demo(std::string id, std::string path)
+	Demo::Demo(const std::string &id, const std::string &path)
 	{
 		ID = id;
-		Reader = std::make_unique<Iswenzz::CoD4::DM1::DemoReader>(path);
+		Reader = CreateScope<Iswenzz::CoD4::DM1::DemoReader>(path);
 
-		SR->ThreadPool->GSC->Worker(this, OpenAsync);
+		ThreadPool::GSC.Worker(this, OpenAsync);
 	}
 
 	Demo::~Demo()
 	{
 		Reader->Close();
-	}
-
-	void Demo::Initialize()
-	{
-		Iswenzz::CoD4::DM1::Huffman::InitMain();
-		uv_mutex_init(&Mutex);
 	}
 
 	void Demo::Open()
@@ -61,7 +57,6 @@ namespace Iswenzz::CoD4x
 					if (ent.eType == ET_SCRIPTMOVER)
 						frame.entities[ent.number] = *reinterpret_cast<entityState_t *>(&ent);
 				}
-
 				// Interpolate invalid packets
 				if (frame.valid)
 				{
@@ -69,7 +64,6 @@ namespace Iswenzz::CoD4x
 						Interpolate(frame);
 					LastValidFrame = Frames.size();
 				}
-
 				previousFrame = frame;
 				Frames.push_back(frame);
 			}
@@ -77,20 +71,18 @@ namespace Iswenzz::CoD4x
 		catch (...)
 		{
 		}
-
 		Reader->Close();
 		IsLoaded = true;
 	}
 
 	void Demo::OpenAsync(uv_work_t *req)
 	{
-		uv_mutex_lock(&Mutex);
+		uv_mutex_lock(&DemoContainer::Mutex);
 
 		Demo *demo = reinterpret_cast<Demo *>(AsyncWorkerData(req));
 		demo->Open();
 
-		uv_mutex_unlock(&Mutex);
-
+		uv_mutex_unlock(&DemoContainer::Mutex);
 		AsyncWorkerDone(req, ASYNC_SUCCESSFUL);
 	}
 

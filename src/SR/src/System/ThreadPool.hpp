@@ -1,19 +1,16 @@
 #pragma once
 #include "AsyncHandler.hpp"
 
-#include <memory>
-
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	/// @brief Thread pool manager.
 	class ThreadPool
 	{
 	public:
-		std::unique_ptr<AsyncHandler> Main;
-		std::unique_ptr<AsyncHandler> GSC;
+		static inline AsyncHandler Main;
+		static inline AsyncHandler GSC;
 
 		/// @brief Initialize the thread pool.
-		ThreadPool();
-		~ThreadPool() = default;
+		static void Initialize();
 	};
 }

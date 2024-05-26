@@ -1,13 +1,12 @@
 #pragma once
-#include "Command.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
-	/// @brief Commands registration container.
+	/// @brief Commands container.
 	class CommandsContainer
 	{
 	public:
-		/// @brief Register commands.
-		static void Register();
+		/// @brief Initialize commands.
+		static void Initialize();
 	};
 }

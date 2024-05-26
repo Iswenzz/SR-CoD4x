@@ -3,7 +3,7 @@
 
 #include <chrono>
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	class Debug
 	{

@@ -1,6 +1,6 @@
 #include "DemoRecord.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	void DemoRecord::WriteSnapshot(client_t *client, msg_t *msg)
 	{
@@ -97,7 +97,6 @@ namespace Iswenzz::CoD4x
 				newent = &svsHeader.snapshotEntities[(frame->first_entity + newindex) % svsHeader.numSnapshotEntities];
 				newnum = newent->number;
 			}
-
 			if (oldindex >= from_num_entities)
 			{
 				oldnum = 9999;
@@ -108,7 +107,6 @@ namespace Iswenzz::CoD4x
 				oldent = &svsHeader.snapshotEntities[(from_first_entity + oldindex) % svsHeader.numSnapshotEntities];
 				oldnum = oldent->number;
 			}
-
 			if (newnum == oldnum)
 			{
 				// Delta update from old position
@@ -155,7 +153,6 @@ namespace Iswenzz::CoD4x
 				newcs = &svsHeader.snapshotClients[(frame->first_client + newindex) % svsHeader.numSnapshotClients];
 				newnum = newcs->clientIndex;
 			}
-
 			if (oldindex >= from_num_clients)
 			{
 				oldnum = 9999;
@@ -166,7 +163,6 @@ namespace Iswenzz::CoD4x
 				oldcs = &svsHeader.snapshotClients[(from_first_client + oldindex) % svsHeader.numSnapshotClients];
 				oldnum = oldcs->clientIndex;
 			}
-
 			if (newnum == oldnum)
 			{
 				// Delta update from old position

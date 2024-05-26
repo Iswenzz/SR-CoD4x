@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	enum class Channel
 	{
@@ -55,16 +55,16 @@ namespace Iswenzz::CoD4x
 		/// @brief Print a message.
 		/// @param channel - The channel.
 		/// @param msg - The message.
-		static void Write(Channel channel, std::string msg);
+		static void Write(Channel channel, const std::string& msg);
 
 		/// @brief Write to the console.
 		/// @param fmt - The format.
 		/// @param ... - Format arguments.
-		static void Write(std::string fmt, ...);
+		static void Write(const std::string& fmt, ...);
 
 		/// @brief Write a line to the console.
 		/// @param fmt - The format.
 		/// @param ... - Format arguments.
-		static void WriteLine(std::string fmt, ...);
+		static void WriteLine(const std::string& fmt, ...);
 	};
 }

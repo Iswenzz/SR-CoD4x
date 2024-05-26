@@ -1,17 +1,17 @@
 #pragma once
 #include "Player.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	/// @brief Player movement.
 	class PMove
 	{
 	public:
-		std::shared_ptr<class Player> Player;
+		Ref<class Player> Player;
 
 		/// @brief Initialier a new PMove.
 		/// @param player - The player.
-		PMove(std::shared_ptr<class Player> player);
+		PMove(const Ref<class Player>& player);
 		virtual ~PMove() = default;
 
 		/// @brief Initialize the player movement.
@@ -31,6 +31,6 @@ namespace Iswenzz::CoD4x
 
 		/// @brief Update the player surface type on jump.
 		/// @param pml - The player movement.
-		void JumpUpdateSurface(pml_t *pml);
+		void JumpUpdateSurface(pml_t* pml);
 	};
 }

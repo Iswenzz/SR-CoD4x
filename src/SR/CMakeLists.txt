@@ -25,7 +25,6 @@ set(CPACK_GENERATOR 7Z)
 include(CPack)
 
 # Dependencies
-find_path(CGSC_INCLUDE_DIRS "CGSC/cgsc.h")
 find_path(MINIMP3_INCLUDE_DIRS "minimp3/minimp3.h")
 find_library(SAMPLERATE_LIBRARY samplerate)
 find_package(CoD4DM1 CONFIG REQUIRED)

@@ -1,12 +1,18 @@
 #include "Netchan.hpp"
+#include "Vegas.hpp"
 
 #include "Player/Player.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
+	void Netchan::Initialize()
+	{
+		Vegas::Initialize();
+	}
+
 	void Netchan::Packet(netadr_t *from, client_t *cl, msg_t *msg)
 	{
-		if (!IsDefinedClient(cl))
+		if (!DEFINED_CLIENT(cl))
 			return;
 
 		auto player = Player::Get(cl->gentity->s.number);

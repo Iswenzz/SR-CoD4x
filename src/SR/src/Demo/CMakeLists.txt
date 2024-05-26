@@ -1,4 +1,4 @@
-target_sources(SR PUBLIC
+target_sources(SR PRIVATE
 	Demo.hpp
 	Demo.cpp
 	DemoPlayer.hpp

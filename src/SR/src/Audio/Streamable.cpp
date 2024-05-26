@@ -2,7 +2,7 @@
 
 #include "Speex.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	Streamable::~Streamable()
 	{

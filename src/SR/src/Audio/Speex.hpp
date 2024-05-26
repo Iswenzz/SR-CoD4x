@@ -3,7 +3,6 @@
 
 #include <speex/speex.h>
 #include <cstring>
-#include <vector>
 
 #define SPEEX_RATE 8000
 #define SPEEX_FRAME_SIZE 160
@@ -12,15 +11,15 @@
 #define SPEEX_PCM_CHUNK 16
 #define SPEEX_BITS_PER_SAMPLE 16
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	/// @brief Speex VoIP transmition class.
 	class Speex
 	{
 	public:
-		static inline void *Decoder;
-		static inline void *Encoder;
-		static inline SpeexBits Bits;
+		static inline void *Decoder = nullptr;
+		static inline void *Encoder = nullptr;
+		static inline SpeexBits Bits = { 0 };
 
 		/// @brief Initialize speex encoder and decoder.
 		static void Initialize();

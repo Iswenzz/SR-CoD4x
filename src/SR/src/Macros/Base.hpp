@@ -44,3 +44,16 @@
 		Scr_Error(message);          \
 		return;                      \
 	}
+
+#define DEFINED_GCLIENT(client) (client)
+
+#define DEFINED_CLIENT(cl) (cl && cl->gentity && cl->gentity->client)
+#define DEFINED_CLIENT_NUM(num) \
+	(Player::List[num] && Player::List[num]->cl->gentity && Player::List[num]->cl->gentity->client)
+
+#define DEFINED_ENTITY(ent) (ent && ent->s.number > 0 && ent->s.number < MAX_GENTITIES)
+#define DEFINED_ENTITY_NUM(num) (Entity::List[num] && Entity::List[num]->g)
+
+#define IZ_ASYNC(function) \
+public:                    \
+	static void function(uv_work_t *req);

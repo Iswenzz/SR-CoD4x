@@ -1,4 +1,4 @@
-target_sources(SR PUBLIC
+target_sources(SR PRIVATE
 	Audio.hpp
 	Audio.cpp
 	MP3.hpp

@@ -1,42 +1,46 @@
 #include "Server.hpp"
+#include "Map.hpp"
 
-#include "Application.hpp"
+#include "Audio/Voice.hpp"
+#include "Network/Vegas.hpp"
+#include "System/Debug.hpp"
+#include "System/ThreadPool.hpp"
 
-namespace Iswenzz::CoD4x
+#include "Demo/DemoContainer.hpp"
+#include "Entity/Entity.hpp"
+#include "Player/Player.hpp"
+
+namespace SR
 {
-	Server::Server()
-	{
-		Map = std::make_unique<class Map>();
-		Voice = std::make_unique<class Voice>();
-		Vegas = std::make_unique<class Vegas>();
-	}
-
-	void Server::Spawn(std::string levelName)
+	void Server::Spawn(const std::string& levelName)
 	{
 		Log::WriteLine("[Server] Spawn server");
 
-		SR->ThreadPool->GSC->Restart();
+		ThreadPool::Initialize();
 
-		SR->Players = {};
-		SR->Entities = {};
+		Player::List = {};
+		Entity::List = {};
 
-		SR->DemoContainer->Demos.clear();
+		DemoContainer::Demos.clear();
 	}
 
 	void Server::Restart()
 	{
-		Map->Restart();
+		Map::Restart();
 	}
 
 	void Server::Frame()
 	{
-		for (const auto &player : SR->Players)
+		for (const auto& player : Player::List)
 		{
 			if (player)
+			{
 				player->Frame();
+				Vegas::Frame(player);
+			}
 		}
-		Map->Frame();
-		Voice->Frame();
+		Map::Frame();
+		Voice::Frame();
 		Debug::FPS();
 	}
 }

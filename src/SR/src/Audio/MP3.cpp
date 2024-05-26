@@ -1,7 +1,7 @@
 #include "MP3.hpp"
 
-#include "Application.hpp"
 #include "Audio.hpp"
+#include "System/ThreadPool.hpp"
 
 #define MINIMP3_ONLY_MP3
 #define MINIMP3_NO_STDIO
@@ -9,13 +9,13 @@
 
 #include <minimp3/minimp3_ex.h>
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
-	MP3::MP3(std::string filepath)
+	MP3::MP3(const std::string& filepath)
 	{
 		FilePath = filepath;
 
-		SR->ThreadPool->Main->Worker(this, OpenAsync);
+		ThreadPool::Main.Worker(this, OpenAsync);
 	}
 
 	void MP3::Open()
@@ -64,4 +64,6 @@ namespace Iswenzz::CoD4x
 
 		AsyncWorkerDone(req, ASYNC_SUCCESSFUL);
 	}
+
+	void MP3::Save(const std::string& path) { }
 }

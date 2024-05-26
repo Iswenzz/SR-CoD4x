@@ -1,9 +1,9 @@
 #pragma once
 #include "Base.hpp"
 
-#include <vector>
+#include "Speex.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	/// @brief Process audio data.
 	class Audio

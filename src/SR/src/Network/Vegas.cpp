@@ -1,21 +1,22 @@
 #include "Vegas.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
-	Vegas::Vegas() : TCP(200)
+	void Vegas::Initialize()
 	{
-		NET_TCPAddEventType(SR_VegasMessage, SR_VegasConnect, SR_VegasDisconnect, ServiceID);
-		IsEnabled = Cvar_RegisterBool("vegas", qfalse, 0, "Allow vegas rendering.");
+		ServiceID = 200;
+		NET_TCPAddEventType(Message, Connect, Disconnect, ServiceID);
+		Enabled = Cvar_RegisterBool("vegas", qfalse, 0, "Allow vegas server.");
 	}
 
-	bool Vegas::Connect(netadr_t *from, msg_t *msg)
+	bool Vegas::Connect(netadr_t *from, msg_t *msg, int *connectionId)
 	{
 		return true;
 	}
 
-	void Vegas::Disconnect(netadr_t *from) { }
+	void Vegas::Disconnect(netadr_t *from, int connectionId) { }
 
-	int Vegas::Message(netadr_t *from, msg_t *msg)
+	int Vegas::Message(netadr_t *from, msg_t *msg, int connectionId)
 	{
 		MSG_BeginReading(msg);
 
@@ -37,15 +38,14 @@ namespace Iswenzz::CoD4x
 			b = MSG_ReadByte(msg);
 			a = MSG_ReadByte(msg);
 		}
-
 		Color.split = { r, g, b, a };
 		Material = G_FindMaterial(name);
 		return 0;
 	}
 
-	void Vegas::Frame(Player *player)
+	void Vegas::Frame(const Ref<Player> &player)
 	{
-		if (!IsEnabled->boolean)
+		if (!Enabled->boolean)
 			return;
 
 		clientSnapshot_t *frame = player->GetFrame();

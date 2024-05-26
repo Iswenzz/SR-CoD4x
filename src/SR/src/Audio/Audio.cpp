@@ -2,7 +2,7 @@
 
 #include <samplerate.h>
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	std::vector<short> Audio::Amplify(std::vector<short> &data, float multiplier)
 	{

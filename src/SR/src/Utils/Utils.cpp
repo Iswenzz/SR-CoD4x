@@ -1,6 +1,6 @@
 #include "Utils.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	std::vector<std::string> Utils::SplitString(const std::string& source, char delimiter)
 	{

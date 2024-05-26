@@ -1,4 +1,4 @@
-target_sources(SR PUBLIC
+target_sources(SR PRIVATE
 	Container.hpp
 	Container.cpp
 	Debug.hpp

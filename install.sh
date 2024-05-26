@@ -7,7 +7,7 @@ cd src/CGSC
 rm -r build
 mkdir build
 cd build
-cmake .. -DCMAKE_TOOLCHAIN_FILE=.vcpkg/linux.cmake -DCOD4X=True
+cmake .. --preset linux
 cmake --build .
 cd $ROOT
 
@@ -17,7 +17,7 @@ cd src/SR
 rm -r build
 mkdir build
 cd build
-cmake .. -DCMAKE_TOOLCHAIN_FILE=.vcpkg/linux.cmake
+cmake .. --preset linux
 cmake --build .
 cd $ROOT
 
@@ -31,7 +31,7 @@ cd plugins/gsclib
 rm -r build
 mkdir build
 cd build
-cmake .. -DCMAKE_TOOLCHAIN_FILE=.vcpkg/linux.cmake
+cmake .. --preset linux
 cmake --build .
 cd $ROOT
 

@@ -9,17 +9,14 @@ namespace Iswenzz::CoD4
 
 	AsyncHandler::~AsyncHandler()
 	{
-		Shutdown();
+		if (Handler)
+			AsyncShutdown(Handler);
 	}
 
 	void AsyncHandler::Restart()
 	{
-		Shutdown();
+		if (Handler)
+			AsyncShutdown(Handler);
 		Handler = AsyncInit();
-	}
-
-	void AsyncHandler::Shutdown()
-	{
-		AsyncShutdown(Handler);
 	}
 }

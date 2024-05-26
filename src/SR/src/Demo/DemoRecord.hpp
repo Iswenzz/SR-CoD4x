@@ -1,7 +1,7 @@
 #pragma once
 #include "Base.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	/// @brief Demo recording.
 	class DemoRecord

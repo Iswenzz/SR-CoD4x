@@ -36,8 +36,4 @@ int SR_PmoveGetGravity(playerState_t *ps);
 float SR_PmoveGetJumpHeight(unsigned int num);
 void SR_JumpUpdateSurface(playerState_t *ps, struct pml_t *pml);
 
-qboolean SR_VegasConnect(netadr_t *from, msg_t *msg, int *connectionId);
-void SR_VegasDisconnect(netadr_t *from, int connectionId);
-int SR_VegasMessage(netadr_t *from, msg_t *msg, int connectionId);
-
 IZ_C_END

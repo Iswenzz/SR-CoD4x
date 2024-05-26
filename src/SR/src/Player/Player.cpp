@@ -1,8 +1,6 @@
 #include "Player.hpp"
 
-#include "Application.hpp"
-
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	Player::Player(client_t *cl)
 	{
@@ -17,8 +15,8 @@ namespace Iswenzz::CoD4x
 	{
 		Log::WriteLine("[Player] Connected %d %s", cl->gentity->s.number, cl->name);
 
-		DemoPlayer = std::make_unique<class DemoPlayer>(shared_from_this());
-		PMove = std::make_unique<class PMove>(shared_from_this());
+		DemoPlayer = CreateScope<class DemoPlayer>(shared_from_this());
+		PMove = CreateScope<class PMove>(shared_from_this());
 	}
 
 	void Player::Disconnect()
@@ -71,13 +69,12 @@ namespace Iswenzz::CoD4x
 
 	void Player::Frame()
 	{
-		if (!IsDefinedClient(cl))
+		if (!DEFINED_CLIENT(cl))
 			return;
 
 		CalculateFPS();
 		VoiceChat();
 
-		SR->Server->Vegas->Frame(this);
 		DemoPlayer->Frame();
 	}
 
@@ -107,15 +104,15 @@ namespace Iswenzz::CoD4x
 		return &cl->frames[cl->netchan.outgoingSequence & PACKET_MASK];
 	}
 
-	std::shared_ptr<Player> Player::Get(int num)
+	Ref<Player> &Player::Get(int num)
 	{
-		return IsDefinedClientNum(num) ? SR->Players[num] : nullptr;
+		return List[num];
 	}
 
 	void Player::Add(client_t *cl)
 	{
-		std::shared_ptr<Player> player = std::make_shared<Player>(cl);
+		Ref<Player> player = CreateRef<Player>(cl);
 		player->Initialize();
-		SR->Players[cl->gentity->s.number] = player;
+		List[cl->gentity->s.number] = player;
 	}
 }

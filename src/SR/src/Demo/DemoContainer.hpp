@@ -1,22 +1,22 @@
 #pragma once
 #include "Demo.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	/// @brief Demo container class.
 	class DemoContainer
 	{
 	public:
-		std::vector<std::string> Directories{};
-		std::map<std::string, std::shared_ptr<Demo>> Demos{};
+		static inline std::vector<std::string> Directories{};
+		static inline std::map<std::string, Ref<Demo>> Demos{};
+		static inline uv_mutex_t Mutex;
 
-		/// @brief Initialize a DemoContainer.
-		DemoContainer();
-		~DemoContainer() = default;
+		/// @brief Initialize the DemoContainer.
+		static void Initialize();
 
 		/// @brief Register a demo folder.
 		/// @param path - The folder path.
-		void RegisterDemoFolder(const std::filesystem::path &path);
+		static void RegisterDemoFolder(const std::filesystem::path &path);
 
 		/// @brief Register a speedrun demo.
 		/// @param map - The map name.
@@ -24,7 +24,7 @@ namespace Iswenzz::CoD4x
 		/// @param run - The run id.
 		/// @param mode - The run mode.
 		/// @param way - The run way.
-		int RegisterSpeedrunDemo(const std::string &map, const std::string &playerId, const std::string &run,
+		static int RegisterSpeedrunDemo(const std::string &map, const std::string &playerId, const std::string &run,
 			const std::string &mode, const std::string &way);
 	};
 }

@@ -18,33 +18,31 @@ struct WavHeader
 	uint32_t subchunk2Size; // NumSamples * NumChannels * BitsPerSample / 8
 };
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	/// @brief WAV audio file.
 	class WAV : public Streamable
 	{
+		IZ_ASYNC(OpenAsync)
 	public:
 		/// @brief Open a WAV file.
 		/// @param filepath - The file path.
-		WAV(std::string filepath);
+		WAV(const std::string& filepath);
 		virtual ~WAV() = default;
 
 		/// @brief Open a file.
 		void Open() override;
 
-		/// @brief Open a file.
-		/// @param req - The worker request.
-		static void OpenAsync(uv_work_t *req);
-
 		/// @brief Save file.
 		/// @param path - The file path.
-		void Save(std::string path);
+		void Save(const std::string& path);
 
+	private:
 		/// @brief Write header.
 		/// @param file - The output file.
 		/// @param channels - Number of channels.
 		/// @param rate - The wav samples rate.
 		/// @param samples - The wav samples count.
-		void WriteHeader(std::ofstream &file, int channels, int rate, int samples);
+		void WriteHeader(std::ofstream& file, int channels, int rate, int samples);
 	};
 }

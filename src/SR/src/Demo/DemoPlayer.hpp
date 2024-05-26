@@ -1,20 +1,20 @@
 #pragma once
 #include "Demo.hpp"
-
 #include "Player/Player.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	/// @brief Play a demo on a player.
 	class DemoPlayer
 	{
 	public:
-		std::shared_ptr<class Demo> Demo;
-		std::shared_ptr<class Player> Player;
-		gentity_t* Entity;
+		Ref<class Demo> Demo;
+		Ref<class Player> Player;
+		gentity_t* Entity = nullptr;
+		int Velocity = 0;
+		std::string Weapon = "";
 
 		DemoFrame CurrentFrame;
-
 		int FrameIndex = 0;
 		int PreviousFrameIndex = 0;
 
@@ -22,17 +22,14 @@ namespace Iswenzz::CoD4x
 		int SlowmoIndex = 0;
 		int SlowmoThreshold = 0;
 
-		int Velocity = 0;
-		std::string Weapon = "";
-
 		/// @brief Initialize the DemoPlayer.
 		/// @param player - The player.
-		DemoPlayer(std::shared_ptr<class Player> player);
+		DemoPlayer(const Ref<class Player>& player);
 		~DemoPlayer() = default;
 
 		/// @brief Play a demo on a player.
 		/// @param demo - The demo.
-		void Play(const std::shared_ptr<class Demo>& demo);
+		void Play(const Ref<class Demo>& demo);
 
 		/// @brief Stop the demo.
 		void Stop();

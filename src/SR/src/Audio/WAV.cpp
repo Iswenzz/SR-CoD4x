@@ -1,15 +1,15 @@
 #include "WAV.hpp"
 
-#include "Application.hpp"
 #include "Audio.hpp"
+#include "System/ThreadPool.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
-	WAV::WAV(std::string filepath)
+	WAV::WAV(const std::string &filepath)
 	{
 		FilePath = filepath;
 
-		SR->ThreadPool->Main->Worker(this, OpenAsync);
+		ThreadPool::Main.Worker(this, OpenAsync);
 	}
 
 	void WAV::Open()
@@ -50,7 +50,7 @@ namespace Iswenzz::CoD4x
 		AsyncWorkerDone(req, ASYNC_SUCCESSFUL);
 	}
 
-	void WAV::Save(std::string path)
+	void WAV::Save(const std::string &path)
 	{
 		if (!Buffer.size())
 			return;

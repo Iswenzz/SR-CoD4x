@@ -2,9 +2,9 @@
 
 #include "Player.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
-	PMove::PMove(std::shared_ptr<class Player> player)
+	PMove::PMove(const Ref<class Player>& player)
 	{
 		Player = player;
 	}
@@ -36,7 +36,7 @@ namespace Iswenzz::CoD4x
 		return Player->cl->jumpHeight;
 	}
 
-	void PMove::JumpUpdateSurface(pml_t *pml)
+	void PMove::JumpUpdateSurface(pml_t* pml)
 	{
 		Player->SurfaceFlags = pml->groundTrace.sflags;
 	}

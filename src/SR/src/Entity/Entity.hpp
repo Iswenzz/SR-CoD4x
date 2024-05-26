@@ -1,15 +1,14 @@
 #pragma once
 #include "Base.hpp"
 
-#define IsDefinedEntity(ent) (ent && ent->s.number > 0 && ent->s.number < MAX_GENTITIES)
-#define IsDefinedEntityNum(num) (SR->Entities[num] && SR->Entities[num]->g)
-
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	/// @brief Entity class.
 	class Entity
 	{
 	public:
+		static inline std::array<Ref<Entity>, MAX_GENTITIES> List;
+
 		gentity_t *g;
 
 		/// @brief Initialize a new Entity.
@@ -24,6 +23,6 @@ namespace Iswenzz::CoD4x
 		/// @brief Get the entity.
 		/// @param num - The entity number.
 		/// @return
-		static std::shared_ptr<Entity> Get(int num);
+		static Ref<Entity> &Get(int num);
 	};
 }

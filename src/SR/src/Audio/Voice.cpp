@@ -1,14 +1,12 @@
 #include "Voice.hpp"
 
 #include "Audio.hpp"
-#include "Speex.hpp"
-
 #include "Player/Player.hpp"
 
 #define VOICE_AMPLIFY 2
 #define PROXIMITY_DISTANCE 1500
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	void Voice::Stream()
 	{

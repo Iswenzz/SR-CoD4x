@@ -2,9 +2,9 @@
 
 namespace Iswenzz::CoD4
 {
-	ThreadPool::ThreadPool()
+	void ThreadPool::Initialize()
 	{
-		Main = std::make_unique<AsyncHandler>();
-		GSC = std::make_unique<AsyncHandler>();
+		Main.Restart();
+		GSC.Restart();
 	}
 }

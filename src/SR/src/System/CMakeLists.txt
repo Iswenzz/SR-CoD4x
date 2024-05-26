@@ -1,6 +1,8 @@
-target_sources(SR PUBLIC
+target_sources(SR PRIVATE
 	AsyncHandler.hpp
 	AsyncHandler.cpp
+	Debug.hpp
+	Debug.cpp
 	Environment.hpp
 	Environment.cpp
 	ThreadPool.hpp

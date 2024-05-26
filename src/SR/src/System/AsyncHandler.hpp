@@ -1,17 +1,20 @@
 #pragma once
 #include "Base.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	/// @brief Async handler class.
 	class AsyncHandler
 	{
 	public:
-		async_handler *Handler;
+		async_handler *Handler = nullptr;
 
 		/// @brief Initialize the async handler.
 		AsyncHandler();
 		~AsyncHandler();
+
+		/// @brief Restart async handler.
+		void Restart();
 
 		/// @brief Create an async worker.
 		/// @tparam T - The data type.
@@ -35,11 +38,5 @@ namespace Iswenzz::CoD4x
 		{
 			return AsyncWorker(Handler, data, callback, afterCallback);
 		}
-
-		/// @brief Restart the async handler.
-		void Restart();
-
-		/// @brief Shutdown the async handler.
-		void Shutdown();
 	};
 }

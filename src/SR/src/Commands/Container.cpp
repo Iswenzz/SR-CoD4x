@@ -6,9 +6,9 @@
 #include "Game.hpp"
 #include "Player.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
-	void CommandsContainer::Register()
+	void CommandsContainer::Initialize()
 	{
 		DebugCommands::Register();
 		DemoCommands::Register();

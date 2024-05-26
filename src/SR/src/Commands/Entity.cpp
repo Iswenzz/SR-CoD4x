@@ -1,6 +1,6 @@
 #include "Entity.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	void EntityCommands::Register() { }
 }

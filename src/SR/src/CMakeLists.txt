@@ -4,6 +4,7 @@ add_subdirectory(Audio)
 add_subdirectory(Commands)
 add_subdirectory(Demo)
 add_subdirectory(Entity)
+add_subdirectory(Macros)
 add_subdirectory(Network)
 add_subdirectory(Player)
 add_subdirectory(Server)
@@ -30,10 +31,8 @@ target_link_libraries(SR PUBLIC
 target_include_directories(SR PUBLIC
 	.
 	../..
-	../../CGSC
 	../../version
 	../../../plugins
-	${CGSC_INCLUDE_DIRS}
 	${MINIMP3_INCLUDE_DIRS})
 
 # Tree

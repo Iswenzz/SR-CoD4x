@@ -3,7 +3,7 @@
 
 #include <filesystem>
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	/// @brief Environment variables.
 	class Environment

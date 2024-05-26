@@ -1,6 +1,6 @@
 #include "Speex.hpp"
 
-namespace Iswenzz::CoD4x
+namespace SR
 {
 	void Speex::Initialize()
 	{

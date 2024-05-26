@@ -1,7 +1,5 @@
-add_subdirectory(Listeners)
-
-target_sources(SR PUBLIC
+target_sources(SR PRIVATE
 	Netchan.hpp
 	Netchan.cpp
-	TCP.hpp
-	TCP.cpp)
+	Vegas.hpp
+	Vegas.cpp)
