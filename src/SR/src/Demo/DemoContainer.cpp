@@ -30,7 +30,7 @@ namespace SR
 		std::vector<std::string> demos{};
 		for (const std::string &folder : Directories)
 		{
-			auto demoDirectory = std::filesystem::path(folder) / playerId / map;
+			const auto demoDirectory = std::filesystem::path(folder) / playerId / map;
 			if (!std::filesystem::exists(demoDirectory))
 				continue;
 
@@ -44,7 +44,7 @@ namespace SR
 		if (demos.size())
 		{
 			std::string id = fmt("times_%s_%s", mode.c_str(), way.c_str());
-			auto found = Demos.find(id);
+			const auto found = Demos.find(id);
 
 			if (found != std::end(Demos))
 			{
@@ -52,8 +52,10 @@ namespace SR
 					return 2;
 				Demos.erase(id);
 			}
-			Demos.insert({ id, CreateRef<Demo>(id, demos.at(0)) });
-			Log::WriteLine("[DemoContainer] Register demo %s %s", id.c_str(), demos.at(0).c_str());
+			const auto demoPath = demos.at(0);
+			const auto relativePath = std::filesystem::relative(demoPath, Environment::ModDirectory).string();
+			Demos.insert({ id, CreateRef<Demo>(id, demoPath) });
+			Log::WriteLine("[DemoContainer] Register demo %s %s", id.c_str(), relativePath.c_str());
 			return 1;
 		}
 		return 0;
