@@ -9,7 +9,7 @@
 			"kind": "git",
 			"repository": "https://github.com/Iswenzz/vcpkg-registry",
 			"baseline": "c12eb749ee43da80e9951717c334059a50bbdf5b",
-			"packages": ["cgsc", "cod4dm1", "speex"]
+			"packages": ["cod4dm1", "speex"]
 		}
 	],
 	"overlay-triplets": [".vcpkg/triplets"]

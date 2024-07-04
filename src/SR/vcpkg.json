@@ -5,7 +5,7 @@
 	"homepage": "https://github.com/Iswenzz/SR-CoD4x",
 	"dependencies": ["cod4dm1", "speex", "libuv", "minimp3", "libsamplerate"],
 	"overrides": [
-		{ "name": "cod4dm1", "version": "1.0.5" },
+		{ "name": "cod4dm1", "version": "1.0.6" },
 		{ "name": "speex", "version": "1.2.1" },
 		{ "name": "libuv", "version": "1.46.0" },
 		{ "name": "minimp3", "version": "2021-11-30" },
