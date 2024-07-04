@@ -1,6 +1,6 @@
 {
 	"name": "sr",
-	"version": "1.2.3",
+	"version": "1.0.0",
 	"description": "SR CoD4x server source.",
 	"homepage": "https://github.com/Iswenzz/SR-CoD4x",
 	"dependencies": ["cod4dm1", "speex", "libuv", "minimp3", "libsamplerate"],
