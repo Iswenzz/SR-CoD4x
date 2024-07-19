@@ -29,10 +29,6 @@ A compatible client modification can be found here: [client](https://github.com/
 * Backwards compatibility to 1.7 and 1.7a servers
 * A new [masterserver](http://cod4master.cod4x.ovh/), for when the official masterserver is down
 
-# TODO
-* Speedrun BOT
-* 3xP FPS calculation
-
 ## Setting up a Call of Duty 4 server with Cod4x 1.8
 Download binaries: [Releases](https://github.com/callofduty4x/CoD4x_Server/releases)
 
