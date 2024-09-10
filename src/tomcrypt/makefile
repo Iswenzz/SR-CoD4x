@@ -4,6 +4,7 @@ CFLAGS=-m32 -Wall -Os -s -I. -DLTC_NO_ROLC -DLTC_SOURCE
 CC=gcc
 TARGETDIR=../../lib
 TARGETNAME=$(TARGETDIR)/$(TARGET)
+
 SOURCES=$(wildcard ciphers/aes/aes.c \
 	hashes/*.c \
 	misc/crypt/*.c \
@@ -29,8 +30,6 @@ SOURCES=$(wildcard ciphers/aes/aes.c \
 	math/*.c)
 
 OBJECTS=$(patsubst %.c,%.o,$(SOURCES))
-#MATHSOURCES=$(wildcard math/*.c)
-#MATHOBJECTS=$(patsubst %.c,%.o,$(MATHSOURCES))
 
 all: notify $(TARGETNAME)
 	@echo TomCrypt done
@@ -38,7 +37,7 @@ all: notify $(TARGETNAME)
 notify:
 	@echo TomCrypt start
 
-$(TARGETNAME): $(OBJECTS) #$(MATHOBJECTS)
+$(TARGETNAME): $(OBJECTS)
 	@echo   $(AR)  $@
 	@$(AR) cr $@ $^
 
