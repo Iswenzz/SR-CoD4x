@@ -1,1 +1,0 @@
-## Plugin Interface for the D Programming Language
