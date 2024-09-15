@@ -18,13 +18,10 @@ jobs:
         fetch-depth: 0
         submodules: "recursive"
 
-    - name: MinGW
-      run: |
-        $Uri = "https://downloads.sourceforge.net/mingw-w64/i686-8.1.0-release-posix-dwarf-rt_v6-rev0.7z"
-        $filename = "mingw32.7z"
-        cd C:/
-        Start-BitsTransfer -Source $Uri -Destination $filename
-        7z x $filename
+    - name: Set up MinGW
+      uses: egor-tensin/setup-mingw@v2
+      with:
+        platform: x86
 
     - name: NASM
       uses: ilammy/setup-nasm@v1
@@ -34,15 +31,6 @@ jobs:
       with:
         vcpkgGitCommitId: 4a600e9fea71bd7872080cbb716797e04d30e6d3
 
-    - name: Pexports
-      run: |
-        Invoke-WebRequest "https://github.com/callofduty4x/CoD4x_Server/raw/master/tools/pexports-0.47-mingw32-bin.tar.xz" -OutFile "pexports.tar.xz"
-        7z x pexports.tar.xz
-        7z x pexports.tar
-
     - name: Build
       run: |
-        $path = $env:Path
-        $env:Path = "C:\mingw32\bin;"
-        $env:Path += $path
         ./install.bat
