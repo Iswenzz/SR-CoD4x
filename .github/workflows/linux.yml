@@ -25,9 +25,9 @@ jobs:
 
     - name: Dependencies
       run: |
-        sudo apt-get install g++-multilib gcc-multilib
         sudo dpkg --add-architecture i386
-        sudo apt-get install nasm:i386 paxctl:i386 libtommath-dev:i386
+        sudo apt-get update
+        sudo apt-get install nasm:i386 make gcc-multilib g++-multilib git
 
     - name: Build
-      run: ./install.sh
+      run: ./ci.sh

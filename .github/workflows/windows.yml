@@ -33,4 +33,4 @@ jobs:
 
     - name: Build
       run: |
-        ./install.bat
+        ./ci.bat
