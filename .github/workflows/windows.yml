@@ -18,10 +18,10 @@ jobs:
         fetch-depth: 0
         submodules: "recursive"
 
-    - name: Set up MinGW
-      uses: egor-tensin/setup-mingw@v2
+    - name: MinGW
+      uses: msys2/setup-msys2@v2
       with:
-        platform: x86
+        msystem: MINGW32
 
     - name: NASM
       uses: ilammy/setup-nasm@v1
