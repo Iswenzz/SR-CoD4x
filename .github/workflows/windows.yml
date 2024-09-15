@@ -33,4 +33,5 @@ jobs:
 
     - name: Build
       run: |
+        gcc --version
         ./ci.bat
