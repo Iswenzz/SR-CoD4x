@@ -71,7 +71,7 @@ RESOURCE_FILE=src/win32/win_cod4.res
 DEF_FILE=$(BIN_DIR)/$(TARGETNAME).def
 INTERFACE_LIB=$(PLUGINS_DIR)/libcom_plugin.a
 ADDITIONAL_OBJ=$(INTERFACE_LIB)
-CLEAN=-del $(subst /,\\,$(OBJ_DIR)/*.o $(DEF_FILE) $(INTERFACE_LIB))
+CLEAN=-del $(subst /,\\,$(OBJ_DIR)/*.o $(LIB_DIR)/*.a $(DEF_FILE) $(INTERFACE_LIB))
 
 ##################################
 # Linux
@@ -130,6 +130,26 @@ $(OBJ_DIR)/%.o: $(CGSC_DIR)/asm/%.asm
 	@$(NASM) $(NASMFLAGS) $< -o $@
 
 ##################################
+# Targets
+all: $(EXTERNAL) $(TARGET) $(ADDITIONAL_OBJ)
+
+mbedtls:
+	@echo   $(MAKE)  $@
+	@$(MAKE) -C $(SRC_DIR)/$@
+
+tomcrypt:
+	@echo   $(MAKE)  $@
+	@$(MAKE) -C $(SRC_DIR)/$@
+
+clean:
+	@echo   clean Server
+	@$(CLEAN)
+	@echo   clean Mbedtls
+	@$(MAKE) -C $(SRC_DIR)/mbedtls clean
+	@echo   clean Tomcrypt
+	@$(MAKE) -C $(SRC_DIR)/tomcrypt clean
+
+##################################
 # Rules
 $(TARGET): $(OS_OBJ) $(C_OBJ) $(CPP_OBJ) $(ZLIB_OBJ) $(ASSETS_OBJ) $(ASM_OBJ) $(OBJ_DIR)/version.o
 	@echo   $(CXX) $(TARGET)
@@ -174,23 +194,3 @@ $(INTERFACE_LIB): $(DEF_FILE) $(TARGET)
 $(DEF_FILE): $(TARGET)
 	@echo   pexports  $@
 	@pexports $^ > $@
-
-##################################
-# Targets
-all: $(EXTERNAL) $(TARGET) $(ADDITIONAL_OBJ)
-
-mbedtls:
-	@echo   $(MAKE)  $@
-	@$(MAKE) -C $(SRC_DIR)/$@
-
-tomcrypt:
-	@echo   $(MAKE)  $@
-	@$(MAKE) -C $(SRC_DIR)/$@
-
-clean:
-	@echo   clean Server
-	@$(CLEAN)
-	@echo   clean Mbedtls
-	@$(MAKE) -C $(SRC_DIR)/mbedtls clean
-	@echo   clean Tomcrypt
-	@$(MAKE) -C $(SRC_DIR)/tomcrypt clean
