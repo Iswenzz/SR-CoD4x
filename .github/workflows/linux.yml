@@ -30,4 +30,6 @@ jobs:
         sudo apt-get install nasm:i386 make gcc-multilib g++-multilib git
 
     - name: Build
-      run: ./ci.sh
+      run: |
+        chmod +x ci.sh
+        ./ci.sh
