@@ -1,8 +1,5 @@
 # SR CoD4x
 
-[![Checks](https://img.shields.io/github/checks-status/Iswenzz/SR-CoD4x/master?logo=github)](https://github.com/Iswenzz/SR-CoD4x/actions)
-[![License](https://img.shields.io/github/license/Iswenzz/SR-CoD4x?color=blue&logo=gitbook&logoColor=white)](https://github.com/Iswenzz/SR-CoD4x/blob/master/LICENSE)
-
 CoD4x is a modification of the Call of Duty 4 - Modern Warfare server. It fixes several bugs in the original binaries and allows developers to extend server functionality with additional variables and plugins. When using the CoD4x server, the clients invoke installation of the proprietary CoD4x client to players joining the server using the CoD4x servers, which fixes several known base game bugs in the client, and in combination with the server allows for extra features.
 
 A compatible client modification can be found here: [client](https://github.com/callofduty4x/CoD4x_Client_pub)
