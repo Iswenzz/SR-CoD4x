@@ -9,7 +9,7 @@ namespace SR
 	Demo::Demo(const std::string &id, const std::string &path)
 	{
 		ID = id;
-		Reader = CreateScope<Iswenzz::CoD4::DM1::DemoReader>(path);
+		Reader = CreateScope<CoD4::DM1::DemoReader>(path);
 
 		ThreadPool::GSC.Worker(this, OpenAsync);
 	}
@@ -257,7 +257,7 @@ namespace SR
 
 	bool Demo::CanParseSnapshot()
 	{
-		if (Reader->DemoFile->CurrentMessageType != Iswenzz::CoD4::DM1::MSGType::MSG_SNAPSHOT)
+		if (Reader->DemoFile->CurrentMessageType != CoD4::DM1::MSGType::MSG_SNAPSHOT)
 			return false;
 		if (!LastValidFrame && !Reader->GetCurrentSnapshot().valid)
 			return false;

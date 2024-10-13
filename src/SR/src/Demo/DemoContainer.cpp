@@ -9,7 +9,7 @@ namespace SR
 {
 	void DemoContainer::Initialize()
 	{
-		Iswenzz::CoD4::DM1::Huffman::InitMain();
+		CoD4::DM1::Huffman::InitMain();
 
 		Cvar_RegisterInt("sr_demo_version", 2, 0, 100, CVAR_ROM | CVAR_SERVERINFO, "SR demo version");
 

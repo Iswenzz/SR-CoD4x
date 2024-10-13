@@ -34,7 +34,7 @@ namespace SR
 		IZ_ASYNC(OpenAsync)
 	public:
 		std::string ID;
-		Scope<Iswenzz::CoD4::DM1::DemoReader> Reader;
+		Scope<CoD4::DM1::DemoReader> Reader;
 		std::vector<DemoFrame> Frames{};
 		std::array<std::string, DEMO_MAX_CONFIGSTRINGS> ConfigStrings{};
 		std::vector<std::string> Weapons{};

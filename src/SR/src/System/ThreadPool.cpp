@@ -1,6 +1,6 @@
 #include "ThreadPool.hpp"
 
-namespace Iswenzz::CoD4
+namespace SR
 {
 	void ThreadPool::Initialize()
 	{
