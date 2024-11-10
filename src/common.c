@@ -1364,10 +1364,12 @@ void QDECL Com_Error( int code, const char *fmt, ... ) {
 		com_errorEntered = qfalse;
 		mainThreadInError = qfalse;
 		longjmp (*abortframe, -1);
+		exit(1);
 	} else {
 		Sys_BeginShutdownWatchdog();
 		SV_SApiShutdown();
 		SV_Shutdown(va("Server fatal crashed: %s", com_errorMessage));
+		exit(1);
 	}
 	NET_Shutdown();
 	Com_CloseLogFiles( );
