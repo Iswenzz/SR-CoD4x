@@ -1363,7 +1363,7 @@ void QDECL Com_Error( int code, const char *fmt, ... ) {
 		/*FS_PureServerSetLoadedPaks("", "");*/
 		com_errorEntered = qfalse;
 		mainThreadInError = qfalse;
-		longjmp (*abortframe, -1);
+		// longjmp (*abortframe, -1);
 		exit(1);
 	} else {
 		Sys_BeginShutdownWatchdog();
