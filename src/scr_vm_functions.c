@@ -621,8 +621,6 @@ void PlayerCmd_SetGravity(scr_entref_t arg)
         return;
     }
 
-    // Pmove_ExtendedTurnOn();
-
     gentity->client->ps.gravity = gravity;
     // SV_SendServerCommandNoLoss(&svs.clients[entityNum], va("v g_gravity \"%d\"", gravity));
 }
@@ -743,8 +741,6 @@ void PlayerCmd_SetJumpHeight(scr_entref_t arg)
         return;
     }
 
-    // Pmove_ExtendedTurnOn();
-
     svs.clients[entityNum].jumpHeight = height;
     // SV_SendServerCommandNoLoss(&svs.clients[entityNum], va("v jump_height \"%d\"", height));
 }
@@ -798,7 +794,6 @@ void PlayerCmd_SetMoveSpeed(scr_entref_t arg)
         return;
     }
 
-    // Pmove_ExtendedTurnOn();
     gentity->client->ps.speed = speed;
 }
 

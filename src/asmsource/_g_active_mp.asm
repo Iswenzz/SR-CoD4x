@@ -1409,8 +1409,6 @@ ClientThink_real_100:
 	mov [ebp-0x268], eax
 	mov [ebp-0xac], eax
 	; -------------------------- SR_PmoveGetSpeed --------------------------
-	; Get the player's gspeed instead of the global server CVar
-	; -----------------------------------------------------------------------
 	; mov eax, g_speed 					; cvar_t* g_speed;
 	; mov eax, [eax]					; deref
 	; mov eax, [eax+0xc]				; eax = g_speed.integer;

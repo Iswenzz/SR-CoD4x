@@ -70,13 +70,6 @@ void G_PrintRedirect(char* msg, int len);
 void G_PrintAddRedirect(void (*rd_dest)( const char *, int));
 __cdecl void ClientSpawn(gentity_t* ent, float* px, float* py);
 
-
-void Pmove_ExtendedResetState( void );
-void Pmove_ExtendedInitForClient(client_t *cl);
-void Pmove_ExtendedTurnOn( void );
-void Pmove_SetSpeed(unsigned int num, int speed);
-__cdecl __optimize3 int Pmove_GetSpeed( playerState_t *ps );
-__cdecl __optimize3 int Pmove_GetGravity( playerState_t *ps );
 __cdecl __optimize3 float Jump_GetHeight( playerState_t *ps);
 __cdecl __optimize3 void Jump_ClampVelocity(playerState_t* ps, vec3_t vec);
 __cdecl __optimize3 qboolean Jump_IsPlayerAboveMax(playerState_t* ps);
