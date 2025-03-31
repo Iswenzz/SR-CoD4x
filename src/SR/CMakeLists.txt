@@ -5,15 +5,6 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "-fpermissive -m32 -Wall -msse2 -mfpmath=sse -fno-omit-frame-pointer -fno-pie -O1 -Wno-packed-not-aligned -Wp,-w")
 
-# NASM
-if(WIN32)
-	set(CMAKE_ASM_NASM_FLAGS "-dWin32 --prefix _")
-	set(CMAKE_ASM_NASM_OBJECT_FORMAT "win32")
-else()
-	set(CMAKE_ASM_NASM_OBJECT_FORMAT "elf32")
-endif()
-enable_language(ASM_NASM)
-
 # CMake
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(ClangTools)

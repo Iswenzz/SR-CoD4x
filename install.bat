@@ -1,5 +1,7 @@
 @echo off
 set ROOT="%cd%"
+set CC=gcc
+set CXX=g++
 
 :: CGSC
 echo [+] CGSC
@@ -37,5 +39,5 @@ cd %ROOT%
 
 :: Binary
 echo [+] Binary
-copy /v bin\cod4x18_dedrun.exe "D:\Program Files (x86)\Activision\Cod4Mod"
-copy /v bin\gsclib.dll "D:\Program Files (x86)\Activision\Cod4Mod\plugins"
+copy /v bin\cod4x18_dedrun.exe "C:\Program Files (x86)\Activision\CoD4Mod"
+copy /v bin\gsclib.dll "C:\Program Files (x86)\Activision\CoD4Mod\plugins"
