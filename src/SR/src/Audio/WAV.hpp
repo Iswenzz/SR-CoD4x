@@ -20,29 +20,17 @@ struct WavHeader
 
 namespace SR
 {
-	/// @brief WAV audio file.
 	class WAV : public Streamable
 	{
 		IZ_ASYNC(OpenAsync)
 	public:
-		/// @brief Open a WAV file.
-		/// @param filepath - The file path.
 		WAV(const std::string& filepath);
 		virtual ~WAV() = default;
 
-		/// @brief Open a file.
 		void Open() override;
-
-		/// @brief Save file.
-		/// @param path - The file path.
 		void Save(const std::string& path);
 
 	private:
-		/// @brief Write header.
-		/// @param file - The output file.
-		/// @param channels - Number of channels.
-		/// @param rate - The wav samples rate.
-		/// @param samples - The wav samples count.
 		void WriteHeader(std::ofstream& file, int channels, int rate, int samples);
 	};
 }

@@ -47,24 +47,11 @@ namespace SR
 		COUNT = 0x26
 	};
 
-	/// @brief Log utility class.
-	/// @remark No support for <format> with MinGW.
 	class Log
 	{
 	public:
-		/// @brief Print a message.
-		/// @param channel - The channel.
-		/// @param msg - The message.
 		static void Write(Channel channel, const std::string& msg);
-
-		/// @brief Write to the console.
-		/// @param fmt - The format.
-		/// @param ... - Format arguments.
 		static void Write(const std::string& fmt, ...);
-
-		/// @brief Write a line to the console.
-		/// @param fmt - The format.
-		/// @param ... - Format arguments.
 		static void WriteLine(const std::string& fmt, ...);
 	};
 }

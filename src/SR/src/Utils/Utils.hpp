@@ -3,20 +3,11 @@
 
 namespace SR
 {
-	/// @brief Utility class.
 	class Utils
 	{
 	public:
-		/// @brief Split a string from a delimiter.
-		/// @param source - The string source.
-		/// @param delimiter - The split delimiter.
-		/// @return
 		static std::vector<std::string> SplitString(const std::string& source, char delimiter);
 
-		/// @brief Average mode a given vector.
-		/// @tparam T - The elemements type.
-		/// @param vec - The vector source.
-		/// @return
 		template <class T>
 		static T VectorAverageMode(const std::vector<T>& vec)
 		{
@@ -48,10 +39,6 @@ namespace SR
 			return mode;
 		}
 
-		/// @brief Average mean a given vector.
-		/// @tparam T - The elemements type.
-		/// @param vec - The vector source.
-		/// @return
 		template <class T>
 		static T VectorAverageMean(const std::vector<T>& vec)
 		{
@@ -66,14 +53,6 @@ namespace SR
 			return mean / size;
 		}
 
-		/// @brief Get the difference between 2 containers.
-		/// @tparam T - The vector type.
-		/// @tparam Container - STL container class.
-		/// @tparam Predicate - The predicate function.
-		/// @param a - The first container.
-		/// @param b - The second container.
-		/// @param predicate - The predicate function.
-		/// @return
 		template <typename T, class Container, typename Predicate>
 		static std::vector<T> GetArrayDifference(const Container& a, const Container& b, Predicate predicate)
 		{

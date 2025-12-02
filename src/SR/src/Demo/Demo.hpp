@@ -12,7 +12,6 @@
 
 namespace SR
 {
-	/// @brief Demo frame.
 	struct DemoFrame
 	{
 		bool valid;
@@ -28,7 +27,6 @@ namespace SR
 		int buttons;
 	};
 
-	/// @brief Game demo.
 	class Demo
 	{
 		IZ_ASYNC(OpenAsync)
@@ -47,36 +45,15 @@ namespace SR
 		bool HasReadInformations = false;
 		bool IsLoaded = false;
 
-		/// @brief Initialize a new Demo.
-		/// @param id - The demo id.
-		/// @param path - The demo path.
 		Demo(const std::string& id, const std::string& path);
 		~Demo();
 
-		/// @brief Open a demo.
 		void Open();
-
-		/// @brief Read the demo information.
 		void ReadDemoInformations();
-
-		/// @brief Interpolate invalid packets.
-		/// @param interpolateFrame - The last valid frame to interpolate the previous invalid frames.
 		void Interpolate(DemoFrame& interpolateFrame);
-
-		/// @brief Get the demo version.
 		void GetVersion();
-
-		/// @brief Get the player velocity.
-		/// @param frame - The current frame.
-		/// @return
 		int GetVelocity(DemoFrame& frame);
-
-		/// @brief Process chat messages.
-		/// @return
 		std::vector<std::string> ProcessChat();
-
-		/// @brief Can parse the snapshot.
-		/// @return
 		bool CanParseSnapshot();
 	};
 }

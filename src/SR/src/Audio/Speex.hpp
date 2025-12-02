@@ -13,7 +13,6 @@
 
 namespace SR
 {
-	/// @brief Speex VoIP transmition class.
 	class Speex
 	{
 	public:
@@ -21,19 +20,10 @@ namespace SR
 		static inline void *Encoder = nullptr;
 		static inline SpeexBits Bits = { 0 };
 
-		/// @brief Initialize speex encoder and decoder.
 		static void Initialize();
-
-		/// @brief Shutdown speex.
 		static void Shutdown();
 
-		/// @brief Decode a speex packet.
-		/// @param packet - The packet.
-		/// @return
 		static std::vector<short> Decode(VoicePacket_t *packet);
-
-		/// @brief Encode a speex packet.
-		/// @param packet - The packet.
 		static VoicePacket_t Speex::Encode(std::vector<short> &packet);
 	};
 }
