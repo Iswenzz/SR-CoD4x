@@ -12,6 +12,7 @@ cmake --build src/SR/build
 
 :: CoD4x
 echo [+] CoD4x
+del bin\cod4x18_dedrun.exe
 mingw32-make
 
 :: gsclib
@@ -20,5 +21,5 @@ cmake --build plugins/gsclib/build
 
 :: Binary
 echo [+] Binary
-copy /v bin\cod4x18_dedrun.exe "C:\Program Files (x86)\Activision\CoD4Mod"
-copy /v bin\gsclib.dll "C:\Program Files (x86)\Activision\CoD4Mod\plugins"
+copy /v bin\cod4x18_dedrun.exe "D:\Dev\CoD4\SDK"
+copy /v bin\gsclib.dll "D:\Dev\CoD4\SDK\plugins"

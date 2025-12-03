@@ -23,6 +23,8 @@ cd $ROOT
 
 # CoD4x
 echo -e "[+] CoD4x"
+rm bin/cod4x18_dedrun
+make clean
 make
 
 # gsclib

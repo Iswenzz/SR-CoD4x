@@ -10,6 +10,7 @@ cmake --build src/SR/build
 
 # CoD4x
 echo -e "[+] CoD4x"
+rm bin/cod4x18_dedrun
 make
 
 # gsclib
