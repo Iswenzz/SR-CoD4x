@@ -10,5 +10,6 @@ namespace SR
 		static void IsPrecached();
 		static void LegacyWeapon();
 		static void RadioPlay();
+		static void SoundAlias();
 	};
 }

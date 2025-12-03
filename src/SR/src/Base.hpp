@@ -18,6 +18,7 @@ IZ_C
 	#include <huffman.h>
 	#include <sv_snapshot.h>
 	#include <qcommon_logprint.h>
+	#include <xassets.h>
 	// clang-format on
 }
 // clang-format off

@@ -13,6 +13,7 @@ namespace SR
 		Scr_AddFunction("legacyweapon", LegacyWeapon, qfalse);
 		Scr_AddFunction("isprecached", IsPrecached, qfalse);
 		Scr_AddFunction("radioplay", RadioPlay, qfalse);
+		Scr_AddFunction("soundalias", SoundAlias, qfalse);
 	}
 
 	void GameCommands::IsPrecached()
@@ -87,5 +88,35 @@ namespace SR
 		Voice::Radio = file;
 
 		Log::WriteLine("[Radio] Playing %s", name.c_str());
+	}
+
+	void GameCommands::SoundAlias()
+	{
+		const auto getSoundAlias = [](void *header, void *indata)
+		{
+			union XAssetHeader head;
+			head.data = header;
+			snd_alias_list_t *soundAlias = head.sound;
+
+			if (!soundAlias || !soundAlias->head)
+				return;
+
+			const auto alias = soundAlias->head;
+			if ((alias->flags & 0xC0) >> 6 != 2)
+				return;
+
+			const auto file = alias->soundFile;
+			if (!file)
+				return;
+
+			const auto &raw = file->sound.streamSnd.filename.info.raw;
+			if (!std::string_view(raw.name).ends_with(".mp3"))
+				return;
+
+			Scr_AddString(fmt("%s %s/%s", alias->aliasName, raw.dir, raw.name));
+			Scr_AddArray();
+		};
+		Scr_MakeArray();
+		DB_EnumXAssets_FastFile(ASSET_TYPE_SOUND, getSoundAlias, nullptr, true);
 	}
 }
