@@ -6,7 +6,7 @@ set CXX=g++
 :: API
 echo [+] API
 cd plugins\gsclib\api
-install.bat
+call install.bat
 cd %ROOT%
 
 :: SR
