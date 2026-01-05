@@ -1,10 +1,11 @@
 #!/bin/bash
 ROOT="$(pwd)"
+CC=gcc
+CXX=g++
 
 # SR
 echo -e "[+] SR"
-cd src/SR
-rm -r build
+cd src/sr
 mkdir build
 cd build
 cmake .. --preset linux

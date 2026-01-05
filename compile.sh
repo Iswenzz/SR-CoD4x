@@ -1,19 +1,27 @@
 #!/bin/bash
+ROOT="$(pwd)"
+CC=gcc
+CXX=g++
+
+# API
+echo -e "[+] API"
+cd plugins/gsclib/api
+./install.sh
+cd $ROOT
 
 # SR
 echo -e "[+] SR"
-cmake --build src/SR/build --target install
+cmake --build src/sr/build --target install
 
 # CoD4x
 echo -e "[+] CoD4x"
-rm bin/cod4x18_dedrun
 make
 
 # gsclib
 echo -e "[+] gsclib"
-cmake --build plugins/gsclib/build --target install
+cmake --build plugins/gsclib/build
 
-# Binary
-echo -e "[+] Binary"
+# Install
+echo -e "[+] Install"
 cp -v bin/cod4x18_dedrun /home/cod4/cod4x18_dedrun && chmod u+x /home/cod4/cod4x18_dedrun
 cp -v bin/gsclib.so /home/cod4/plugins

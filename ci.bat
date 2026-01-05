@@ -1,10 +1,11 @@
 @echo off
 set ROOT="%cd%"
+set CC=gcc
+set CXX=g++
 
 :: SR
 echo [+] SR
-cd src/SR
-rmdir build /s /q
+cd src\sr
 mkdir build
 cd build
 cmake .. --preset windows

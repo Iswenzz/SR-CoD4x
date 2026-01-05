@@ -29,7 +29,7 @@ LINUX_DEFINES=_GNU_SOURCE
 
 ##################################
 # Flags
-COMMON_FLAGS=-m32 -msse2 -mfpmath=sse -Wall -fno-omit-frame-pointer -fmax-errors=15 -Isrc
+COMMON_FLAGS=-m32 -msse2 -mfpmath=sse -Wall -fno-omit-frame-pointer -fmax-errors=15 -Wno-unused-result -Isrc
 CFLAGS=$(COMMON_FLAGS) -std=gnu11
 CXXFLAGS=$(COMMON_FLAGS) -std=gnu++11
 SR_LLIBS=SR CoD4DM1 samplerate speex
