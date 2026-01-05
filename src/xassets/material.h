@@ -4,7 +4,7 @@
 #include "../q_shared.h"
 
 /* 709 */
-typedef enum 
+typedef enum
 {
   TECHNIQUE_DEPTH_PREPASS = 0x0,
   TECHNIQUE_BUILD_FLOAT_Z = 0x1,
@@ -23,9 +23,9 @@ typedef enum
   TECHNIQUE_LIT_OMNI_SHADOW = 0xD,
   TECHNIQUE_LIT_INSTANCED = 0xE,
   TECHNIQUE_LIT_INSTANCED_SUN = 0xF,
-  TECHNIQUE_LIT_INSTANCED_SUN_SHADOW = 0x10, 
-  TECHNIQUE_LIT_INSTANCED_SPOT = 0x11, 
-  TECHNIQUE_LIT_INSTANCED_SPOT_SHADOW = 0x12, 
+  TECHNIQUE_LIT_INSTANCED_SUN_SHADOW = 0x10,
+  TECHNIQUE_LIT_INSTANCED_SPOT = 0x11,
+  TECHNIQUE_LIT_INSTANCED_SPOT_SHADOW = 0x12,
   TECHNIQUE_LIT_INSTANCED_OMNI = 0x13,
   TECHNIQUE_LIT_INSTANCED_OMNI_SHADOW = 0x14,
   TECHNIQUE_LIGHT_SPOT = 0x15,
@@ -40,7 +40,7 @@ typedef enum
   TECHNIQUE_SHADOWCOOKIE_CASTER = 0x1E,
   TECHNIQUE_SHADOWCOOKIE_RECEIVER = 0x1F,
   TECHNIQUE_DEBUG_BUMPMAP = 0x20,
-  TECHNIQUE_DEBUG_BUMPMAP_INSTANCED = 0x21,  
+  TECHNIQUE_DEBUG_BUMPMAP_INSTANCED = 0x21,
   TECHNIQUE_COUNT = 0x22,
   TECHNIQUE_TOTAL_COUNT = 0x23,
   TECHNIQUE_NONE = 0x24,
@@ -60,7 +60,7 @@ typedef struct MaterialConstantDef_s
     char name[12];
     vec4_t literal;
 }MaterialConstantDef_t;
- 
+
 typedef struct GfxStateBits_s
 {
 #ifdef XBOX
@@ -75,12 +75,12 @@ typedef struct GfxStateBits_s
 #endif
 
 }GfxStateBits_t;
- 
+
 typedef struct WaterWritable_s
 {
     float floatTime;
 }WaterWritable_t;
- 
+
 typedef struct water_s
 {
     WaterWritable_t writable;
@@ -98,7 +98,7 @@ typedef struct water_s
     float codeConstant[4];
     GfxImage_t *image;
 }water_t;
- 
+
 /* MaterialTextureDef->semantic */
 #define TS_2D		0x0
 #define TS_FUNCTION	0x1
@@ -112,13 +112,13 @@ typedef struct water_s
 #define TS_UNUSED_5	0x9
 #define TS_UNUSED_6	0xA
 #define TS_WATER_MAP	0xB
- 
-typedef union  
+
+typedef union
 {
     GfxImage_t *image;	// MaterialTextureDef->semantic != TS_WATER_MAP
     water_t *water;		// MaterialTextureDef->semantic == TS_WATER_MAP
 }MaterialTextureDefInfo_t;
- 
+
 typedef struct MaterialTextureDef_s
 {
     unsigned int nameHash;
@@ -131,7 +131,7 @@ typedef struct MaterialTextureDef_s
 #endif
     MaterialTextureDefInfo_t u;
 }MaterialTextureDef_t;
- 
+
 typedef union
 {
     unsigned long long unused,
@@ -148,8 +148,8 @@ typedef union
 
 
 #endif
-    
-    
+
+
 /* 6901 */
 #pragma pack(push, 4)
 struct MaterialPass
@@ -174,7 +174,7 @@ struct MaterialTechnique
   struct MaterialPass passArray[1];
 };
 
-    
+
     /* 6888 */
 #pragma pack(push, 2)
 struct MaterialTechniqueSet
@@ -189,7 +189,7 @@ struct MaterialTechniqueSet
 
 
 
-typedef struct 
+typedef struct
 {
   uint64_t _bf0;
 }GfxDrawSurfFields;
@@ -200,15 +200,15 @@ union GfxDrawSurf
   GfxDrawSurfFields fields;
   uint64_t packed;
 };
-    
-    
+
+
 typedef struct
 {
     int loadBits[2];
-}GfxStateBits;	
+}GfxStateBits;
 
-    
-typedef struct __attribute__((aligned (8))) 
+
+typedef struct __attribute__((aligned (8)))
 {
     const char *name;
     char gameFlags;
@@ -218,8 +218,8 @@ typedef struct __attribute__((aligned (8)))
     union GfxDrawSurf drawSurf;
     int surfaceTypeBits;
 }MaterialInfo;
- 
-typedef struct Material
+
+typedef struct __attribute__((aligned (8))) Material
 {
     MaterialInfo info;
     char stateBitsEntry[TECHNIQUE_COUNT];	// see MaterialTechniqueType
@@ -233,14 +233,12 @@ typedef struct Material
     struct MaterialTextureDef *textureTable;
     struct MaterialConstantDef *constantTable;
     GfxStateBits *stateBitTable;
-    
-    
+
+
 #ifdef MW2
     const char **unknownXStringArray;
-#else
-    #ifdef MW3
+#elif MW3
     const char **unknownXStringArray;
-    #endif
 #endif
 
 

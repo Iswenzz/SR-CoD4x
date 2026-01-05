@@ -786,7 +786,7 @@ LONG WINAPI Sys_DumpCrash(EXCEPTION_POINTERS *ex)
 	//Q_strncpyz(hash, "File Hashing has not been implemented yet", sizeof(hash));
 	hash[64] = '\0';
 	Com_Printf(CON_CHANNEL_SR_DEBUG, "File is %s Hash is: %s\n", Sys_ExeFile(), hash);
-	Sys_PrintBacktrace(ex->ContextRecord);
+	Sys_PrintBacktrace((void*)ex->ContextRecord);
 	Com_Printf(CON_CHANNEL_SR_DEBUG, "\n-- Registers ---\n");
 	Com_Printf(CON_CHANNEL_SR_DEBUG, "edi 0x%lx\nesi 0x%lx\nebp 0x%lx\nesp 0x%lx\neax 0x%lx\nebx 0x%lx\necx 0x%lx\nedx 0x%lx\neip 0x%lx\n",
 		ex->ContextRecord->Edi, ex->ContextRecord->Esi, ex->ContextRecord->Ebp, ex->ContextRecord->Esp,
@@ -1013,7 +1013,7 @@ int addr2line(char const *const program_name, void const *const addr)
 	return system(addr2line_cmd);
 }
 
-void Sys_PrintBacktrace(CONTEXT *ctx)
+void Sys_PrintBacktrace(void* pCtx)
 {
 	BOOL result;
     HANDLE process;
@@ -1030,6 +1030,7 @@ void Sys_PrintBacktrace(CONTEXT *ctx)
     char module[MaxNameLen];
     PSYMBOL_INFO pSymbol = (PSYMBOL_INFO)buffer;
 
+	CONTEXT* ctx = (CONTEXT*)pCtx;
     CONTEXT ctxCopy;
     memcpy(&ctxCopy, ctx, sizeof(CONTEXT));
     memset(&stack, 0, sizeof(STACKFRAME64));

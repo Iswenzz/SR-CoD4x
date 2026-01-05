@@ -392,12 +392,12 @@ void __cdecl SL_RemoveRefToStringOfSize(unsigned int stringValue, unsigned int l
   {
     if ( gScrStringDebugGlob )
     {
-      assertx(gScrStringDebugGlob->totalRefCount && gScrStringDebugGlob->refCount[stringValue], 
+      assertx(gScrStringDebugGlob->totalRefCount && gScrStringDebugGlob->refCount[stringValue],
                "gScrStringDebugGlob->totalRefCount: %i, stringValue: %i, gScrStringDebugGlob->refCount[stringValue]: %i, string: '%s'",
                gScrStringDebugGlob->totalRefCount, stringValue,
                gScrStringDebugGlob->refCount[stringValue], SL_DebugConvertToString(stringValue));
 
-      assertx(gScrStringDebugGlob->refCount[stringValue] != 0, "SL_DebugConvertToString( stringValue ) = %s", 
+      assertx(gScrStringDebugGlob->refCount[stringValue] != 0, "SL_DebugConvertToString( stringValue ) = %s",
             SL_DebugConvertToString(stringValue));
 
       InterlockedDecrement((volatile DWORD*)&gScrStringDebugGlob->totalRefCount);
@@ -424,13 +424,13 @@ void __cdecl SL_RemoveRefToStringOfSize(unsigned int stringValue, unsigned int l
     SL_FreeString(stringValue, refStr, len);
     if ( gScrStringDebugGlob )
     {
-      assertx(gScrStringDebugGlob->totalRefCount && gScrStringDebugGlob->refCount[stringValue], 
+      assertx(gScrStringDebugGlob->totalRefCount && gScrStringDebugGlob->refCount[stringValue],
                "gScrStringDebugGlob->totalRefCount: %i, stringValue: %i, gScrStringDebugGlob->refCount[stringValue]: %i, string: '%s'",
                gScrStringDebugGlob->totalRefCount, stringValue,
                gScrStringDebugGlob->refCount[stringValue], SL_DebugConvertToString(stringValue));
 
 
-      assertx(gScrStringDebugGlob->refCount[stringValue] != 0, "SL_DebugConvertToString( stringValue ) = %s", 
+      assertx(gScrStringDebugGlob->refCount[stringValue] != 0, "SL_DebugConvertToString( stringValue ) = %s",
             SL_DebugConvertToString(stringValue));
 
       InterlockedDecrement((volatile DWORD*)&gScrStringDebugGlob->totalRefCount);
@@ -445,7 +445,6 @@ void __cdecl SL_RemoveRefToStringOfSize(unsigned int stringValue, unsigned int l
 void __cdecl SL_AddRefToString(unsigned int stringValue)
 {
   RefString *refStr;
-  volatile int refC;
 
   if ( gScrStringDebugGlob )
   {
@@ -459,18 +458,10 @@ void __cdecl SL_AddRefToString(unsigned int stringValue)
 
   InterlockedIncrement((volatile DWORD*)&refStr->data);
 
-  if ( !refStr->refCount )
-  {
-    if ( gScrStringDebugGlob )
-    {
-      refC = gScrStringDebugGlob->refCount[stringValue];
-    }
-    else
-    {
-      refC = 0;
-    }
-    assertx(refStr->refCount, "string: '%s', refCount: %d", SL_DebugConvertToString(stringValue), refC);
-  }
+  assertx(refStr->refCount,
+          "string: '%s', refCount: %d",
+          SL_DebugConvertToString(stringValue),
+          gScrStringDebugGlob ? gScrStringDebugGlob->refCount[stringValue] : 0);
 }
 
 void __cdecl SL_RemoveRefToString(unsigned int stringValue)
@@ -521,7 +512,7 @@ unsigned int SL_GetLowercaseStringOfSize(const char *upperstring, int user, unsi
 		Com_Error(ERR_FATAL, "SL_GetLowercaseStringOfSize(): max string length exceeded: \"%s\"", upperstring);
 		return 0;
 	}
-  
+
 	for(i = 0; i < len; ++i)
 	{
 		lwrstr[i] = tolower(upperstring[i]);
@@ -609,12 +600,12 @@ unsigned int SL_FindLowercaseString(const char *upperstring)
 	unsigned int i;
 
 	size = strlen(upperstring) + 1;
-	
+
 	if ( size >= sizeof(lwrstr) )
 	{
 		return 0;
 	}
-  
+
 	for(i = 0; i < size; ++i)
 	{
 		lwrstr[i] = tolower(upperstring[i]);

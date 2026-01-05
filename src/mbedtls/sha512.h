@@ -139,7 +139,7 @@ int mbedtls_sha512_update_ret( mbedtls_sha512_context *ctx,
  * \return         A negative error code on failure.
  */
 int mbedtls_sha512_finish_ret( mbedtls_sha512_context *ctx,
-                               unsigned char output[64] );
+                               unsigned char* output );
 
 /**
  * \brief          This function processes a single data block within
@@ -201,7 +201,7 @@ MBEDTLS_DEPRECATED void mbedtls_sha512_update( mbedtls_sha512_context *ctx,
  *                 be a writable buffer of size \c 64 Bytes.
  */
 MBEDTLS_DEPRECATED void mbedtls_sha512_finish( mbedtls_sha512_context *ctx,
-                                               unsigned char output[64] );
+                                               unsigned char* output );
 
 /**
  * \brief          This function processes a single data block within
@@ -244,7 +244,7 @@ MBEDTLS_DEPRECATED void mbedtls_sha512_process(
  */
 int mbedtls_sha512_ret( const unsigned char *input,
                         size_t ilen,
-                        unsigned char output[64],
+                        unsigned char* output,
                         int is384 );
 
 #if !defined(MBEDTLS_DEPRECATED_REMOVED)
@@ -276,7 +276,7 @@ int mbedtls_sha512_ret( const unsigned char *input,
  */
 MBEDTLS_DEPRECATED void mbedtls_sha512( const unsigned char *input,
                                         size_t ilen,
-                                        unsigned char output[64],
+                                        unsigned char* output,
                                         int is384 );
 
 #undef MBEDTLS_DEPRECATED

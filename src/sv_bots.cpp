@@ -192,7 +192,7 @@ static void scr_botweapon(scr_entref_t ent_num)
     int argc;
     gentity_t *bot;
     char* weapon;
-    unsigned char weapInt;
+    ::byte weapInt;
     mvabuf;
 
     bot = VM_GetGEntityForEntRef(ent_num);
@@ -214,7 +214,7 @@ static void scr_botweapon(scr_entref_t ent_num)
         return;
     }
 
-    weapInt = (unsigned char)G_GetWeaponIndexForName(weapon);
+    weapInt = static_cast<::byte>(G_GetWeaponIndexForName(weapon));
     g_botai[ent_num.entnum].weapon = weapInt;
 }
 /*
@@ -391,6 +391,13 @@ qboolean shouldSpamUseButton(gentity_t *bot)
 
     ai->lastAliveState = is_alive;
     return is_alive == qfalse && ai->useSpamDelay == 0 ? qtrue : qfalse;
+}
+
+void Bot_SetBotWeapon(int clientNum, unsigned int weaponIdx)
+{
+    ::byte weapInt;
+    weapInt = static_cast<::byte>(weaponIdx);
+    g_botai[clientNum].weapon = weapInt;
 }
 
 }

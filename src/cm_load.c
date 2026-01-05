@@ -50,7 +50,7 @@ Capsules are handled differently though.
 ===================
 */
 
-clipHandle_t CM_TempBoxModel( const vec3_t mins, const vec3_t maxs, int capsule ) {
+clipHandle_t CM_TempBoxModel( const vec3_t mins, const vec3_t maxs ) {
 
 	TraceThreadInfo* tti = Sys_GetValue(3);
 
@@ -175,7 +175,7 @@ void __cdecl CM_LoadMap(const char *name, int *checksum)
   {
     Com_Error(ERR_DROP, "CM_LoadMap: NULL name");
   }
- 
+
   CM_LoadMapData(name);
   CM_InitAllThreadData();
   cm.isInUse = 1;

@@ -1,12 +1,8 @@
 #!/bin/bash
 
-# CGSC
-echo -e "[+] CGSC"
-cmake --build src/CGSC/build
-
 # SR
 echo -e "[+] SR"
-cmake --build src/SR/build
+cmake --build src/SR/build --target install
 
 # CoD4x
 echo -e "[+] CoD4x"
@@ -15,7 +11,7 @@ make
 
 # gsclib
 echo -e "[+] gsclib"
-cmake --build plugins/gsclib/build
+cmake --build plugins/gsclib/build --target install
 
 # Binary
 echo -e "[+] Binary"

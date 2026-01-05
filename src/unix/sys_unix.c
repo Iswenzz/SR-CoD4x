@@ -863,7 +863,7 @@ BOOL __cdecl _CloseHandle(HANDLE handle)
 {
 
   hObject_t *hObject = (hObject_t *)handle;
-  
+
   if ( hObject->type == 'File' )
   {
     if ( hObject->fh )
@@ -1060,7 +1060,7 @@ signed int __cdecl Sys_ResetEvent(HANDLE handle)
 #ifdef __MACH__
       pthread_yield_np();
 #else
-      pthread_yield();
+      sched_yield();
 #endif
     }
     return 1;

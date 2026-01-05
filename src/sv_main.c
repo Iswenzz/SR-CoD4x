@@ -319,7 +319,6 @@ void __cdecl SV_AddServerCommand(client_t *client, int type, const char *cmd)
 {
   int v4;
   int i;
-  int j;
   int index;
   char string[64];
 
@@ -2001,14 +2000,7 @@ __optimize3 __regparm2 void SV_PacketEvent( netadr_t *from, msg_t *msg ) {
 
     cl->reliableAcknowledge = MSG_ReadLong( msg );
 
-    if (cl->reliableAcknowledge < 0)
-    {
-        Com_Printf(CON_CHANNEL_SERVER,"Negative reliableAcknowledge message from %s - reliableAcknowledge is %i\n", cl->name, cl->reliableAcknowledge);
-        cl->reliableAcknowledge = cl->reliableSequence;
-        return;
-    }
-
-    if((cl->reliableSequence - cl->reliableAcknowledge) > (MAX_RELIABLE_COMMANDS - 1)){
+    if((cl->reliableSequence - cl->reliableAcknowledge) > (MAX_RELIABLE_COMMANDS - 1) || (cl->reliableSequence - cl->reliableAcknowledge) < 0) {
         Com_Printf(CON_CHANNEL_SERVER,"Out of range reliableAcknowledge message from %s - reliableSequence is %i, reliableAcknowledge is %i\n",
         cl->name, cl->reliableSequence, cl->reliableAcknowledge);
         cl->reliableAcknowledge = cl->reliableSequence;
@@ -2075,8 +2067,6 @@ void SV_HeartBeatMessageLoop(msg_t* msg, qboolean authoritative, qboolean *needt
     char newchallenge[65];
     msg_t singlemsg;
     int ic;
-    int k;
-    client_t* cl;
 
     while(msg->readcount < msg->cursize)
     {
@@ -2102,7 +2092,7 @@ void SV_HeartBeatMessageLoop(msg_t* msg, qboolean authoritative, qboolean *needt
                 ic = MSG_ReadLong(&singlemsg);
                 if(ic == 1)
                 {
-                    Com_Printf(CON_CHANNEL_SERVER,"Server is registered on the masterserver\n");
+                    Com_DPrintf(CON_CHANNEL_SERVER,"Server is registered on the masterserver\n");
                 }else if(ic == 0){
                     Com_PrintError(CON_CHANNEL_SERVER,"Failure registering server on masterserver. Errorcode: 0x%x\n", MSG_ReadLong(&singlemsg));
                 }else if(ic == 2){
@@ -2198,7 +2188,7 @@ void SV_SendReceiveHeartbeatTCP(netadr_t* adr, netadr_t* sourceadr, byte* messag
         if(socket >= 0)
         {
             NET_AdrToStringShortMT(&ip6announce, line, sizeof(line));
-            Com_Printf(CON_CHANNEL_SERVER,"Cvar net_ip6 is undefined. Announcing address %s!\n", line);
+            Com_DPrintf(CON_CHANNEL_SERVER,"Cvar net_ip6 is undefined. Announcing address %s!\n", line);
         }
     }
 
@@ -2297,7 +2287,7 @@ void* SV_SendHeartbeatThread(void* arg)
         if(iplist[i].type == NA_IP && opts->adr4.type == NA_IP && iplist[i].ip[0] != 127 && iplist[i].ip[0] < 224)
         {
             //IPv4
-            Com_Printf(CON_CHANNEL_SERVER,"Sending master heartbeat from %s to %s\n", NET_AdrToStringMT(&iplist[i], adrstr, sizeof(adrstr)),
+            Com_DPrintf(CON_CHANNEL_SERVER,"Sending master heartbeat from %s to %s\n", NET_AdrToStringMT(&iplist[i], adrstr, sizeof(adrstr)),
             NET_AdrToStringMT(&opts->adr4, adrstrdst, sizeof(adrstrdst)));
             if(opts->msgtokenstart)
             {
@@ -2310,7 +2300,7 @@ void* SV_SendHeartbeatThread(void* arg)
             SV_SendReceiveHeartbeatTCP(&opts->adr4, &iplist[i], opts->message, opts->messagelen, opts->authoritative, opts->needticket, opts->challengei4);
         }else if(iplist[i].type == NA_IP6 && opts->adr6.type == NA_IP6 && iplist[i].ip6[0] < 0xfe){
             //IPv6
-            Com_Printf(CON_CHANNEL_SERVER,"Sending master heartbeat from %s to %s\n", NET_AdrToStringMT(&iplist[i], adrstr, sizeof(adrstr)),
+            Com_DPrintf(CON_CHANNEL_SERVER,"Sending master heartbeat from %s to %s\n", NET_AdrToStringMT(&iplist[i], adrstr, sizeof(adrstr)),
             NET_AdrToStringMT(&opts->adr6, adrstrdst, sizeof(adrstrdst)));
 
             if(opts->msgtokenstart)
@@ -3739,7 +3729,9 @@ void SV_MapRestart( qboolean fastRestart ){
 //    sv.inFrame = 0;
     sv.restarting = qtrue;
 
+    PHandler_Event(PLUGINS_ONPREGAMERESTART, pers);
     SV_RestartGameProgs(pers);
+    PHandler_Event(PLUGINS_ONPOSTGAMERESTART, pers);
     SV_BuildXAssetCSString();
 
 /*
@@ -3995,7 +3987,6 @@ void SV_BotUserMove(client_t *client)
     num = client - svs.clients;
     ucmd.serverTime = svs.time;
 
-    playerState_t* ps = SV_GameClientNum(num);
     ent = SV_GentityNum(num);
 
     ucmd.weapon = g_botai[num].weapon;

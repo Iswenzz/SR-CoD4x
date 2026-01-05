@@ -78,7 +78,6 @@ cvar_t* com_timescale;
 cvar_t* com_fixedtime;
 cvar_t* com_maxFrameTime;
 cvar_t* com_animCheck;
-cvar_t* com_developer;
 cvar_t* useFastFile;
 cvar_t* com_developer;
 cvar_t* com_developer_script;
@@ -125,41 +124,12 @@ typedef struct {
 	void            *evPtr;         // this must be manually freed if not NULL
 } sysEvent_t;
 
-
-#define MAX_TIMEDEVENTARGS 8
-
-typedef struct{
-    universalArg_t arg;
-    unsigned int size;
-}timedEventArg_t;
-
-typedef timedEventArg_t timedEventArgs_t[MAX_TIMEDEVENTARGS];
-
-
 #define MAX_QUEUED_EVENTS  256
-#define MAX_TIMED_EVENTS  1024
 #define MASK_QUEUED_EVENTS ( MAX_QUEUED_EVENTS - 1 )
-#define MASK_TIMED_EVENTS ( MAX_TIMED_EVENTS - 1 )
-
-typedef struct{
-	int evTime, evTriggerTime;
-	timedEventArgs_t evArguments;
-	void (*evFunction)();
-}timedSysEvent_t;
-
 
 static sysEvent_t  eventQueue[ MAX_QUEUED_EVENTS ];
-static timedSysEvent_t  timedEventBuffer[ MAX_QUEUED_EVENTS ];
 static int         eventHead = 0;
 static int         eventTail = 0;
-static int         timedEventHead = 0;
-
-
-void EventTimerTest(int time, int triggerTime, int value, char* s){
-
-	Com_Printf(CON_CHANNEL_SYSTEM,"^5Event exectuted: %i %i %i %i %s\n", time, triggerTime, Sys_Milliseconds(), value, s);
-
-}
 
 void CCS_InitConstantConfigStrings();
 void Com_ShutdownDObj();
@@ -182,101 +152,6 @@ void HunkAvailMemDebug()
 {
     Com_Printf(CON_CHANNEL_CLIENT, "Hunk available: %d, Hunk total: %d\n", (s_hunkTotal - hunk_high.temp + hunk_low.temp) / (1024*1024), s_hunkTotal / (1024*1024));
 }
-
-/*
-================
-Com_SetTimedEventCachelist
-
-================
-*/
-void Com_MakeTimedEventArgCached(unsigned int index, unsigned int arg, unsigned int size){
-
-	if(index >= MAX_TIMED_EVENTS)
-		Com_Error(ERR_FATAL, "Com_MakeTimedEventArgCached: Bad index: %d", index);
-
-	if(arg >= MAX_TIMEDEVENTARGS)
-		Com_Error(ERR_FATAL, "Com_MakeTimedEventArgCached: Bad function argument number. Allowed range is 0 - %d arguments", MAX_TIMEDEVENTARGS);
-
-	timedSysEvent_t  *ev = &timedEventBuffer[index];
-	void *ptr = Z_Malloc(size);
-	Com_Memcpy(ptr, ev->evArguments[arg].arg.p, size);
-	ev->evArguments[arg].size = size;
-	ev->evArguments[arg].arg.p = ptr;
-}
-
-
-/*
-================
-Com_AddTimedEvent
-
-================
-*/
-int QDECL Com_AddTimedEvent( int delay, void *function, unsigned int argcount, ...)
-{
-	timedSysEvent_t  *ev;
-	int index;
-	int i;
-	int time;
-	int triggerTime;
-
-	if ( timedEventHead >= MAX_TIMED_EVENTS )
-	{
-		Com_PrintWarning(CON_CHANNEL_SYSTEM,"Com_AddTimedEvent: overflow - Lost one event\n");
-		// we are discarding an event, but don't leak memory
-		return -1;
-	}
-
-	index = timedEventHead;
-
-	time = Sys_Milliseconds();
-
-	triggerTime = delay + time;
-
-	while(qtrue)
-	{
-		if(index > 0){
-
-			ev = &timedEventBuffer[index -1];
-
-			if(ev->evTriggerTime < triggerTime)
-			{
-				timedEventBuffer[index] = *ev;
-				index--;
-				continue;
-			}
-		}
-		break;
-	}
-
-	if(argcount > MAX_TIMEDEVENTARGS)
-	{
-		Com_Error(ERR_FATAL, "Com_AddTimedEvent: Bad number of function arguments. Allowed range is 0 - %d arguments", MAX_TIMEDEVENTARGS);
-		return -1;
-	}
-
-	ev = &timedEventBuffer[index];
-
-	va_list		argptr;
-	va_start(argptr, argcount);
-
-	for(i = 0; i < MAX_TIMEDEVENTARGS; i++)
-	{
-		if(i < argcount)
-			ev->evArguments[i].arg = va_arg(argptr, universalArg_t);
-
-		ev->evArguments[i].size = 0;
-	}
-
-	va_end(argptr);
-
-	ev->evTime = time;
-	ev->evTriggerTime = triggerTime;
-	ev->evFunction = function;
-	timedEventHead++;
-	return index;
-}
-
-
 
 void Com_InitEventQueue()
 {
@@ -324,29 +199,6 @@ void Com_QueueEvent( int time, sysEventType_t type, int value, int value2, int p
 	ev->evPtrLength = ptrLength;
 	ev->evPtr = ptr;
 }
-
-/*
-================
-Com_GetTimedEvent
-
-================
-*/
-timedSysEvent_t* Com_GetTimedEvent( int time )
-{
-	timedSysEvent_t  *ev;
-
-	if(timedEventHead > 0)
-	{
-		ev = &timedEventBuffer[timedEventHead - 1];
-		if(ev->evTriggerTime <= time)
-		{
-			timedEventHead--; //We have removed one event
-			return ev;
-		}
-	}
-	return NULL;
-}
-
 
 /*
 ================
@@ -425,39 +277,6 @@ void Com_EventLoop( void ) {
 			}
 	}
 }
-
-
-/*
-=================
-Com_TimedEventLoop
-=================
-*/
-void Com_TimedEventLoop( void ) {
-	timedSysEvent_t	*evt;
-	int time = Sys_Milliseconds();
-	int i;
-
-	while( qtrue ) {
-		evt = Com_GetTimedEvent(time);
-
-		// if no more events are available
-		if ( !evt ) {
-			break;
-		}
-		//Execute the passed eventhandler
-		if(evt->evFunction)
-			evt->evFunction(evt->evArguments[0].arg, evt->evArguments[1].arg, evt->evArguments[2].arg, evt->evArguments[3].arg,
-			evt->evArguments[4].arg, evt->evArguments[5].arg, evt->evArguments[6].arg, evt->evArguments[7].arg);
-
-		for(i = 0; i < MAX_TIMEDEVENTARGS; i++)
-		{
-			if(evt->evArguments[i].size > 0){
-				Z_Free(evt->evArguments[i].arg.p);
-			}
-		}
-	}
-}
-
 
 int Com_IsDeveloper()
 {
@@ -1012,7 +831,6 @@ __optimize3 void Com_Frame( void ) {
 
 	PHandler_Event(PLUGINS_ONFRAME);
 
-	Com_TimedEventLoop();
 	Cbuf_Execute ( );
 	NET_Sleep(0);
 	NET_TcpServerPacketEventLoop();
@@ -1269,7 +1087,7 @@ void QDECL Com_Error( int code, const char *fmt, ... ) {
 
 #ifndef NDEBUG
 	Com_Printf(CON_CHANNEL_ERROR,"Com_Error entered:\n");
-	Sys_PrintBacktrace();
+	Sys_PrintBacktrace(NULL);
 #endif
 
 	if(com_developer && com_developer->integer > 1)

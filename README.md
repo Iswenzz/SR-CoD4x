@@ -34,19 +34,18 @@ A more detailed server tutorial is available on [our wiki](https://github.com/ca
 
 _Pre-Requisites:_
 
-1. [CMake](https://cmake.org/) and [vcpkg](https://vcpkg.io/en/).
+1. [MinGW](https://github.com/brechtsanders/winlibs_mingw/releases/download/15.2.0posix-13.0.0-msvcrt-r5/winlibs-i686-posix-dwarf-gcc-15.2.0-mingw-w64msvcrt-13.0.0-r5.zip)
+2. [CMake](https://cmake.org/) and [vcpkg](https://vcpkg.io/en/)
 
 _Build Command:_
 
-    mkdir build && cd build
-    cmake .. --preset windows
-    cmake --build . --target install
+    install.bat
 
 ## Building (Linux)
 
 _Pre-Requisites:_
 
-1. [CMake](https://cmake.org/) and [vcpkg](https://vcpkg.io/en/).
+1. [CMake](https://cmake.org/) and [vcpkg](https://vcpkg.io/en/)
 
 	sudo dpkg --add-architecture i386
     sudo apt update
@@ -54,11 +53,9 @@ _Pre-Requisites:_
 
 _Build Command:_
 
-    mkdir build && cd build
-    cmake .. --preset linux
-    cmake --build . --target install
+    install.sh
 
-## [Download](https://github.com/Iswenzz/gsclib/releases)
+## [Download](https://github.com/Iswenzz/SR-CoD4x/releases)
 
 ## Contributors:
 

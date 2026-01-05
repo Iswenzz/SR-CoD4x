@@ -2,13 +2,9 @@
 set CC=gcc
 set CXX=g++
 
-:: CGSC
-echo [+] CGSC
-cmake --build src/CGSC/build
-
 :: SR
 echo [+] SR
-cmake --build src/SR/build
+cmake --build src/SR/build --target install
 
 :: CoD4x
 echo [+] CoD4x
@@ -17,7 +13,7 @@ mingw32-make
 
 :: gsclib
 echo [+] gsclib
-cmake --build plugins/gsclib/build
+cmake --build plugins/gsclib/build --target install
 
 :: Binary
 echo [+] Binary

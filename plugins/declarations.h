@@ -965,11 +965,15 @@ typedef struct {//(0x2146c);
     int var_03;
 } clientSnapshot_t; //size: 0x2f84
 
+#pragma pack()
+
 typedef struct {
     char num;
     char data[256];
     int dataLen;
 } voices_t;
+
+#pragma pack(1)
 
 typedef struct {
     int checksum;
@@ -1069,7 +1073,7 @@ typedef struct client_s
 	uint64_t		clanidPending;
 	uint64_t		playerid;
 	int			steamstatus;
-	int			isMember; //Steam group membership. 
+	int			isMember; //Steam group membership.
 	//If sv_steamgroup is set up this variable will be 0 if membership status is still unknown.
 	//It will be -1 if he is not a member or 1 if he is a member or 2 if he is an officer
 	int			mutelevel; //1 = voice blocked; 2 = chat and voice blocked
@@ -1084,7 +1088,7 @@ typedef struct client_s
 	int			predictedOriginServerTime;
 
 	const char*		delayDropMsg;
-	char			userinfo[MAX_INFO_STRING];		// name, etc 
+	char			userinfo[MAX_INFO_STRING];		// name, etc
     byte reliableCommands[MAX_RELIABLE_COMMANDS * (MAX_STRING_CHARS + 2 * sizeof (int))]; // (0xa50)
 	int			reliableSequence;	// last added reliable message, not necesarily sent or acknowledged yet
 	int			reliableAcknowledge;	// last acknowledged reliable message
@@ -1112,18 +1116,18 @@ typedef struct client_s
 	int			downloadSendTime;	// time we last got an ack from the client
 	char			wwwDownloadURL[MAX_OSPATH]; // URL from where the client should download the current file
 
-	qboolean		wwwDownload;		
-	qboolean		wwwDownloadStarted;	
-	qboolean		wwwDlAck;		
+	qboolean		wwwDownload;
+	qboolean		wwwDownloadStarted;
+	qboolean		wwwDlAck;
 	qboolean		wwwDl_failed;
 	int			nextReliableTime;	//  svs.time when another reliable command will be allowed
-	int			floodprotect;		
+	int			floodprotect;
 	int			lastPacketTime;		// svs.time when packet was last received
 	int			lastConnectTime;	// svs.time when connection started
 	int			nextSnapshotTime;	// send another snapshot when svs.time >= nextSnapshotTime
 	int			timeoutCount;
 	clientSnapshot_t	frames[PACKET_BACKUP];	//updates can be delta'd from here
-	int			ping;		
+	int			ping;
 	int			rate;		// bytes / second
 	int			snapshotMsec;	// requests a snapshot every snapshotMsec unless rate choked
 	int			unknown6;
@@ -1143,6 +1147,8 @@ typedef struct client_s
 	byte			gamestateSent;
 	byte			hasValidPassword;
 	statData_t		stats;
+	int				localization; // loc_language
+	qboolean		lockedout;
 }client_t;
 
 
@@ -1294,7 +1300,7 @@ typedef struct {
 	uint16_t scriptPersId;          //0x2f88 the first spawn should be at a cool location
 	byte pad2;
 	byte pad;
-	clientConnected_t connected;	//0x2f8c 
+	clientConnected_t connected;	//0x2f8c
 	usercmd_t cmd;                  //0x2f90 we would lose angles if not persistant
 	usercmd_t oldcmd;               //0x2fb0 previous command processed by pmove()
 	qboolean localClient;           //0x2fd0 true if "ip" info key is "localhost"
@@ -1314,11 +1320,11 @@ typedef struct {
 	int viewmodelIndex;				// 0x3000 //Model-index
 
 	qboolean noSpectate;			// 0x3004
-	int teamInfo;					// 0x3008 is free (unused)addr 
-	
+	int teamInfo;					// 0x3008 is free (unused)addr
+
 	clientState_t cs;
 	int psOffsetTime;
-	
+
 } clientSession_t;
 
 struct gclient_s {
@@ -1326,7 +1332,7 @@ struct gclient_s {
 	playerState_t ps;               //0x00 communicated by server to clients
 
 	// the rest of the structure is private to game
-	
+
 	clientSession_t sess;		//0x2f64
 	int spectatorClient;        //0x3074 for chasecam and follow mode
 	qboolean noclip;		//0x3078
@@ -1338,7 +1344,7 @@ struct gclient_s {
 									// of the g_sycronousclients case
 	//Buttonlogic
 	int buttons;			//0x3088
-	int oldbuttons;	
+	int oldbuttons;
 	int latched_buttons;
 	int buttonsSinceLastFrame;		//0x3094
 
@@ -1346,7 +1352,7 @@ struct gclient_s {
 
 	// sum up damage over an entire frame, so
 	// shotgun blasts give a single big kick
-	float fGunPitch;	
+	float fGunPitch;
 	float fGunYaw;
 	int damage_blood;               // damage taken out of health
 	vec3_t damage_from;             //0x30b0 origin for vector calculation

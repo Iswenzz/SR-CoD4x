@@ -364,7 +364,7 @@ void mbedtls_sha512_update( mbedtls_sha512_context *ctx,
  * SHA-512 final digest
  */
 int mbedtls_sha512_finish_ret( mbedtls_sha512_context *ctx,
-                               unsigned char output[64] )
+                               unsigned char* output )
 {
     int ret;
     unsigned used;
@@ -430,7 +430,7 @@ int mbedtls_sha512_finish_ret( mbedtls_sha512_context *ctx,
 
 #if !defined(MBEDTLS_DEPRECATED_REMOVED)
 void mbedtls_sha512_finish( mbedtls_sha512_context *ctx,
-                            unsigned char output[64] )
+                            unsigned char* output )
 {
     mbedtls_sha512_finish_ret( ctx, output );
 }
@@ -443,7 +443,7 @@ void mbedtls_sha512_finish( mbedtls_sha512_context *ctx,
  */
 int mbedtls_sha512_ret( const unsigned char *input,
                     size_t ilen,
-                    unsigned char output[64],
+                    unsigned char* output,
                     int is384 )
 {
     int ret;
@@ -473,7 +473,7 @@ exit:
 #if !defined(MBEDTLS_DEPRECATED_REMOVED)
 void mbedtls_sha512( const unsigned char *input,
                      size_t ilen,
-                     unsigned char output[64],
+                     unsigned char* output,
                      int is384 )
 {
     mbedtls_sha512_ret( input, ilen, output, is384 );

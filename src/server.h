@@ -720,14 +720,6 @@ void SV_LinkEntity( gentity_t *gEnt );
 qboolean SV_ClientCommand( client_t *cl, msg_t *msg, qboolean inDl);
 
 void SV_WriteRconStatus( msg_t *msg );
-
-void G_PrintAdvertForPlayer(client_t*);
-void G_PrintRuleForPlayer(client_t*);
-void G_AddRule(const char* newtext);
-void G_AddAdvert(const char* newtext);
-void G_SetupHudMessagesForPlayer(client_t*);
-
-
 void SV_SayToPlayers(int clnum, int team, char* text);
 bool __cdecl SV_ClientHasClientMuted(int listener, int talker);
 bool __cdecl SV_ClientWantsVoiceData(int clientNum);

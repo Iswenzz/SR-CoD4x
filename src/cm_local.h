@@ -258,7 +258,7 @@ cmodel_t    *CM_ClipHandleToModel( clipHandle_t handle );
 extern clipMap_t cm;
 void __cdecl CM_LoadMapFromBsp(const char *name, char a2);
 void __cdecl CM_LoadStaticModels();
-void __cdecl DynEnt_LoadEntities();
+void __cdecl DynEnt_LoadEntities(const char *name);
 
 
 

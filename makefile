@@ -29,12 +29,15 @@ LINUX_DEFINES=_GNU_SOURCE
 
 ##################################
 # Flags
-CFLAGS=-m32 -msse2 -mfpmath=sse -Wall -fno-omit-frame-pointer -fmax-errors=15 -Isrc -Wno-packed-not-aligned
+COMMON_FLAGS=-m32 -msse2 -mfpmath=sse -Wall -fno-omit-frame-pointer -fmax-errors=15 -Isrc
+CFLAGS=$(COMMON_FLAGS) -std=gnu11
+CXXFLAGS=$(COMMON_FLAGS) -std=gnu++11
+SR_LLIBS=SR CoD4DM1 samplerate speex
 WIN_LFLAGS=-m32 -g -Wl,--nxcompat,--stack,0x800000 -mwindows -static-libgcc -static -lm
-WIN_LLIBS=tomcrypt mbedtls mbedcrypto mbedx509 ws2_32 wsock32 iphlpapi gdi32 winmm crypt32 stdc++ dbghelp ole32 SR CoD4DM1 speex samplerate
+WIN_LLIBS=tomcrypt mbedtls mbedcrypto mbedx509 ws2_32 wsock32 iphlpapi gdi32 winmm crypt32 stdc++ dbghelp ole32 $(SR_LLIBS)
 LINUX_LFLAGS=-m32 -g -static-libgcc -rdynamic -Wl,-rpath=./
-LINUX_LLIBS=tomcrypt mbedtls mbedcrypto mbedx509 dl pthread m stdc++ SR CoD4DM1 speex samplerate
-BSD_LLIBS=tomcrypt mbedtls mbedcrypto mbedx509 pthread m execinfo stdc++
+LINUX_LLIBS=tomcrypt mbedtls mbedcrypto mbedx509 dl pthread m stdc++ $(SR_LLIBS)
+BSD_LLIBS=tomcrypt mbedtls mbedcrypto mbedx509 pthread m execinfo stdc++ $(SR_LLIBS)
 COD4X_DEFINES=COD4X18UPDATE BUILD_NUMBER=$(BUILD_NUMBER) BUILD_BRANCH=$(BUILD_BRANCH) BUILD_REVISION=$(BUILD_REVISION)
 
 ifeq ($(DEBUG), true)
@@ -148,7 +151,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@echo   $(CPP)  $@
-	@$(CPP) -c $(CFLAGS) $(DCFLAGS) $(C_DEFINES) -o $@ $<
+	@$(CPP) -c $(CXXFLAGS) $(DCFLAGS) $(C_DEFINES) -o $@ $<
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/asmsource/%.asm
 	@echo   $(NASM)  $@

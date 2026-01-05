@@ -1,16 +1,6 @@
 @echo off
 set ROOT="%cd%"
 
-:: CGSC
-echo [+] CGSC
-cd src/CGSC
-rmdir build /s /q
-mkdir build
-cd build
-cmake .. --preset windows
-cmake --build .
-cd %ROOT%
-
 :: SR
 echo [+] SR
 cd src/SR
@@ -18,7 +8,7 @@ rmdir build /s /q
 mkdir build
 cd build
 cmake .. --preset windows
-cmake --build .
+cmake --build . --target install
 cd %ROOT%
 
 :: CoD4x

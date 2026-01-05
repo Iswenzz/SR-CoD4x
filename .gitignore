@@ -13,3 +13,7 @@ cod4x18_dedrun
 *.iwd
 *.bsp
 *.log
+
+src/gsclib.hpp
+src/gsclib.cpp
+src/asmsource/_gsclib.asm

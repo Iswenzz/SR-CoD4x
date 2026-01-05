@@ -98,7 +98,7 @@ const char *Sys_TempPath( void )
 
 
 
-void Sys_PrintBacktrace( )
+void Sys_PrintBacktrace(void* ctx)
 {
 	void** traces;
 	char** symbols;
@@ -126,7 +126,7 @@ void Sys_DumpCrash(int signal,struct sigcontext *ctx)
 	//Q_strncpyz(hash, "File Hashing has not been implemented yet", sizeof(hash));
 	hash[64] = '\0';
 	Com_Printf(CON_CHANNEL_SR_DEBUG, "File is %s Hash is: %s\n", Sys_ExeFile(), hash);
-	Sys_PrintBacktrace( );
+	Sys_PrintBacktrace(null);
 	Com_Printf(CON_CHANNEL_SR_DEBUG, "\n-- Registers ---\n");
 	Com_Printf(CON_CHANNEL_SR_DEBUG, "edi 0x%lx\nesi 0x%lx\nebp 0x%lx\nesp 0x%lx\neax 0x%lx\nebx 0x%lx\necx 0x%lx\nedx 0x%lu\neip 0x%lx\n",ctx->sc_edi,ctx->sc_esi,ctx->sc_ebp,ctx->sc_esp,ctx->sc_eax,ctx->sc_ebx,ctx->sc_ecx,ctx->sc_edx,ctx->sc_eip);
 	Com_Printf(CON_CHANNEL_SR_DEBUG, "-------- Backtrace Completed --------\n");

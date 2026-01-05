@@ -98,7 +98,7 @@ void CM_AreaEntities_r(unsigned int nodeIndex, areaParms_t *ap)
 				++ap->count;
 	    }
     }
-      
+
 	  if ( node->tree.dist >= ap->maxs[node->tree.axis] )
 		{
 			nodeIndex = node->tree.child[1];
@@ -140,10 +140,7 @@ void __cdecl CM_AddEntityToNode(svEntity_s *ent, uint16_t childNodeIndex)
 
 clipHandle_t SV_ClipHandleForEntity(gentity_t *touch)
 {
-	if(!touch->r.bmodel)
-		return CM_TempBoxModel(touch->r.mins, touch->r.maxs, touch->r.contents);
-	else
-		return touch->s.index;
+	return touch->r.bmodel ? touch->s.index : CM_TempBoxModel(touch->r.mins, touch->r.maxs);
 }
 
 qboolean G_ShouldEntitiesClip(moveclip_t *clip, int touchNum, gentity_t *touch)
@@ -251,14 +248,14 @@ __cdecl void SV_ClipMoveToEntity(moveclip_t *clip, svEntity_t *entity, trace_t *
 			return;
 
 		if(touch->r.ownerNum.isDefined()){
-		
+
 			if( touch->r.ownerNum.entnum() == clip->passEntityNum )
 			    return;
 
 
 			if( touch->r.ownerNum.entnum() == clip->passOwnerNum )
 			    return;
-		
+
 		}
 		if(!G_ShouldEntitiesClip(clip, touchNum, touch))
 			return;
@@ -269,7 +266,7 @@ __cdecl void SV_ClipMoveToEntity(moveclip_t *clip, svEntity_t *entity, trace_t *
 
 	if(CM_TraceBox(&clip->extents, mins, maxs, trace->fraction))
 		return;
-	
+
 	clipHandle = SV_ClipHandleForEntity(touch);
 
 	origin = touch->r.currentOrigin;
@@ -301,7 +298,7 @@ void __cdecl SV_SetupIgnoreEntParams(IgnoreEntParams *ignoreEntParams, int baseE
   {
 	  ent = SV_GentityNum(baseEntity);
   }
-  
+
   if ( ent && ent->r.ownerNum.isDefined() )
   {
     ignoreEntParams->parentEntity = ent->r.ownerNum.entnum();
@@ -336,7 +333,7 @@ int CM_AreaEntities(const float *mins, const float *maxs, int *entityList, int m
   areaParms_t ae;
 
   PIXBeginNamedEvent(-1, "CM_AreaEntities");
-  
+
   ae.mins = mins;
   ae.maxs = maxs;
   ae.list = entityList;
@@ -473,8 +470,8 @@ void __cdecl SV_SightTrace(int *hitNum, const float *start, const float *mins, c
       VectorAdd(maxs, mins, temp);
       VectorScale(temp, 0.5, temp);
 
-      VectorAdd(start, temp, clip.start); 
-      VectorAdd(end, temp, clip.end); 
+      VectorAdd(start, temp, clip.start);
+      VectorAdd(end, temp, clip.end);
 
       *hitNum = CM_ClipSightTraceToEntities(&clip);
   }
@@ -530,8 +527,8 @@ int __cdecl SV_TracePassed(const float *start, const float *mins, const float *m
       VectorAdd(maxs, mins, temp);
       VectorScale(temp, 0.5, temp);
 
-      VectorAdd(start, temp, clip.start); 
-      VectorAdd(end, temp, clip.end); 
+      VectorAdd(start, temp, clip.start);
+      VectorAdd(end, temp, clip.end);
 
       if(CM_ClipSightTraceToEntities(&clip))
       {
@@ -909,10 +906,10 @@ void __cdecl SV_PointTraceToEntity(struct pointtrace_t *clip, svEntity_t *check,
         angles = vec3_origin;
       }
       oldFraction = trace->fraction;
- 
+
       CM_TransformedBoxTrace(trace, clip->extents.start, clip->extents.end, vec3_origin, vec3_origin,
         clipHandle, clip->contentmask, touch->r.currentOrigin, angles);
- 
+
       if ( trace->fraction >= oldFraction )
       {
 /*
@@ -930,7 +927,7 @@ void __cdecl SV_PointTraceToEntity(struct pointtrace_t *clip, svEntity_t *check,
       trace->partName = 0;
 //      trace->boneIndex = 0;
       trace->partGroup = 0;
-      
+
       assert(touch->s.number == (unsigned short)( touch->s.number ));
 
       trace->hitType = 1;
@@ -1086,10 +1083,10 @@ void __cdecl SV_PointTraceToEntity(struct pointtrace_t *clip, svEntity_t *check,
         angles = vec3_origin;
       }
       oldFraction = trace->fraction;
- 
+
       CM_TransformedBoxTrace(trace, clip->extents.start, clip->extents.end, vec3_origin, vec3_origin,
         clipHandle, clip->contentmask, touch->r.currentOrigin, angles);
- 
+
       if ( trace->fraction >= oldFraction )
       {
         return;
@@ -1213,9 +1210,9 @@ void __cdecl SV_PointTraceToEntity(struct pointtrace_t *clip, svEntity_t *check,
       absmin[0] = actorLocationalMins[0] + touch->r.currentOrigin[0];
       absmin[1] = actorLocationalMins[1] + touch->r.currentOrigin[1];
       absmin[2] = actorLocationalMins[2] + touch->r.currentOrigin[2];
-      absmax[0] = actorLocationalMaxs[0] + touch->r.currentOrigin[0]; 
-      absmax[1] = actorLocationalMaxs[1] + touch->r.currentOrigin[1]; 
-      absmax[2] = actorLocationalMaxs[2] + touch->r.currentOrigin[2]; 
+      absmax[0] = actorLocationalMaxs[0] + touch->r.currentOrigin[0];
+      absmax[1] = actorLocationalMaxs[1] + touch->r.currentOrigin[1];
+      absmax[2] = actorLocationalMaxs[2] + touch->r.currentOrigin[2];
   }
   if ( CM_TraceBox(&clip->extents, absmin, absmax, trace->fraction) == qfalse )
   {

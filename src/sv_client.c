@@ -1002,6 +1002,7 @@ each of the backup packets.
 ==================
 */
 __optimize3 __regparm3 void SV_UserMove( client_t *cl, msg_t *msg, qboolean delta ) {
+	int x, y, z;
 	int i, key, clientNum;
 	unsigned int *ackTime;
 	unsigned int sysTime;
@@ -1070,9 +1071,12 @@ __optimize3 __regparm3 void SV_UserMove( client_t *cl, msg_t *msg, qboolean delt
 		oldcmd = cmd;
 	}
 
-	*((uint32_t*)&cl->predictedOrigin[0]) = MSG_ReadLong(msg);
-	*((uint32_t*)&cl->predictedOrigin[1]) = MSG_ReadLong(msg);
-	*((uint32_t*)&cl->predictedOrigin[2]) = MSG_ReadLong(msg);
+	x = MSG_ReadLong(msg);
+    y = MSG_ReadLong(msg);
+    z = MSG_ReadLong(msg);
+    memcpy(&cl->predictedOrigin[0], &x, sizeof(x));
+    memcpy(&cl->predictedOrigin[1], &y, sizeof(y));
+    memcpy(&cl->predictedOrigin[2], &z, sizeof(z));
 	cl->predictedOriginServerTime = MSG_ReadLong(msg);
 
 
@@ -1179,7 +1183,7 @@ void SV_ClientEnterWorld( client_t *client, usercmd_t *cmd ) {
 	// call the game begin function
 	ClientBegin( clientNum );
 
-	SV_SApiSteamIDToString(client->steamid, psti, sizeof(psti));
+	SV_SApiSteamIDToString(client->playerid ? client->playerid : client->steamid, psti, sizeof(psti));
 
 	//It was never intended to make a new demo for each fast_restart.
 	//SV_SpawnServer() stops the demo and cleans the name which did not happen here which resulted in strange naming bug
@@ -2550,6 +2554,7 @@ void SV_ExecuteClientCommand( client_t *cl, const char *s, qboolean clientOK, qb
 		if ( !strcmp( SV_Cmd_Argv( 0 ), u->name ) ) {
 
 			if(!inDl || u->indlcmd){
+				PHandler_Event(PLUGINS_ONCLIENTCOMMAND, cl, s);
 				u->func( cl );
 			}
 			SV_Cmd_EndTokenizedString( );

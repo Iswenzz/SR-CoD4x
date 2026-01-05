@@ -50,7 +50,6 @@ void __cdecl SV_GameSendServerCommand(int clientnum, int svscmd_type, const char
 
 #ifdef __cplusplus
 extern "C"{
-    void G_ShowMotd(unsigned int clnum);
     qboolean Cmd_FollowClient_f(gentity_t *ent, int clientnum);
 };
 
@@ -83,13 +82,4 @@ int __cdecl G_LocalizedStringIndex( const char* );
 void __cdecl ClientCommand( int );
 const char* __cdecl ClientConnect(int clnum, short clscriptid);  //Something simular to VM_Call
 void __cdecl ClientBegin( int clientNum );
-
-void G_PrintRuleForPlayer(client_t *cl);
-void G_PrintAdvertForPlayer(client_t *cl);
-void G_SetupHudMessagesForPlayer(client_t* cl);
-void G_DestroyAdsForPlayer(client_t *cl);
-void G_AddRule(const char* newtext);
-void G_AddAdvert(const char* newtext);
-void G_InitMotd();
-void G_ClearAllMessages();
 #endif
