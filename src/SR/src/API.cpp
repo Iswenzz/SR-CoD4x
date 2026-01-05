@@ -129,7 +129,7 @@ void SR_Packet(netadr_t *from, client_t *cl, msg_t *msg)
 
 void SR_Print(conChannel_t channel, char *msg)
 {
-	Log::Write(static_cast<Channel>(channel), msg);
+	Log::Write(msg);
 }
 
 int SR_PmoveGetSpeed(playerState_t *ps)

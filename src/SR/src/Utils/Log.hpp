@@ -1,4 +1,5 @@
 #pragma once
+#include <format>
 #include <iostream>
 #include <string>
 
@@ -50,8 +51,18 @@ namespace SR
 	class Log
 	{
 	public:
-		static void Write(Channel channel, const std::string& msg);
-		static void Write(const std::string& fmt, ...);
-		static void WriteLine(const std::string& fmt, ...);
+		static void Write(const std::string& msg);
+
+		template <typename... Args>
+		static void Write(std::format_string<Args...> fmt, Args&&... args)
+		{
+			Write(std::format(fmt, std::forward<Args>(args)...));
+		}
+
+		template <typename... Args>
+		static void WriteLine(std::format_string<Args...> fmt, Args&&... args)
+		{
+			Write(std::format(fmt, std::forward<Args>(args)...) + '\n');
+		}
 	};
 }

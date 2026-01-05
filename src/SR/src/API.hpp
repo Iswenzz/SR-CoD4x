@@ -1,5 +1,5 @@
 #pragma once
-#include "Macros/Base.hpp"
+#include "Macros.hpp"
 
 #include <bg_public.h>
 #include <server.h>

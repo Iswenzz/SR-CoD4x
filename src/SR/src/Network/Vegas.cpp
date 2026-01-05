@@ -9,9 +9,9 @@ namespace SR
 		Enabled = Cvar_RegisterBool("vegas", qfalse, 0, "Allow vegas server.");
 	}
 
-	bool Vegas::Connect(netadr_t *from, msg_t *msg, int *connectionId)
+	qboolean Vegas::Connect(netadr_t *from, msg_t *msg, int *connectionId)
 	{
-		return true;
+		return qtrue;
 	}
 
 	void Vegas::Disconnect(netadr_t *from, int connectionId) { }

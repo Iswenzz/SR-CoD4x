@@ -16,7 +16,7 @@ namespace SR
 		int var_x, from_first_entity, from_num_clients, from_first_client;
 
 		snapInfo.clnum = client - svsHeader.clients;
-		snapInfo.client = (void *)client;
+		snapInfo.client = client;
 		snapInfo.snapshotDeltaTime = 0;
 		snapInfo.fromBaseline = 0;
 		snapInfo.archived = 0;

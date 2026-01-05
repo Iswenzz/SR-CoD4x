@@ -14,7 +14,7 @@ namespace SR
 		static void Initialize();
 		static void Shutdown();
 
-		static bool Connect(netadr_t *from, msg_t *msg, int *connectionId);
+		static qboolean Connect(netadr_t *from, msg_t *msg, int *connectionId);
 		static void Disconnect(netadr_t *from, int connectionId);
 		static int Message(netadr_t *from, msg_t *msg, int connectionId);
 

@@ -24,6 +24,6 @@ namespace SR
 		static void Shutdown();
 
 		static std::vector<short> Decode(VoicePacket_t *packet);
-		static VoicePacket_t Speex::Encode(std::vector<short> &packet);
+		static VoicePacket_t Encode(std::vector<short> &packet);
 	};
 }

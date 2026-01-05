@@ -22,7 +22,6 @@ namespace SR
 {
 	class WAV : public Streamable
 	{
-		IZ_ASYNC(OpenAsync)
 	public:
 		WAV(const std::string& filepath);
 		virtual ~WAV() = default;

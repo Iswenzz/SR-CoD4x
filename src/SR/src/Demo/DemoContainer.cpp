@@ -15,8 +15,6 @@ namespace SR
 
 		RegisterDemoFolder(Environment::ModDirectory / "demos");
 		RegisterDemoFolder(Environment::ModDirectory / "wrs");
-
-		uv_mutex_init(&Mutex);
 	}
 
 	void DemoContainer::RegisterDemoFolder(const std::filesystem::path &path)
@@ -43,7 +41,7 @@ namespace SR
 		}
 		if (demos.size())
 		{
-			std::string id = fmt("times_%s_%s", mode.c_str(), way.c_str());
+			std::string id = std::format("times_{}_{}", mode, way);
 			const auto found = Demos.find(id);
 
 			if (found != std::end(Demos))
@@ -55,7 +53,7 @@ namespace SR
 			const auto demoPath = demos.at(0);
 			const auto relativePath = std::filesystem::relative(demoPath, Environment::ModDirectory).string();
 			Demos.insert({ id, CreateRef<Demo>(id, demoPath) });
-			Log::WriteLine("[DemoContainer] Register demo %s %s", id.c_str(), relativePath.c_str());
+			Log::WriteLine("[DemoContainer] Register demo {} {}", id.c_str(), relativePath.c_str());
 			return 1;
 		}
 		return 0;

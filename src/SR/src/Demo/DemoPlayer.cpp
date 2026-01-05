@@ -204,6 +204,6 @@ namespace SR
 
 		// Commands
 		for (const std::string &message : CurrentFrame.chat)
-			SV_SendServerCommand(Player->cl, "h \"^5[Demo] ^7%s\"", message.c_str());
+			SV_SendServerCommand(Player->cl, "h \"^5[Demo] ^7{}\"", message.c_str());
 	}
 }

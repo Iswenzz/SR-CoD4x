@@ -1,6 +1,8 @@
 #pragma once
 #include "Demo.hpp"
 
+#include <mutex>
+
 namespace SR
 {
 	class DemoContainer
@@ -8,7 +10,7 @@ namespace SR
 	public:
 		static inline std::vector<std::string> Directories{};
 		static inline std::map<std::string, Ref<Demo>> Demos{};
-		static inline uv_mutex_t Mutex;
+		static inline std::mutex Mutex;
 
 		static void Initialize();
 

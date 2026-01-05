@@ -3,7 +3,6 @@
 #include "Audio/Speex.hpp"
 #include "Commands/Container.hpp"
 #include "Demo/DemoContainer.hpp"
-
 #include "Network/Netchan.hpp"
 #include "System/Debug.hpp"
 #include "System/Environment.hpp"
@@ -13,7 +12,6 @@ namespace SR
 	void Application::Start()
 	{
 		Log::WriteLine("[SR] Start");
-
 		Environment::Build();
 
 		Netchan::Initialize();

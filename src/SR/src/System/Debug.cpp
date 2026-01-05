@@ -24,7 +24,7 @@ namespace SR
 		if (duration > 0)
 			fps = 1000 / duration;
 		if (fps > 0)
-			Log::WriteLine("[Debug] FPS %d", fps);
+			Log::WriteLine("[Debug] FPS {}", fps);
 
 		PreviousFrameTime = FrameTime;
 	}
@@ -35,8 +35,8 @@ namespace SR
 			return;
 
 		if (size >= 1050)
-			Log::WriteLine("^3[Debug] Packet %d", size);
+			Log::WriteLine("^3[Debug] Packet {}", size);
 		else if (size >= 200)
-			Log::WriteLine("^2[Debug] Packet %d", size);
+			Log::WriteLine("^2[Debug] Packet {}", size);
 	}
 }

@@ -15,7 +15,7 @@ namespace SR
 			return;
 		AmbientStarted = true;
 
-		SV_SetConfigstring(0x335, fmt("n\\%s\\t\\%i", AmbientAlias.c_str(), AmbientVolume));
+		SV_SetConfigstring(0x335, std::format("n\\{}\\t\\{}", AmbientAlias, AmbientVolume).c_str());
 	}
 
 	void Map::SetAmbient(const std::string& alias, int volume)

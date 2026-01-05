@@ -1,7 +1,6 @@
 #include "Demo.hpp"
 
 #include "DemoContainer.hpp"
-#include "System/ThreadPool.hpp"
 #include "Utils/Utils.hpp"
 
 namespace SR
@@ -11,7 +10,13 @@ namespace SR
 		ID = id;
 		Reader = CreateScope<CoD4::DM1::DemoReader>(path);
 
-		ThreadPool::GSC.Worker(this, OpenAsync);
+		Async::Submit(
+			[this](AsyncTask &task)
+			{
+				std::scoped_lock lock(DemoContainer::Mutex);
+				Open();
+				task.Status = AsyncStatus::Successful;
+			});
 	}
 
 	Demo::~Demo()
@@ -54,7 +59,7 @@ namespace SR
 				// Entities
 				for (auto &ent : Reader->GetLastUpdatedEntities())
 				{
-					if (ent.eType == ET_SCRIPTMOVER)
+					if (static_cast<int>(ent.eType) == ET_SCRIPTMOVER)
 						frame.entities[ent.number] = *reinterpret_cast<entityState_t *>(&ent);
 				}
 				// Interpolate invalid packets
@@ -73,17 +78,6 @@ namespace SR
 		}
 		Reader->Close();
 		IsLoaded = true;
-	}
-
-	void Demo::OpenAsync(uv_work_t *req)
-	{
-		uv_mutex_lock(&DemoContainer::Mutex);
-
-		Demo *demo = reinterpret_cast<Demo *>(AsyncWorkerData(req));
-		demo->Open();
-
-		uv_mutex_unlock(&DemoContainer::Mutex);
-		AsyncWorkerDone(req, ASYNC_SUCCESSFUL);
 	}
 
 	void Demo::ReadDemoInformations()

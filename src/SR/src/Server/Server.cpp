@@ -4,7 +4,6 @@
 #include "Audio/Voice.hpp"
 #include "Network/Vegas.hpp"
 #include "System/Debug.hpp"
-#include "System/ThreadPool.hpp"
 
 #include "Demo/DemoContainer.hpp"
 #include "Entity/Entity.hpp"
@@ -16,11 +15,11 @@ namespace SR
 	{
 		Log::WriteLine("[Server] Spawn server");
 
-		ThreadPool::Initialize();
+		Async::Shutdown();
+		Async::Initialize();
 
 		Player::List = {};
 		Entity::List = {};
-
 		DemoContainer::Demos.clear();
 	}
 

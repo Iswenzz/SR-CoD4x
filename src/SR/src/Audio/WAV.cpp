@@ -1,7 +1,6 @@
 #include "WAV.hpp"
 
 #include "Audio.hpp"
-#include "System/ThreadPool.hpp"
 
 namespace SR
 {
@@ -9,7 +8,12 @@ namespace SR
 	{
 		FilePath = filepath;
 
-		ThreadPool::Main.Worker(this, OpenAsync);
+		Async::Submit(
+			[this](AsyncTask &task)
+			{
+				Open();
+				task.Status = AsyncStatus::Successful;
+			});
 	}
 
 	void WAV::Open()
@@ -19,7 +23,7 @@ namespace SR
 		IsLoaded = false;
 		Input.open(FilePath, std::ios_base::binary);
 
-		Log::WriteLine("[WAV] Opening %s", FilePath.c_str());
+		Log::WriteLine("[WAV] Opening {}", FilePath.c_str());
 
 		WavHeader header;
 		Input.read(reinterpret_cast<char *>(&header), sizeof(WavHeader));
@@ -40,14 +44,6 @@ namespace SR
 
 		ProcessPackets();
 		IsLoaded = true;
-	}
-
-	void WAV::OpenAsync(uv_work_t *req)
-	{
-		WAV *wav = reinterpret_cast<WAV *>(AsyncWorkerData(req));
-		wav->Open();
-
-		AsyncWorkerDone(req, ASYNC_SUCCESSFUL);
 	}
 
 	void WAV::Save(const std::string &path)

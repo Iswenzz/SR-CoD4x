@@ -1,9 +1,7 @@
 target_sources(SR PRIVATE
-	AsyncHandler.hpp
-	AsyncHandler.cpp
+	Async.hpp
+	Async.cpp
 	Debug.hpp
 	Debug.cpp
 	Environment.hpp
-	Environment.cpp
-	ThreadPool.hpp
-	ThreadPool.cpp)
+	Environment.cpp)

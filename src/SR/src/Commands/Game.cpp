@@ -67,7 +67,7 @@ namespace SR
 		}
 		if (!std::filesystem::exists(name))
 		{
-			Scr_ObjectError(fmt("Radio file name %s doesn't exists.\n", name));
+			Scr_ObjectError(std::format("Radio file name {} doesn't exists.\n", name).c_str());
 			return;
 		}
 		Ref<Streamable> file;
@@ -87,7 +87,7 @@ namespace SR
 		file->StreamPosition = 0;
 		Voice::Radio = file;
 
-		Log::WriteLine("[Radio] Playing %s", name.c_str());
+		Log::WriteLine("[Radio] Playing {}", name.c_str());
 	}
 
 	void GameCommands::SoundAlias()
@@ -113,7 +113,7 @@ namespace SR
 			if (!std::string_view(raw.name).ends_with(".mp3"))
 				return;
 
-			Scr_AddString(fmt("%s %s/%s", alias->aliasName, raw.dir, raw.name));
+			Scr_AddString(std::format("{} {}/{}", alias->aliasName, raw.dir, raw.name).c_str());
 			Scr_AddArray();
 		};
 		Scr_MakeArray();

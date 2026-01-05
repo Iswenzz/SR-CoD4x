@@ -29,7 +29,6 @@ namespace SR
 
 	class Demo
 	{
-		IZ_ASYNC(OpenAsync)
 	public:
 		std::string ID;
 		Scope<CoD4::DM1::DemoReader> Reader;

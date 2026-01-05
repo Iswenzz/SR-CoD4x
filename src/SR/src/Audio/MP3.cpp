@@ -1,7 +1,6 @@
 #include "MP3.hpp"
 
 #include "Audio.hpp"
-#include "System/ThreadPool.hpp"
 
 #define MINIMP3_ONLY_MP3
 #define MINIMP3_NO_STDIO
@@ -15,7 +14,12 @@ namespace SR
 	{
 		FilePath = filepath;
 
-		ThreadPool::Main.Worker(this, OpenAsync);
+		Async::Submit(
+			[this](AsyncTask& task)
+			{
+				Open();
+				task.Status = AsyncStatus::Successful;
+			});
 	}
 
 	void MP3::Open()
@@ -28,7 +32,7 @@ namespace SR
 		mp3dec_init(&mp3d);
 
 		Input.open(FilePath, std::ios_base::binary);
-		Log::WriteLine("[MP3] Opening %s", FilePath.c_str());
+		Log::WriteLine("[MP3] Opening {}", FilePath.c_str());
 
 		Input.seekg(0, Input.end);
 		FileSize = Input.tellg();
@@ -40,7 +44,7 @@ namespace SR
 		mp3dec_file_info_t fileInfo;
 		if (mp3dec_load_buf(&mp3d, buffer.data(), buffer.size(), &fileInfo, nullptr, nullptr))
 		{
-			Log::WriteLine("[MP3] Error opening %s", FilePath.c_str());
+			Log::WriteLine("[MP3] Error opening {}", FilePath.c_str());
 			return;
 		}
 		int channels = 1;
@@ -55,14 +59,6 @@ namespace SR
 		free(fileInfo.buffer);
 		ProcessPackets();
 		IsLoaded = true;
-	}
-
-	void MP3::OpenAsync(uv_work_t* req)
-	{
-		MP3* mp3 = reinterpret_cast<MP3*>(AsyncWorkerData(req));
-		mp3->Open();
-
-		AsyncWorkerDone(req, ASYNC_SUCCESSFUL);
 	}
 
 	void MP3::Save(const std::string& path) { }

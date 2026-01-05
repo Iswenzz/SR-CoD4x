@@ -2,12 +2,8 @@
 
 CoD4x is a modification of the Call of Duty 4 - Modern Warfare server. It fixes several bugs in the original binaries and allows developers to extend server functionality with additional variables and plugins. When using the CoD4x server, the clients invoke installation of the proprietary CoD4x client to players joining the server using the CoD4x servers, which fixes several known base game bugs in the client, and in combination with the server allows for extra features.
 
-A compatible client modification can be found here: [client](https://github.com/callofduty4x/CoD4x_Client_pub)
-
-[Website](http://cod4x.ovh/) - [Forums](https://cod4x.ovh/index.php?/forums/) - [Documentation](http://docs.cod4x.ovh/) - [Masterserver](http://cod4master.cod4x.ovh/)
-
 # SR Features
-* CGSC & gsclib
+* gsclib standard library
 * Extended player movements
 * Increased assets pool
 * Record demos
@@ -26,60 +22,45 @@ A compatible client modification can be found here: [client](https://github.com/
 * Backwards compatibility to 1.7 and 1.7a servers
 * A new [masterserver](http://cod4master.cod4x.ovh/), for when the official masterserver is down
 
-## Setting up a Call of Duty 4 server with Cod4x 1.8
-Download binaries: [Releases](https://github.com/callofduty4x/CoD4x_Server/releases)
-
+## Setting up a server
 You also require the base game to run a server. Copy every .iwd file in `cod4directory/main/` to `serverdirectory/main/`.
 Also copy everything inside `cod4directory/zone` to `serverdirectory/zone`.
 
 Now you can run the server with `./cod4x18_dedrun +map mp_killhouse`. If you are running a local server on Windows use `cod4x18_dedrun.exe +map mp_killhouse +set dedicated 2 +set net_ip 127.0.0.1`. Join the server with your client via the console (`^`) by typing `/connect 127.0.0.1` (if hosted locally), and see if you can join the server.
 
 A more detailed server tutorial is available on [our wiki](https://github.com/callofduty4x/CoD4x_Server/wiki/Server-setup).
-[Also read about new banlists here](https://github.com/callofduty4x/CoD4x_Server/wiki/Banlists-in-version-15.9--and-other-changes)
 
-## Compiling on Linux
-To compile CoD4x from source, you need to install the following prerequisites:
+## Building (Windows)
 
-- NASM
-- gcc
-- make
+_Pre-Requisites:_
 
-Debian/Ubuntu 32-bit:
-```
-sudo apt install nasm build-essential
-```
+1. [CMake](https://cmake.org/) and [vcpkg](https://vcpkg.io/en/).
 
-Debian/Ubuntu 64-bit:
-```
-sudo dpkg --add-architecture i386
-sudo apt-get update
-sudo apt-get install nasm:i386 build-essential gcc-multilib g++-multilib
-```
+_Build Command:_
 
-openSUSE 32-bit:
-```
-sudo zypper install nasm gcc-32bit gcc-c++-32bit
-```
+    mkdir build && cd build
+    cmake .. --preset windows
+    cmake --build . --target install
 
-Arch Linux 64-bit:
-```
-sudo pacman -S nasm gcc lib32-gcc-libs make
-```
+## Building (Linux)
 
-Now compile the server by running `make`.
+_Pre-Requisites:_
 
-If compilation was successful the binary will be placed in the `/bin/` folder.
+1. [CMake](https://cmake.org/) and [vcpkg](https://vcpkg.io/en/).
 
-## Compiling on Windows
-To compile CoD4x from source you require the following tools:
+	sudo dpkg --add-architecture i386
+    sudo apt update
+    sudo apt install build-essential gcc-multilib g++-multilib pkg-config linux-libc-dev nasm:i386
 
-- [NASM](http://www.nasm.us/pub/nasm/releasebuilds/?C=M;O=D)
-- [MinGW i686-8.1.0-win32-dwarf-msvcrt](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/8.1.0/threads-win32/dwarf/i686-8.1.0-release-win32-dwarf-rt_v6-rev0.7z)
+_Build Command:_
 
-Now compile the server by running `mingw32-make`.
+    mkdir build && cd build
+    cmake .. --preset linux
+    cmake --build . --target install
 
-If compilation was successful the binary will be placed in the `/bin/` folder.
+## [Download](https://github.com/Iswenzz/gsclib/releases)
 
 ## Contributors:
 
-***Note:*** If you would like to contribute to this repository, feel free to send a pull request, and I will review your code. Also feel free to post about any problems that may arise in the issues section of the repository.
+**_Note:_** If you would like to contribute to this repository, feel free to send a pull request, and I will review your code. Also feel free to post about any problems that may arise in the issues section of the repository.
+

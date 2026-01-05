@@ -5,7 +5,6 @@ namespace SR
 {
 	class MP3 : public Streamable
 	{
-		IZ_ASYNC(OpenAsync)
 	public:
 		MP3(const std::string& filepath);
 		virtual ~MP3() = default;

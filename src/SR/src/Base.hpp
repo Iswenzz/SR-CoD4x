@@ -1,23 +1,28 @@
 #pragma once
 
-#include "Macros/Base.hpp"
+#include "Macros.hpp"
+#include "System/Async.hpp"
 #include "Utils/Log.hpp"
 #include "Utils/Ref.hpp"
 
 #include <array>
 #include <map>
+#include <unordered_map>
 #include <vector>
 
 IZ_C
 {
 	// clang-format off
-	#include <CGSC/cgsc.h>
-	#include <server.h>
-	#include <net_game.h>
-	#include <sys_main.h>
+	#include <cscr_variable.h>
+	#include <cscr_stringlist.h>
+	#include <g_shared.h>
 	#include <huffman.h>
-	#include <sv_snapshot.h>
+	#include <net_game.h>
 	#include <qcommon_logprint.h>
+	#include <scr_vm.h>
+	#include <server.h>
+	#include <sv_snapshot.h>
+	#include <sys_main.h>
 	#include <xassets.h>
 	// clang-format on
 }

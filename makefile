@@ -113,23 +113,6 @@ ZLIB_OBJ=$(patsubst $(ZLIB_DIR)/%.c,$(OBJ_DIR)/%.o,$(ZLIB_SOURCES))
 ASSETS_OBJ=$(patsubst $(ASSETS_DIR)/%.c,$(OBJ_DIR)/%.o,$(ASSETS_SOURCES))
 
 ##################################
-# CGSC
-CGSC_DIR=$(SRC_DIR)/CGSC
-WIN_LLIBS:=$(WIN_LLIBS) CGSC uv iphlpapi psapi userenv ws2_32 ole32 uuid dbghelp
-LINUX_LLIBS:=$(LINUX_LLIBS) CGSC uv dl pthread rt
-BSD_LLIBS:=$(BSD_LLIBS) CGSC uv dl pthread rt
-
-WIN_LFLAGS:=$(WIN_LFLAGS) -mconsole
-
-CGSC_ASM_SOURCES=$(wildcard $(CGSC_DIR)/asm/*.asm)
-CGSC_ASM_OBJ=$(patsubst $(CGSC_DIR)/asm/%.asm,$(OBJ_DIR)/%.o,$(CGSC_ASM_SOURCES))
-ASM_OBJ:=$(ASM_OBJ) $(CGSC_ASM_OBJ)
-
-$(OBJ_DIR)/%.o: $(CGSC_DIR)/asm/%.asm
-	@echo	 $(NASM) $@
-	@$(NASM) $(NASMFLAGS) $< -o $@
-
-##################################
 # Targets
 all: $(EXTERNAL) $(TARGET) $(ADDITIONAL_OBJ)
 
