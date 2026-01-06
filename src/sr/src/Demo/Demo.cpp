@@ -10,12 +10,13 @@ namespace SR
 		ID = id;
 		Reader = CreateScope<CoD4::DM1::DemoReader>(path);
 
+		auto task = Async::Create(this);
 		Async::Submit(
-			[this](AsyncTask &task)
+			[this, task]
 			{
 				std::scoped_lock lock(DemoContainer::Mutex);
 				Open();
-				task.Status = AsyncStatus::Successful;
+				task->Status = AsyncStatus::Successful;
 			});
 	}
 

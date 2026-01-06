@@ -8,11 +8,12 @@ namespace SR
 	{
 		FilePath = filepath;
 
+		auto task = Async::Create(this);
 		Async::Submit(
-			[this](AsyncTask &task)
+			[this, task]
 			{
 				Open();
-				task.Status = AsyncStatus::Successful;
+				task->Status = AsyncStatus::Successful;
 			});
 	}
 
