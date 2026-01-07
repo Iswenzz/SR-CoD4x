@@ -9,7 +9,7 @@ namespace SR
 		MP3(const std::string& filepath);
 		virtual ~MP3() = default;
 
-		void Open() override;
+		void Open(const Ref<AsyncTask>& task) override;
 		void Save(const std::string& path) override;
 	};
 }

@@ -47,7 +47,7 @@ namespace SR
 		Demo(const std::string& id, const std::string& path);
 		~Demo();
 
-		void Open();
+		void Open(const Ref<AsyncTask>& task);
 		void ReadDemoInformations();
 		void Interpolate(DemoFrame& interpolateFrame);
 		void GetVersion();

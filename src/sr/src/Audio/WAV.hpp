@@ -26,7 +26,7 @@ namespace SR
 		WAV(const std::string& filepath);
 		virtual ~WAV() = default;
 
-		void Open() override;
+		void Open(const Ref<AsyncTask>& task) override;
 		void Save(const std::string& path);
 
 	private:

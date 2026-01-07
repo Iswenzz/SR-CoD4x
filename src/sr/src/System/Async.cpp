@@ -36,9 +36,9 @@ namespace SR
 		ActiveTasks.clear();
 	}
 
-	std::shared_ptr<AsyncTask> Async::Create(void* data)
+	Ref<AsyncTask> Async::Create(void* data)
 	{
-		auto task = std::make_shared<AsyncTask>();
+		auto task = CreateRef<AsyncTask>();
 		task->Data = data;
 		task->Status = AsyncStatus::Pending;
 		{

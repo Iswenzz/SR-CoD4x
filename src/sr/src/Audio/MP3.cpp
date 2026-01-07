@@ -15,19 +15,16 @@ namespace SR
 		FilePath = filepath;
 
 		auto task = Async::Create(this);
-		Async::Submit(
-			[this, task]
-			{
-				Open();
-				task->Status = AsyncStatus::Successful;
-			});
+		Async::Submit([this, task] { Open(task); });
 	}
 
-	void MP3::Open()
+	void MP3::Open(const Ref<AsyncTask>& task)
 	{
 		if (!std::filesystem::exists(FilePath))
+		{
+			task->Status = AsyncStatus::Failure;
 			return;
-
+		}
 		IsLoaded = false;
 		mp3dec_t mp3d;
 		mp3dec_init(&mp3d);
@@ -46,6 +43,7 @@ namespace SR
 		if (mp3dec_load_buf(&mp3d, buffer.data(), buffer.size(), &fileInfo, nullptr, nullptr))
 		{
 			Log::WriteLine("[MP3] Error opening {}", FilePath.c_str());
+			task->Status = AsyncStatus::Failure;
 			return;
 		}
 		int channels = 1;
@@ -60,6 +58,7 @@ namespace SR
 		free(fileInfo.buffer);
 		ProcessPackets();
 		IsLoaded = true;
+		task->Status = AsyncStatus::Successful;
 	}
 
 	void MP3::Save(const std::string& path) { }

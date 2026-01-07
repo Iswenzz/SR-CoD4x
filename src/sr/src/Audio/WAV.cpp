@@ -9,18 +9,16 @@ namespace SR
 		FilePath = filepath;
 
 		auto task = Async::Create(this);
-		Async::Submit(
-			[this, task]
-			{
-				Open();
-				task->Status = AsyncStatus::Successful;
-			});
+		Async::Submit([this, task] { Open(task); });
 	}
 
-	void WAV::Open()
+	void WAV::Open(const Ref<AsyncTask>& task)
 	{
 		if (!std::filesystem::exists(FilePath))
+		{
+			task->Status = AsyncStatus::Failure;
 			return;
+		}
 		IsLoaded = false;
 		Input.open(FilePath, std::ios_base::binary);
 
@@ -45,6 +43,7 @@ namespace SR
 
 		ProcessPackets();
 		IsLoaded = true;
+		task->Status = AsyncStatus::Successful;
 	}
 
 	void WAV::Save(const std::string &path)

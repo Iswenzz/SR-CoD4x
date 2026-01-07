@@ -24,7 +24,7 @@ namespace SR
 		Streamable() = default;
 		virtual ~Streamable();
 
-		virtual void Open() = 0;
+		virtual void Open(const Ref<AsyncTask>& task) = 0;
 		virtual void Save(const std::string& path) = 0;
 		VoicePacket_t Play();
 

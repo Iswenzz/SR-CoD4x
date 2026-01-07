@@ -11,13 +11,7 @@ namespace SR
 		Reader = CreateScope<CoD4::DM1::DemoReader>(path);
 
 		auto task = Async::Create(this);
-		Async::Submit(
-			[this, task]
-			{
-				std::scoped_lock lock(DemoContainer::Mutex);
-				Open();
-				task->Status = AsyncStatus::Successful;
-			});
+		Async::Submit([this, task] { Open(task); });
 	}
 
 	Demo::~Demo()
@@ -25,8 +19,9 @@ namespace SR
 		Reader->Close();
 	}
 
-	void Demo::Open()
+	void Demo::Open(const Ref<AsyncTask>& task)
 	{
+		std::scoped_lock lock(DemoContainer::Mutex);
 		IsLoaded = false;
 		DemoFrame previousFrame = { 0 };
 
@@ -79,6 +74,7 @@ namespace SR
 		}
 		Reader->Close();
 		IsLoaded = true;
+		task->Status = AsyncStatus::Successful;
 	}
 
 	void Demo::ReadDemoInformations()
