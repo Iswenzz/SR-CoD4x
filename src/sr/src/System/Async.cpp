@@ -78,7 +78,7 @@ namespace SR
 			}
 			catch (const std::exception& e)
 			{
-				Log::WriteLine("Async exception: {}", e.what());
+				Log::WriteLine("Async exception {}", e.what());
 			}
 		}
 	}

@@ -23,8 +23,8 @@ CoD4x is a modification of the Call of Duty 4 - Modern Warfare server. It fixes 
 * A new [masterserver](http://cod4master.cod4x.ovh/), for when the official masterserver is down
 
 ## Setting up a server
-You also require the base game to run a server. Copy every .iwd file in `cod4directory/main/` to `serverdirectory/main/`.
-Also copy everything inside `cod4directory/zone` to `serverdirectory/zone`.
+You also require the base game to run a server. Copy every .iwd file in `client/main` to `server/main`.
+Also copy everything inside `client/zone` to `server/zone`.
 
 Now you can run the server with `./cod4x18_dedrun +map mp_killhouse`. If you are running a local server on Windows use `cod4x18_dedrun.exe +map mp_killhouse +set dedicated 2 +set net_ip 127.0.0.1`. Join the server with your client via the console (`^`) by typing `/connect 127.0.0.1` (if hosted locally), and see if you can join the server.
 
