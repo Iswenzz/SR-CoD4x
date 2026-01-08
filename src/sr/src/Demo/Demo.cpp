@@ -19,7 +19,7 @@ namespace SR
 		Reader->Close();
 	}
 
-	void Demo::Open(const Ref<AsyncTask>& task)
+	void Demo::Open(const Ref<AsyncTask> &task)
 	{
 		std::scoped_lock lock(DemoContainer::Mutex);
 		IsLoaded = false;
@@ -128,6 +128,9 @@ namespace SR
 
 	void Demo::Interpolate(DemoFrame &interpolateFrame)
 	{
+		if (LastValidFrame >= Frames.size())
+			return;
+
 		DemoFrame &validFrame = Frames[LastValidFrame];
 
 		for (int i = LastValidFrame + 1, c = 1; i < Frames.size(); i++, c++)
