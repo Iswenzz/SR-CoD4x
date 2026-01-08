@@ -30,7 +30,7 @@ namespace SR
 		mp3dec_init(&mp3d);
 
 		Input.open(FilePath, std::ios_base::binary);
-		Log::WriteLine("[MP3] Opening {}", FilePath.c_str());
+		Log::WriteLine("^5[MP3] Opening {}", FilePath.c_str());
 
 		Input.seekg(0, Input.end);
 		FileSize = Input.tellg();
@@ -42,7 +42,7 @@ namespace SR
 		mp3dec_file_info_t fileInfo;
 		if (mp3dec_load_buf(&mp3d, buffer.data(), buffer.size(), &fileInfo, nullptr, nullptr))
 		{
-			Log::WriteLine("[MP3] Error opening {}", FilePath.c_str());
+			Log::WriteLine("^1[MP3] Error opening {}", FilePath.c_str());
 			task->Status = AsyncStatus::Failure;
 			return;
 		}

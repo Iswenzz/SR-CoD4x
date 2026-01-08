@@ -57,7 +57,7 @@ namespace SR
 
 		if (int error = src_simple(&data, SRC_LINEAR, channels); error)
 		{
-			Log::WriteLine("[Voice] Downsample error {}", src_strerror(error));
+			Log::WriteLine("^1[Voice] Downsample error {}", src_strerror(error));
 			return {};
 		}
 		std::vector<short> resampledData(data.output_frames_gen * channels);

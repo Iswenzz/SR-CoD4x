@@ -22,7 +22,7 @@ namespace SR
 		IsLoaded = false;
 		Input.open(FilePath, std::ios_base::binary);
 
-		Log::WriteLine("[WAV] Opening {}", FilePath.c_str());
+		Log::WriteLine("^5[WAV] Opening {}", FilePath.c_str());
 
 		WavHeader header;
 		Input.read(reinterpret_cast<char *>(&header), sizeof(WavHeader));

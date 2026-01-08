@@ -87,7 +87,7 @@ namespace SR
 		file->StreamPosition = 0;
 		Voice::Radio = file;
 
-		Log::WriteLine("[Radio] Playing {}", name.c_str());
+		Log::WriteLine("^5[Radio] Playing {}", name.c_str());
 	}
 
 	void GameCommands::SoundAlias()

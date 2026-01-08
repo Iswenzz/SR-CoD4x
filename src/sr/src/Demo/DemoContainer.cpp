@@ -53,7 +53,7 @@ namespace SR
 			const auto demoPath = demos.at(0);
 			const auto relativePath = std::filesystem::relative(demoPath, Environment::ModDirectory).string();
 			Demos.insert({ id, CreateRef<Demo>(id, demoPath) });
-			Log::WriteLine("[DemoContainer] Register demo {} {}", id.c_str(), relativePath.c_str());
+			Log::WriteLine("^5[DemoContainer] Register demo {} {}", id.c_str(), relativePath.c_str());
 			return 1;
 		}
 		return 0;

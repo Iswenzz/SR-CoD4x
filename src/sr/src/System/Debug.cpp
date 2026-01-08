@@ -24,7 +24,7 @@ namespace SR
 		if (duration > 0)
 			fps = 1000 / duration;
 		if (fps > 0)
-			Log::WriteLine("[Debug] FPS {}", fps);
+			Log::WriteLine("^5[Debug] FPS {}", fps);
 
 		PreviousFrameTime = FrameTime;
 	}

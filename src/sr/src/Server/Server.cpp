@@ -13,7 +13,7 @@ namespace SR
 {
 	void Server::Spawn(const std::string& levelName)
 	{
-		Log::WriteLine("[Server] Spawn server");
+		Log::WriteLine("^5[Server] Spawn server");
 
 		Async::Shutdown();
 		Async::Initialize();

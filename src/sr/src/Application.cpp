@@ -11,7 +11,7 @@ namespace SR
 {
 	void Application::Start()
 	{
-		Log::WriteLine("[SR] Start");
+		Log::WriteLine("^5[SR] Start");
 		Environment::Build();
 
 		Netchan::Initialize();
@@ -23,7 +23,7 @@ namespace SR
 
 	void Application::Shutdown()
 	{
-		Log::WriteLine("[SR] Shutdown");
+		Log::WriteLine("^5[SR] Shutdown");
 
 		Speex::Shutdown();
 	}

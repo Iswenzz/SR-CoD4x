@@ -13,7 +13,7 @@ namespace SR
 
 	void Player::Initialize()
 	{
-		Log::WriteLine("[Player] Connected {} {}", cl->gentity->s.number, cl->name);
+		Log::WriteLine("^5[Player] Connected {} {}", cl->gentity->s.number, cl->name);
 
 		DemoPlayer = CreateScope<class DemoPlayer>(shared_from_this());
 		PMove = CreateScope<class PMove>(shared_from_this());
@@ -21,7 +21,7 @@ namespace SR
 
 	void Player::Disconnect()
 	{
-		Log::WriteLine("[Player] Disconnected {} {}", cl->gentity->s.number, cl->name);
+		Log::WriteLine("^5[Player] Disconnected {} {}", cl->gentity->s.number, cl->name);
 	}
 
 	void Player::Spawn()
