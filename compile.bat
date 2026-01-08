@@ -15,6 +15,7 @@ cmake --build src\sr\build --target install
 
 :: CoD4x
 echo [+] CoD4x
+del bin\cod4x18_dedrun.exe
 mingw32-make
 
 :: gsclib
