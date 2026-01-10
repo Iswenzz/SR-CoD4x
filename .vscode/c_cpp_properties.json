@@ -7,7 +7,7 @@
             ],
             "includePath": [
                 "src",
-                "src/SR",
+                "src/sr",
 				"plugins"
             ],
             "intelliSenseMode": "gcc-x86",
