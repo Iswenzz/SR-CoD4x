@@ -12,7 +12,7 @@ namespace SR
 		Async::Submit([this, task] { Open(task); });
 	}
 
-	void WAV::Open(const Ref<AsyncTask>& task)
+	void WAV::Open(const Ref<AsyncTask> &task)
 	{
 		if (!std::filesystem::exists(FilePath))
 		{

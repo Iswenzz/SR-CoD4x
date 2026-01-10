@@ -4,7 +4,7 @@
 
 struct RawFile
 {
-  const char *name;
-  int len;
-  const char *buffer;
+	const char *name;
+	int len;
+	const char *buffer;
 };

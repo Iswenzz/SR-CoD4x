@@ -1,23 +1,3 @@
-/*
-===========================================================================
-    Copyright (C) 2010-2013  Ninja and TheKelm
-
-    This file is part of CoD4X18-Server source code.
-
-    CoD4X18-Server source code is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
-
-    CoD4X18-Server source code is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>
-===========================================================================
-*/
 #pragma once
 
 #include "scr_vm.h"
@@ -26,7 +6,7 @@
 #include "dobj.h"
 
 #ifndef SCR_ENTREF_DEFINED
-#define SCR_ENTREF_DEFINED
+	#define SCR_ENTREF_DEFINED
 typedef int scr_entref_t;
 #endif
 
@@ -118,14 +98,14 @@ void GScr_ArrayTest();
 extern "C"
 {
 #endif
-qboolean __cdecl GScr_UpdateTagInternal2(gentity_t *ent, unsigned int tagName, cached_tag_mat_t *cachedTag, qboolean showScriptError);
+	qboolean __cdecl GScr_UpdateTagInternal2(gentity_t *ent, unsigned int tagName, cached_tag_mat_t *cachedTag,
+		qboolean showScriptError);
 
 #ifdef __cplusplus
 }
 #endif
 
 void PrintModelBonesInfo(gentity_t *ent);
-
 
 void GScr_CreatePrintChannel();
 void GScr_printChannelSet();
@@ -575,4 +555,3 @@ void GScr_StrReplace();
 void GScr_CloneBrushModelToScriptModel(scr_entref_t brushModelEnt);
 void PlayerCmd_SetStance(scr_entref_t playerEntNum);
 void EntityCmd_GetHandlerType(scr_entref_t entref);
-

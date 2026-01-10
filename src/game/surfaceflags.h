@@ -5,103 +5,97 @@
 // these definitions also need to be in q_shared.h!
 
 // lower bits are stronger, and will eat weaker brushes completely
-#define PLAYER_SOLIDMASK	    0x00600000
+#define PLAYER_SOLIDMASK 0x00600000
 
-#define CONTENTS_SOLID          1       // an eye is never valid in a solid
+#define CONTENTS_SOLID 1 // an eye is never valid in a solid
 
-#define CONTENTS_NONCOLLIDING   4           //Never used
-#define CONTENTS_LAVA           8         //Never used. So it can be assumed to be used as dummy
+#define CONTENTS_NONCOLLIDING 4 // Never used
+#define CONTENTS_LAVA 8			// Never used. So it can be assumed to be used as dummy
 
-#define CONTENTS_WATER          0x20
-#define CONTENTS_CANSHOTCLIP    0x40
-#define CONTENTS_MISSILECLIP    0x80
-#define CONTENTS_VEHICLECLIP	0x200
-#define CONTENTS_ITEMCLIP       0x400
-#define CONTENTS_SKY            0x800
-#define CONTENTS_AI_NOSIGHT     0x1000  // AI cannot see through this
-#define CONTENTS_CLIPSHOT       0x2000  // stops bullets
-#define CONTENTS_MOVER          0x4000  // Could be wrong
-#define CONTENTS_PLAYERCLIP     0x10000
-#define CONTENTS_MONSTERCLIP    0x20000
+#define CONTENTS_WATER 0x20
+#define CONTENTS_CANSHOTCLIP 0x40
+#define CONTENTS_MISSILECLIP 0x80
+#define CONTENTS_VEHICLECLIP 0x200
+#define CONTENTS_ITEMCLIP 0x400
+#define CONTENTS_SKY 0x800
+#define CONTENTS_AI_NOSIGHT 0x1000 // AI cannot see through this
+#define CONTENTS_CLIPSHOT 0x2000   // stops bullets
+#define CONTENTS_MOVER 0x4000	   // Could be wrong
+#define CONTENTS_PLAYERCLIP 0x10000
+#define CONTENTS_MONSTERCLIP 0x20000
 
-//bot specific contents types - they are not used in CoD4 maps
-#define CONTENTS_TELEPORTER     0x40000
-#define CONTENTS_JUMPPAD        0x80000
-#define CONTENTS_CLUSTERPORTAL  0x100000
-#define CONTENTS_DONOTENTER     0x200000   //Used by player content
-#define CONTENTS_DONOTENTER_LARGE 0x400000   //Used by player content
+// bot specific contents types - they are not used in CoD4 maps
+#define CONTENTS_TELEPORTER 0x40000
+#define CONTENTS_JUMPPAD 0x80000
+#define CONTENTS_CLUSTERPORTAL 0x100000
+#define CONTENTS_DONOTENTER 0x200000	   // Used by player content
+#define CONTENTS_DONOTENTER_LARGE 0x400000 // Used by player content
 
+#define CONTENTS_MANTLE 0x1000000
+#define CONTENTS_DETAIL 0x8000000		// brushes not used for the bsp - don't include in structural bsp
+#define CONTENTS_STRUCTURAL 0x10000000	// brushes used for the bsp - force into structural bsp even if trnas
+#define CONTENTS_TRANSPARENT 0x20000000 // Cod2 unverified
+#define CONTENTS_NODROP 0x80000000
 
-#define CONTENTS_MANTLE         0x1000000
-#define CONTENTS_DETAIL         0x8000000   // brushes not used for the bsp - don't include in structural bsp
-#define CONTENTS_STRUCTURAL     0x10000000  // brushes used for the bsp - force into structural bsp even if trnas
-#define CONTENTS_TRANSPARENT    0x20000000  //Cod2 unverified
-#define CONTENTS_NODROP         0x80000000
+#define CONTENTS_TRIGGER 0x40000000
 
-
-#define CONTENTS_TRIGGER        0x40000000
-
-#define CONTENTS_BODY           0x2000000   // should never be on a brush, only in game
-
+#define CONTENTS_BODY 0x2000000 // should never be on a brush, only in game
 
 /* Probably not. Just here so botlib compiles */
 
-#define CONTENTS_SLIME          0x10
-#define CONTENTS_FOG            0x40
+#define CONTENTS_SLIME 0x10
+#define CONTENTS_FOG 0x40
 
+#define SURF_NODAMAGE 0x1 // never give falling damage
+#define SURF_SLICK 0x2	  // effects game physics
+#define SURF_SKY 0x4	  // lighting from environment map
+#define SURF_LADDER 0x8
+#define SURF_NOIMPACT 0x10 // don't make missile explosions
+#define SURF_NOMARKS 0x20  // don't leave missile marks
+#define SURF_NODRAW 0x80   // don't generate a drawsurface (or a lightmap)
+#define SURF_NOPENETRATE 0x100
+#define SURF_NOLIGHTMAP 0x400 // surface doesn't need a lightmap
+#define SURF_NOSTEPS 0x2000	  // no footstep sounds
+#define SURF_NONSOLID 0x4000  // don't collide against curves with this set
+#define SURF_NODLIGHT 0x20000 // don't dlight even if solid (solid lava, skies)
+#define SURF_NOCASTSHADOW 0x40000
+#define SURF_MANTLEON 0x2000000
+#define SURF_MANTLEOVER 0x4000000
+#define SURF_PORTAL 0x80000000
 
-#define SURF_NODAMAGE           0x1     // never give falling damage
-#define SURF_SLICK              0x2     // effects game physics
-#define SURF_SKY                0x4     // lighting from environment map
-#define SURF_LADDER             0x8
-#define SURF_NOIMPACT           0x10    // don't make missile explosions
-#define SURF_NOMARKS            0x20    // don't leave missile marks
-#define SURF_NODRAW             0x80    // don't generate a drawsurface (or a lightmap)
-#define SURF_NOPENETRATE        0x100
-#define SURF_NOLIGHTMAP         0x400   // surface doesn't need a lightmap
-#define SURF_NOSTEPS            0x2000  // no footstep sounds
-#define SURF_NONSOLID           0x4000  // don't collide against curves with this set
-#define SURF_NODLIGHT           0x20000 // don't dlight even if solid (solid lava, skies)
-#define SURF_NOCASTSHADOW       0x40000
-#define SURF_MANTLEON           0x2000000
-#define SURF_MANTLEOVER         0x4000000
-#define SURF_PORTAL             0x80000000
+#define SURF_BARK 0x100000
+#define SURF_BRICK 0x200000
+#define SURF_CARPET 0x300000
+#define SURF_CLOTH 0x400000
+#define SURF_CONCRETE 0x500000
+#define SURF_DIRT 0x600000
+#define SURF_FLESH 0x700000
+#define SURF_FOLIAGE 0x800000
+#define SURF_GLASS 0x900000
+#define SURF_OPAQUEGLASS SURF_GLASS
+#define SURF_GRASS 0xa00000
+#define SURF_GRAVEL 0xb00000
+#define SURF_ICE 0xc00000
+#define SURF_METAL 0xd00000
+#define SURF_MUD 0xe00000
+#define SURF_PAPER 0xf00000
+#define SURF_PLASTER 0x1000000
+#define SURF_ROCK 0x1100000
+#define SURF_SAND 0x1200000
+#define SURF_SNOW 0x1300000
+#define SURF_WATER 0x1400000
+#define SURF_WOOD 0x1500000
+#define SURF_ASPHALT 0x1600000
+#define SURF_CERAMIC 0x1700000
+#define SURF_PLASTIC 0x1800000
+#define SURF_RUBBER 0x1900000
+#define SURF_CUSHION 0x1a00000
+#define SURF_FRUIT 0x1b00000
+#define SURF_PAINTEDMETAL 0x1c00000
 
-
-#define SURF_BARK               0x100000
-#define SURF_BRICK              0x200000
-#define SURF_CARPET             0x300000
-#define SURF_CLOTH              0x400000
-#define SURF_CONCRETE           0x500000
-#define SURF_DIRT               0x600000
-#define SURF_FLESH              0x700000
-#define SURF_FOLIAGE            0x800000
-#define SURF_GLASS              0x900000
-#define SURF_OPAQUEGLASS        SURF_GLASS
-#define SURF_GRASS              0xa00000
-#define SURF_GRAVEL             0xb00000
-#define SURF_ICE                0xc00000
-#define SURF_METAL              0xd00000
-#define SURF_MUD                0xe00000
-#define SURF_PAPER              0xf00000
-#define SURF_PLASTER            0x1000000
-#define SURF_ROCK               0x1100000
-#define SURF_SAND               0x1200000
-#define SURF_SNOW               0x1300000
-#define SURF_WATER              0x1400000
-#define SURF_WOOD               0x1500000
-#define SURF_ASPHALT            0x1600000
-#define SURF_CERAMIC            0x1700000
-#define SURF_PLASTIC            0x1800000
-#define SURF_RUBBER             0x1900000
-#define SURF_CUSHION            0x1a00000
-#define SURF_FRUIT              0x1b00000
-#define SURF_PAINTEDMETAL       0x1c00000
-
-#define TOOL_ORIGIN             0x4
-#define TOOL_PHYSICSGEOM        0x400
-#define TOOL_LIGHTPORTAL        0x2000
-
+#define TOOL_ORIGIN 0x4
+#define TOOL_PHYSICSGEOM 0x400
+#define TOOL_LIGHTPORTAL 0x2000
 
 /*
 

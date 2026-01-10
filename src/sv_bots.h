@@ -8,23 +8,23 @@
 /* Should keep attribute and this field layout.
  * Met situation where simple vector read into moveTo broke whole
  *  structure.
-*/
+ */
 /* !!!DO NOT CHANGE ALIGNED TO 1!!! */
 /* T-Max: I have no idea why it changes ints' sizes to 1 byte and brokes whole structure x2. */
-typedef struct __attribute__ ((aligned (4))) BotMovementInfo_t
+typedef struct __attribute__((aligned(4))) BotMovementInfo_t
 {
-    /* Actions */
-    int buttons;
-    /* Movement */
-    int doMove;
-    float moveTo[2];
-    /* Rotation */
-    int rotIterCount;
-    short int rotFrac[2];
-    qboolean lastAliveState;
-    byte useSpamDelay;
-    /* Weapon */
-    byte weapon;
+	/* Actions */
+	int buttons;
+	/* Movement */
+	int doMove;
+	float moveTo[2];
+	/* Rotation */
+	int rotIterCount;
+	short int rotFrac[2];
+	qboolean lastAliveState;
+	byte useSpamDelay;
+	/* Weapon */
+	byte weapon;
 } BotMovementInfo_t;
 
 extern BotMovementInfo_t g_botai[MAX_CLIENTS];
@@ -34,11 +34,9 @@ extern "C"
 {
 #endif // __cplusplus
 
-
-void Scr_AddBotsMovement();
-qboolean shouldSpamUseButton(gentity_t *bot);
-void Bot_SetBotWeapon(int, unsigned int);
-
+	void Scr_AddBotsMovement();
+	qboolean shouldSpamUseButton(gentity_t *bot);
+	void Bot_SetBotWeapon(int, unsigned int);
 
 #ifdef __cplusplus
 }

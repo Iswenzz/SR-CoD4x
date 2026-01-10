@@ -9,8 +9,7 @@ void Profile_BeginInternal()
 	starttime = Sys_Milliseconds();
 }
 
-
 void Profile_EndInternal()
 {
-	Com_Printf(CON_CHANNEL_SYSTEM,"Took %d msec\n", Sys_Milliseconds() - starttime);
+	Com_Printf(CON_CHANNEL_SYSTEM, "Took %d msec\n", Sys_Milliseconds() - starttime);
 }

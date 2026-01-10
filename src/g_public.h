@@ -7,11 +7,11 @@
 // the server does not know how to interpret most of the values
 // in entityStates (level eType), so the game must explicitly flag
 // special server behaviors
-#define SVF_NOCLIENT            0x00000001  // don't send entity to clients, even if it has effects
-#define SVF_DISK		0x00000040
+#define SVF_NOCLIENT 0x00000001 // don't send entity to clients, even if it has effects
+#define SVF_DISK 0x00000040
 /*
-#define SVF_VISDUMMY            0x00000004  // this ent is a "visibility dummy" and needs it's master to be sent to clients that can see it even if they can't see the master ent
-#define SVF_BOT                 0x00000008
+#define SVF_VISDUMMY            0x00000004  // this ent is a "visibility dummy" and needs it's master to be sent to
+clients that can see it even if they can't see the master ent #define SVF_BOT                 0x00000008
 // Wolfenstein
 #define SVF_CASTAI              0x00000010
 // done.
@@ -38,34 +38,33 @@
 
 struct VoicePacket_t
 {
-  char talker;
-  char data[MAX_VOICE_PACKET_DATA];
-  int dataSize;
+	char talker;
+	char data[MAX_VOICE_PACKET_DATA];
+	int dataSize;
 };
-
 
 struct CEntPlayerInfo
 {
-  struct clientControllers_s *control;
-  byte tag[6];
+	struct clientControllers_s *control;
+	byte tag[6];
 };
 
 #ifdef __cplusplus
-extern "C"{
+extern "C"
+{
 #endif
-float __cdecl G_GetFogOpaqueDistSqrd();
-void __cdecl ClientDisconnect(int clientNum);
-void __cdecl G_SetLastServerTime(int clientNum, int lastServerTime);
-void __cdecl ClientThink(int clientNum);
-int __cdecl G_GetSavePersist();
-void __cdecl G_ResetEntityParsePoint();
-void __cdecl G_InitGame(int levelTime, int randomSeed, int restart, int savepersist, int framerate);
-void __cdecl G_ShutdownGame(int freeScripts);
-qboolean __cdecl ConsoleCommand();
-const char *__cdecl CS_DisplayName(clientState_t *cs, int type);
-void CS_SetPlayerName(clientState_t *cs, const char* name);
-qboolean OnSameTeam( gentity_t *ent1, gentity_t *ent2 );
-
+	float __cdecl G_GetFogOpaqueDistSqrd();
+	void __cdecl ClientDisconnect(int clientNum);
+	void __cdecl G_SetLastServerTime(int clientNum, int lastServerTime);
+	void __cdecl ClientThink(int clientNum);
+	int __cdecl G_GetSavePersist();
+	void __cdecl G_ResetEntityParsePoint();
+	void __cdecl G_InitGame(int levelTime, int randomSeed, int restart, int savepersist, int framerate);
+	void __cdecl G_ShutdownGame(int freeScripts);
+	qboolean __cdecl ConsoleCommand();
+	const char *__cdecl CS_DisplayName(clientState_t *cs, int type);
+	void CS_SetPlayerName(clientState_t *cs, const char *name);
+	qboolean OnSameTeam(gentity_t *ent1, gentity_t *ent2);
 
 #ifdef __cplusplus
 }

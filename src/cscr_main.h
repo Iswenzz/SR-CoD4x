@@ -1,9 +1,9 @@
 #ifdef __cplusplus
-extern "C"{
+extern "C"
+{
 #endif
 
-qboolean __cdecl Scr_IsInOpcodeMemory(const char *pos);
-
+	qboolean __cdecl Scr_IsInOpcodeMemory(const char *pos);
 
 #ifdef __cplusplus
 };

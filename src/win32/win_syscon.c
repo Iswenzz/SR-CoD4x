@@ -1,24 +1,3 @@
-/*
-===========================================================================
-    Copyright (C) 1999-2005 Id Software, Inc.
-
-    This file is part of CoD4X18-Server source code.
-
-    CoD4X18-Server source code is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
-
-    CoD4X18-Server source code is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>
-===========================================================================
-*/
-
 #include "../sys_main.h"
 #include "../q_shared.h"
 #include "../cmd_completion.h"
@@ -37,7 +16,7 @@
 // NOTE: if the user is editing a line when something gets printed to the early
 // console then it won't look good so we provide CON_Hide and CON_Show to be
 // called before and after a stdout or stderr output
-static cvar_t* com_ansiColor;
+static cvar_t *com_ansiColor;
 
 // General flag to tell about tty console mode
 static qboolean ttycon_on = qfalse;
@@ -60,7 +39,7 @@ void Field_AutoComplete(field_t *field);
 field_t *Hist_Prev(void);
 
 #ifndef MAXPRINTMSG
-#define MAXPRINTMSG 1024
+	#define MAXPRINTMSG 1024
 #endif
 
 /**
@@ -169,11 +148,11 @@ field_t *Hist_Next(void)
 void CON_Init(void)
 {
 	hStdin = GetStdHandle(STD_INPUT_HANDLE);
-    GetConsoleMode(hStdin, &stdinOriginalMode);
+	GetConsoleMode(hStdin, &stdinOriginalMode);
 
-    // Disable line buffering and echoing of input characters
-    stdinConsoleMode = stdinOriginalMode & ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT);
-    SetConsoleMode(hStdin, stdinConsoleMode);
+	// Disable line buffering and echoing of input characters
+	stdinConsoleMode = stdinOriginalMode & ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT);
+	SetConsoleMode(hStdin, stdinConsoleMode);
 
 	Field_Clear(&TTY_con);
 	ttycon_on = qtrue;
@@ -272,7 +251,8 @@ char *CON_Input(void)
 			if (TTY_con.len > 0 && TTY_con.cursor > 0)
 			{
 				CON_Hide();
-				memmove(TTY_con.buffer + TTY_con.cursor - 1, TTY_con.buffer + TTY_con.cursor, TTY_con.len - TTY_con.cursor + 2);
+				memmove(TTY_con.buffer + TTY_con.cursor - 1, TTY_con.buffer + TTY_con.cursor,
+					TTY_con.len - TTY_con.cursor + 2);
 				TTY_con.len--;
 				TTY_con.cursor--;
 				CON_Show();
@@ -293,7 +273,8 @@ char *CON_Input(void)
 				}
 				else
 					trailing_spaces = false;
-				memmove(TTY_con.buffer + TTY_con.cursor - 1, TTY_con.buffer + TTY_con.cursor, TTY_con.len - TTY_con.cursor + 2);
+				memmove(TTY_con.buffer + TTY_con.cursor - 1, TTY_con.buffer + TTY_con.cursor,
+					TTY_con.len - TTY_con.cursor + 2);
 				TTY_con.len--;
 				TTY_con.cursor--;
 			}
@@ -393,7 +374,7 @@ char *CON_Input(void)
 			return NULL;
 
 		// Rip off the /n and terminate
-		text[len-1] = 0;
+		text[len - 1] = 0;
 		return text;
 	}
 	return NULL;
@@ -416,7 +397,7 @@ void Sys_AnsiColorPrint(const char *msg)
 		34, // COLOR_BLUE
 		36, // COLOR_CYAN
 		35, // COLOR_MAGENTA
-		0   // COLOR_WHITE
+		0	// COLOR_WHITE
 	};
 
 	while (*msg)

@@ -6,20 +6,19 @@
 #include "q_platform.h"
 /* The SHA f()-functions.  */
 
-#define f1(x,y,z)   (z ^ (x & (y ^ z)))		/* x ? y : z */
-#define f2(x,y,z)   (x ^ y ^ z)			/* XOR */
-#define f3(x,y,z)   ((x & y) + (z & (x ^ y)))	/* majority */
+#define f1(x, y, z) (z ^ (x & (y ^ z)))		  /* x ? y : z */
+#define f2(x, y, z) (x ^ y ^ z)				  /* XOR */
+#define f3(x, y, z) ((x & y) + (z & (x ^ y))) /* majority */
 
 /* The SHA Mysterious Constants */
 
-#define K1  0x5A827999L			/* Rounds  0-19: sqrt(2) * 2^30 */
-#define K2  0x6ED9EBA1L			/* Rounds 20-39: sqrt(3) * 2^30 */
-#define K3  0x8F1BBCDCL			/* Rounds 40-59: sqrt(5) * 2^30 */
-#define K4  0xCA62C1D6L			/* Rounds 60-79: sqrt(10) * 2^30 */
+#define K1 0x5A827999L /* Rounds  0-19: sqrt(2) * 2^30 */
+#define K2 0x6ED9EBA1L /* Rounds 20-39: sqrt(3) * 2^30 */
+#define K3 0x8F1BBCDCL /* Rounds 40-59: sqrt(5) * 2^30 */
+#define K4 0xCA62C1D6L /* Rounds 60-79: sqrt(10) * 2^30 */
 
 static inline uint32_t ror32(uint32_t word, unsigned int shift);
 static inline uint32_t rol32(uint32_t word, unsigned int shift);
-
 
 /**
  * sha_transform - single block SHA1 transform
@@ -45,7 +44,7 @@ void sha_transform(uint32_t *digest, const char *in, uint32_t *W)
 		W[i] = BigLong(((const uint32_t *)in)[i]);
 
 	for (i = 0; i < 64; i++)
-		W[i+16] = rol32(W[i+13] ^ W[i+8] ^ W[i+2] ^ W[i], 1);
+		W[i + 16] = rol32(W[i + 13] ^ W[i + 8] ^ W[i + 2] ^ W[i], 1);
 
 	a = digest[0];
 	b = digest[1];
@@ -53,24 +52,44 @@ void sha_transform(uint32_t *digest, const char *in, uint32_t *W)
 	d = digest[3];
 	e = digest[4];
 
-	for (i = 0; i < 20; i++) {
+	for (i = 0; i < 20; i++)
+	{
 		t = f1(b, c, d) + K1 + rol32(a, 5) + e + W[i];
-		e = d; d = c; c = rol32(b, 30); b = a; a = t;
+		e = d;
+		d = c;
+		c = rol32(b, 30);
+		b = a;
+		a = t;
 	}
 
-	for (; i < 40; i ++) {
+	for (; i < 40; i++)
+	{
 		t = f2(b, c, d) + K2 + rol32(a, 5) + e + W[i];
-		e = d; d = c; c = rol32(b, 30); b = a; a = t;
+		e = d;
+		d = c;
+		c = rol32(b, 30);
+		b = a;
+		a = t;
 	}
 
-	for (; i < 60; i ++) {
+	for (; i < 60; i++)
+	{
 		t = f3(b, c, d) + K3 + rol32(a, 5) + e + W[i];
-		e = d; d = c; c = rol32(b, 30); b = a; a = t;
+		e = d;
+		d = c;
+		c = rol32(b, 30);
+		b = a;
+		a = t;
 	}
 
-	for (; i < 80; i ++) {
+	for (; i < 80; i++)
+	{
 		t = f2(b, c, d) + K4 + rol32(a, 5) + e + W[i];
-		e = d; d = c; c = rol32(b, 30); b = a; a = t;
+		e = d;
+		d = c;
+		c = rol32(b, 30);
+		b = a;
+		a = t;
 	}
 
 	digest[0] += a;
@@ -94,21 +113,21 @@ void sha_init(uint32_t *buf)
 }
 
 /**
-* rol32 - rotate a 32-bit value left
-* @word: value to rotate
-* @shift: bits to roll
-*/
+ * rol32 - rotate a 32-bit value left
+ * @word: value to rotate
+ * @shift: bits to roll
+ */
 static inline uint32_t rol32(uint32_t word, unsigned int shift)
 {
-         return (word << shift) | (word >> (32 - shift));
+	return (word << shift) | (word >> (32 - shift));
 }
 
 /**
-* ror32 - rotate a 32-bit value right
-* @word: value to rotate
-* @shift: bits to roll
-*/
+ * ror32 - rotate a 32-bit value right
+ * @word: value to rotate
+ * @shift: bits to roll
+ */
 static inline uint32_t ror32(uint32_t word, unsigned int shift)
 {
-       return (word >> shift) | (word << (32 - shift));
+	return (word >> shift) | (word << (32 - shift));
 }

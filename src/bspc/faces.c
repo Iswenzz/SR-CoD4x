@@ -1,36 +1,8 @@
-/*
-===========================================================================
-
-Return to Castle Wolfenstein multiplayer GPL Source Code
-Copyright (C) 1999-2010 id Software LLC, a ZeniMax Media company. 
-
-This file is part of the Return to Castle Wolfenstein multiplayer GPL Source Code (RTCW MP Source Code).  
-
-RTCW MP Source Code is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-RTCW MP Source Code is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with RTCW MP Source Code.  If not, see <http://www.gnu.org/licenses/>.
-
-In addition, the RTCW MP Source Code is also subject to certain additional terms. You should have received a copy of these additional terms immediately following the terms and conditions of the GNU General Public License which accompanied the RTCW MP Source Code.  If not, please request a copy in writing from id Software at the address below.
-
-If you have questions concerning this license or the applicable additional terms, you may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
-
-===========================================================================
-*/
-
 // NO LONGER USED
 // faces.c
 #if 0
-#include "qbsp.h"
-#include "l_mem.h"
+	#include "qbsp.h"
+	#include "l_mem.h"
 
 
 extern dvertex_t       *dvertexes;
@@ -49,11 +21,11 @@ extern texinfo_t texinfo[MAX_MAP_TEXINFO];
 */
 
 // undefine for dumb linear searches
-#define USE_HASHING
+	#define USE_HASHING
 
-#define INTEGRAL_EPSILON    0.01
-#define POINT_EPSILON       0.5
-#define OFF_EPSILON         0.5
+	#define INTEGRAL_EPSILON 0.01
+	#define POINT_EPSILON 0.5
+	#define OFF_EPSILON 0.5
 
 int c_merge;
 int c_subdivide;
@@ -66,7 +38,7 @@ int c_faceoverflows;
 int c_facecollapse;
 int c_badstartverts;
 
-#define MAX_SUPERVERTS  512
+	#define MAX_SUPERVERTS 512
 int superverts[MAX_SUPERVERTS];
 int numsuperverts;
 
@@ -86,7 +58,7 @@ int edge_verts[MAX_MAP_VERTS];
 
 face_t *NewFaceFromFace( face_t *f );
 
-//===========================================================================
+
 
 typedef struct hashvert_s
 {
@@ -94,8 +66,7 @@ typedef struct hashvert_s
 	int num;
 } hashvert_t;
 
-
-#define HASH_SIZE   64
+	#define HASH_SIZE 64
 
 
 int vertexchain[MAX_MAP_VERTS];     // the next vertex in a hash chain
@@ -103,7 +74,7 @@ int hashverts[HASH_SIZE * HASH_SIZE]; // a vertex number, or 0 for no verts
 
 face_t      *edgefaces[MAX_MAP_EDGES][2];
 
-//============================================================================
+
 
 
 unsigned HashVec( vec3_t vec ) {
@@ -119,13 +90,11 @@ unsigned HashVec( vec3_t vec ) {
 	return y * HASH_SIZE + x;
 }
 
-#ifdef USE_HASHING
+	#ifdef USE_HASHING
 /*
-=============
 GetVertex
 
 Uses hashing
-=============
 */
 int GetVertexnum( vec3_t in ) {
 	int h;
@@ -175,13 +144,11 @@ int GetVertexnum( vec3_t in ) {
 
 	return numvertexes - 1;
 }
-#else
+	#else
 /*
-==================
 GetVertexnum
 
 Dumb linear search
-==================
 */
 int GetVertexnum( vec3_t v ) {
 	int i, j;
@@ -226,11 +193,9 @@ int GetVertexnum( vec3_t v ) {
 
 	return numvertexes - 1;
 }
-#endif
-
+	#endif
 
 /*
-==================
 FaceFromSuperverts
 
 The faces vertexes have been added to the superverts[] array,
@@ -242,7 +207,6 @@ vertexnums can be added.
 
 superverts[base] will become face->vertexnums[0], and the others
 will be circularly filled in.
-==================
 */
 void FaceFromSuperverts( node_t *node, face_t *f, int base ) {
 	face_t  *newf;
@@ -278,12 +242,6 @@ void FaceFromSuperverts( node_t *node, face_t *f, int base ) {
 		f->vertexnums[i] = superverts[( i + base ) % numsuperverts];
 }
 
-
-/*
-==================
-EmitFaceVertexes
-==================
-*/
 void EmitFaceVertexes( node_t *node, face_t *f ) {
 	winding_t   *w;
 	int i;
@@ -314,11 +272,6 @@ void EmitFaceVertexes( node_t *node, face_t *f ) {
 	FaceFromSuperverts( node, f, 0 );
 }
 
-/*
-==================
-EmitVertexes_r
-==================
-*/
 void EmitVertexes_r( node_t *node ) {
 	int i;
 	face_t  *f;
@@ -336,28 +289,25 @@ void EmitVertexes_r( node_t *node ) {
 		EmitVertexes_r( node->children[i] );
 }
 
-
-#ifdef USE_HASHING
+	#ifdef USE_HASHING
 /*
-==========
 FindEdgeVerts
 
 Uses the hash tables to cut down to a small number
-==========
 */
 void FindEdgeVerts( vec3_t v1, vec3_t v2 ) {
 	int x1, x2, y1, y2, t;
 	int x, y;
 	int vnum;
 
-#if 0
+		#if 0
 	{
 		int i;
 		num_edge_verts = numvertexes - 1;
 		for ( i = 0 ; i < numvertexes - 1 ; i++ )
 			edge_verts[i] = i + 1;
 	}
-#endif
+		#endif
 
 	x1 = ( 4096 + (int)( v1[0] + 0.5 ) ) >> 7;
 	y1 = ( 4096 + (int)( v1[1] + 0.5 ) ) >> 7;
@@ -374,7 +324,7 @@ void FindEdgeVerts( vec3_t v1, vec3_t v2 ) {
 		y1 = y2;
 		y2 = t;
 	}
-#if 0
+		#if 0
 	x1--;
 	x2++;
 	y1--;
@@ -391,7 +341,7 @@ void FindEdgeVerts( vec3_t v1, vec3_t v2 ) {
 	if ( y2 >= HASH_SIZE ) {
 		y2 = HASH_SIZE;
 	}
-#endif
+		#endif
 	num_edge_verts = 0;
 	for ( x = x1 ; x <= x2 ; x++ )
 	{
@@ -405,13 +355,11 @@ void FindEdgeVerts( vec3_t v1, vec3_t v2 ) {
 	}
 }
 
-#else
+	#else
 /*
-==========
 FindEdgeVerts
 
 Forced a dumb check of everything
-==========
 */
 void FindEdgeVerts( vec3_t v1, vec3_t v2 ) {
 	int i;
@@ -420,14 +368,12 @@ void FindEdgeVerts( vec3_t v1, vec3_t v2 ) {
 	for ( i = 0 ; i < num_edge_verts ; i++ )
 		edge_verts[i] = i + 1;
 }
-#endif
+	#endif
 
 /*
-==========
 TestEdge
 
 Can be recursively reentered
-==========
 */
 void TestEdge( vec_t start, vec_t end, int p1, int p2, int startvert ) {
 	int j, k;
@@ -481,10 +427,8 @@ void TestEdge( vec_t start, vec_t end, int p1, int p2, int startvert ) {
 }
 
 /*
-==================
 FixFaceEdges
 
-==================
 */
 void FixFaceEdges( node_t *node, face_t *f ) {
 	int p1, p2;
@@ -547,11 +491,6 @@ void FixFaceEdges( node_t *node, face_t *f ) {
 	FaceFromSuperverts( node, f, base );
 }
 
-/*
-==================
-FixEdges_r
-==================
-*/
 void FixEdges_r( node_t *node ) {
 	int i;
 	face_t  *f;
@@ -568,10 +507,8 @@ void FixEdges_r( node_t *node ) {
 }
 
 /*
-===========
 FixTjuncs
 
-===========
 */
 void FixTjuncs( node_t *headnode ) {
 	// snap and merge all vertexes
@@ -600,7 +537,7 @@ void FixTjuncs( node_t *headnode ) {
 }
 
 
-//========================================================
+
 
 int c_faces;
 
@@ -633,15 +570,12 @@ void FreeFace( face_t *f ) {
 	c_faces--;
 }
 
-//========================================================
 
 /*
-==================
 GetEdge
 
 Called by writebsp.
 Don't allow four way edges
-==================
 */
 int GetEdge2( int v1, int v2,  face_t *f ) {
 	dedge_t *edge;
@@ -685,15 +619,12 @@ int GetEdge2( int v1, int v2,  face_t *f ) {
 }
 
 /*
-===========================================================================
 
 FACE MERGING
 
-===========================================================================
 */
 
 /*
-=============
 TryMerge
 
 If two polygons share a common edge and the edges that meet at the
@@ -701,7 +632,6 @@ common points are both inside the other polygons, merge them
 
 Returns NULL if the faces couldn't be merged, or the new face.
 The originals will NOT be freed.
-=============
 */
 face_t *TryMerge( face_t *f1, face_t *f2, vec3_t planenormal ) {
 	face_t      *newf;
@@ -736,11 +666,6 @@ face_t *TryMerge( face_t *f1, face_t *f2, vec3_t planenormal ) {
 	return newf;
 }
 
-/*
-===============
-MergeNodeFaces
-===============
-*/
 void MergeNodeFaces( node_t *node ) {
 	face_t  *f1, *f2, *end;
 	face_t  *merged;
@@ -788,14 +713,11 @@ void MergeNodeFaces( node_t *node ) {
 	}
 }
 
-//=====================================================================
 
 /*
-===============
 SubdivideFace
 
 Chop up faces that are larger than we want in the surface cache
-===============
 */
 void SubdivideFace( node_t *node, face_t *f ) {
 	float mins, maxs;
@@ -836,11 +758,11 @@ void SubdivideFace( node_t *node, face_t *f ) {
 					maxs = v;
 				}
 			}
-#if 0
+	#if 0
 			if ( maxs - mins <= 0 ) {
 				Error( "zero extents" );
 			}
-#endif
+	#endif
 			if ( axis == 2 ) { // allow double high walls
 				if ( maxs - mins <= subdivide_size /* *2 */ ) {
 					break;
@@ -887,16 +809,13 @@ void SubdivideNodeFaces( node_t *node ) {
 	}
 }
 
-//===========================================================================
+
 
 int c_nodefaces;
 
-
 /*
-============
 FaceFromPortal
 
-============
 */
 face_t *FaceFromPortal( portal_t *p, int pside ) {
 	face_t  *f;
@@ -929,9 +848,7 @@ face_t *FaceFromPortal( portal_t *p, int pside ) {
 	return f;
 }
 
-
 /*
-===============
 MakeFaces_r
 
 If a portal will make a visible face,
@@ -941,7 +858,6 @@ mark the side that originally created it
   solid / water : solid
   water / empty : water
   water / water : none
-===============
 */
 void MakeFaces_r( node_t *node ) {
 	portal_t    *p;
@@ -982,11 +898,6 @@ void MakeFaces_r( node_t *node ) {
 	}
 }
 
-/*
-============
-MakeFaces
-============
-*/
 void MakeFaces( node_t *node ) {
 	qprintf( "--- MakeFaces ---\n" );
 	c_merge = 0;

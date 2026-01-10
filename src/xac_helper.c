@@ -18,132 +18,125 @@
 
 static int (*Init)(imports_t* sapi_imports, exports_t* exports);
 
-
-
 /*
-=============
 Com_Printf
 
 Both client and server can use this, and it will output
 to the apropriate place.
 
 A raw string should NEVER be passed as fmt, because of "%f" type crashers.
-=============
 */
-void QDECL XACHLP_Printf( const char *fmt, ... ) {
-	va_list		argptr;
-	char		msg[MAXPRINTMSG];
+void QDECL XACHLP_Printf(const char* fmt, ...)
+{
+	va_list argptr;
+	char msg[MAXPRINTMSG];
 
-	va_start (argptr,fmt);
-	Q_vsnprintf (msg, sizeof(msg), fmt, argptr);
-	va_end (argptr);
+	va_start(argptr, fmt);
+	Q_vsnprintf(msg, sizeof(msg), fmt, argptr);
+	va_end(argptr);
 
-        Com_PrintMessage( CON_CHANNEL_STEAM, msg, MSG_DEFAULT);
+	Com_PrintMessage(CON_CHANNEL_STEAM, msg, MSG_DEFAULT);
 }
 
-
 /*
-=============
 Com_PrintWarning
 
 Server can use this, and it will output
 to the apropriate place.
 
 A raw string should NEVER be passed as fmt, because of "%f" type crashers.
-=============
 */
-void QDECL XACHLP_PrintWarning( const char *fmt, ... ) {
-	va_list		argptr;
-	char		msg[MAXPRINTMSG];
+void QDECL XACHLP_PrintWarning(const char* fmt, ...)
+{
+	va_list argptr;
+	char msg[MAXPRINTMSG];
 
-	memcpy(msg,"^3Warning: ", 12);
+	memcpy(msg, "^3Warning: ", 12);
 
-	va_start (argptr,fmt);
-	Q_vsnprintf (&msg[11], (sizeof(msg)-12), fmt, argptr);
-	va_end (argptr);
+	va_start(argptr, fmt);
+	Q_vsnprintf(&msg[11], (sizeof(msg) - 12), fmt, argptr);
+	va_end(argptr);
 
-        Com_PrintMessage( CON_CHANNEL_STEAM, msg, MSG_WARNING);
+	Com_PrintMessage(CON_CHANNEL_STEAM, msg, MSG_WARNING);
 }
 
-
 /*
-=============
 Com_PrintError
 
 Server can use this, and it will output
 to the apropriate place.
 
 A raw string should NEVER be passed as fmt, because of "%f" type crashers.
-=============
 */
-void QDECL XACHLP_PrintError( const char *fmt, ... ) {
-	va_list		argptr;
-	char		msg[MAXPRINTMSG];
+void QDECL XACHLP_PrintError(const char* fmt, ...)
+{
+	va_list argptr;
+	char msg[MAXPRINTMSG];
 
-	memcpy(msg,"^1Error: ", 10);
+	memcpy(msg, "^1Error: ", 10);
 
-	va_start (argptr,fmt);
-	Q_vsnprintf (&msg[9], (sizeof(msg)-10), fmt, argptr);
-	va_end (argptr);
+	va_start(argptr, fmt);
+	Q_vsnprintf(&msg[9], (sizeof(msg) - 10), fmt, argptr);
+	va_end(argptr);
 
-        Com_PrintMessage( CON_CHANNEL_STEAM, msg, MSG_ERROR);
+	Com_PrintMessage(CON_CHANNEL_STEAM, msg, MSG_ERROR);
 }
 
 /*
-================
 Com_DPrintf
 
 A Com_Printf that only shows up if the "developer" cvar is set
-================
 */
-void QDECL XACHLP_DPrintf( const char *fmt, ...) {
-	va_list		argptr;
-	char		msg[MAXPRINTMSG];
-		
-	if ( !Com_IsDeveloper() ) {
-		return;			// don't confuse non-developers with techie stuff...
+void QDECL XACHLP_DPrintf(const char* fmt, ...)
+{
+	va_list argptr;
+	char msg[MAXPRINTMSG];
+
+	if (!Com_IsDeveloper())
+	{
+		return; // don't confuse non-developers with techie stuff...
 	}
-	
+
 	msg[0] = '^';
 	msg[1] = '2';
 
-	va_start (argptr,fmt);	
-	Q_vsnprintf (&msg[2], (sizeof(msg)-3), fmt, argptr);
-	va_end (argptr);
+	va_start(argptr, fmt);
+	Q_vsnprintf(&msg[2], (sizeof(msg) - 3), fmt, argptr);
+	va_end(argptr);
 
-        Com_PrintMessage( CON_CHANNEL_STEAM, msg, MSG_DEFAULT);
+	Com_PrintMessage(CON_CHANNEL_STEAM, msg, MSG_DEFAULT);
 }
 
 void XACHLP_EnterWorldLock(unsigned int client, qboolean status)
 {
-	if(client >= sv_maxclients->integer)
+	if (client >= sv_maxclients->integer)
 	{
 		return;
 	}
 	svs.clients[client].lockedout = status;
 }
 
-void XACHLP_DropClientNoNotify(unsigned int drop, const char *reason)
+void XACHLP_DropClientNoNotify(unsigned int drop, const char* reason)
 {
-	if(drop >= sv_maxclients->integer)
+	if (drop >= sv_maxclients->integer)
 	{
 		return;
 	}
 	SV_DropClientNoNotify(&svs.clients[drop], reason);
 }
 
-void XACHLP_DropClient(unsigned int drop, const char *reason)
+void XACHLP_DropClient(unsigned int drop, const char* reason)
 {
-	if(drop >= sv_maxclients->integer)
+	if (drop >= sv_maxclients->integer)
 	{
 		return;
 	}
 	SV_DelayDropClient(&svs.clients[drop], reason);
 }
 
-void XACHLP_SendReliableServerCommand(unsigned int client, msg_t *msg)
+void XACHLP_SendReliableServerCommand(unsigned int client, msg_t* msg)
 {
-	if(client >= sv_maxclients->integer)
+	if (client >= sv_maxclients->integer)
 	{
 		return;
 	}
@@ -152,7 +145,7 @@ void XACHLP_SendReliableServerCommand(unsigned int client, msg_t *msg)
 
 void XACHLP_AddBanForClient(unsigned int cl, int bantime, const char* banreason)
 {
-	if(cl >= sv_maxclients->integer)
+	if (cl >= sv_maxclients->integer)
 	{
 		return;
 	}
@@ -161,7 +154,7 @@ void XACHLP_AddBanForClient(unsigned int cl, int bantime, const char* banreason)
 
 void XACHLP_ScreenshotArrived(unsigned int cl, const char* filename)
 {
-	if(cl >= sv_maxclients->integer)
+	if (cl >= sv_maxclients->integer)
 	{
 		return;
 	}
@@ -170,22 +163,22 @@ void XACHLP_ScreenshotArrived(unsigned int cl, const char* filename)
 
 void XACHLP_ModuleArrived(unsigned int cl, const char* filename, long checksum)
 {
-	if(cl >= sv_maxclients->integer)
+	if (cl >= sv_maxclients->integer)
 	{
 		return;
 	}
 	SV_ModuleArrived(&svs.clients[cl], filename, checksum);
 }
 
-void XACHLP_GetEmuClientData(unsigned int clnum, struct clientEmu_t *emu)
+void XACHLP_GetEmuClientData(unsigned int clnum, struct clientEmu_t* emu)
 {
-	if(clnum >= sv_maxclients->integer)
+	if (clnum >= sv_maxclients->integer)
 	{
 		memset(emu, 0, sizeof(struct clientEmu_t));
 		return;
 	}
 	client_t* cl = &svs.clients[clnum];
-	
+
 	emu->challenge = cl->challenge;
 	emu->playerid = cl->playerid;
 	emu->steamid = cl->steamid;
@@ -206,9 +199,9 @@ void XACHLP_GetEmuClientData(unsigned int clnum, struct clientEmu_t *emu)
 	emu->maxguidlen = sizeof(cl->legacy_pbguid);
 }
 
-void XACHLP_SetEmuClientData(unsigned int clnum, struct clientEmu_t *emu)
+void XACHLP_SetEmuClientData(unsigned int clnum, struct clientEmu_t* emu)
 {
-	if(clnum >= sv_maxclients->integer)
+	if (clnum >= sv_maxclients->integer)
 	{
 		return;
 	}
@@ -223,21 +216,20 @@ void XACHLP_SetEmuClientData(unsigned int clnum, struct clientEmu_t *emu)
 	cl->steamstatus = emu->steamstatus;
 	cl->isMember = emu->isMember;
 	cl->hasValidPassword = emu->hasValidPassword;
-
 }
 
-void XACHLP_GetGameClientData(unsigned int clnum, struct gclientEmu_t *emu)
+void XACHLP_GetGameClientData(unsigned int clnum, struct gclientEmu_t* emu)
 {
-	if(clnum >= sv_maxclients->integer)
+	if (clnum >= sv_maxclients->integer)
 	{
 		memset(emu, 0, sizeof(struct gclientEmu_t));
 		return;
 	}
 	struct gentity_s* ent = SV_GentityNum(clnum);
-	if(ent->client == NULL)
+	if (ent->client == NULL)
 	{
 		memset(emu, 0, sizeof(struct gclientEmu_t));
-		return;	
+		return;
 	}
 	emu->buttons = ent->client->buttons;
 	VectorCopy(ent->client->ps.origin, emu->origin);
@@ -246,31 +238,29 @@ void XACHLP_GetGameClientData(unsigned int clnum, struct gclientEmu_t *emu)
 
 void XACHLP_SendClientGameState(unsigned int clnum)
 {
-	if(clnum >= sv_maxclients->integer)
+	if (clnum >= sv_maxclients->integer)
 	{
 		return;
 	}
 	client_t* cl = &svs.clients[clnum];
-	if(cl->state < CS_PRIMED)
+	if (cl->state < CS_PRIMED)
 	{
 		return;
 	}
 	SV_SendClientGameState(cl);
-
 }
 
 exports_t xac_imp;
-
 
 void SV_GetSS_f();
 
 void SV_TryLoadXAC()
 {
 	return;
-//	char errormsg[1024];
+	//	char errormsg[1024];
 	void* hmodule;
 	static imports_t exports;
-	
+
 	exports.Com_Printf = XACHLP_Printf;
 	exports.Com_DPrintf = XACHLP_DPrintf;
 	exports.Com_PrintError = XACHLP_PrintError;
@@ -301,14 +291,15 @@ void SV_TryLoadXAC()
 	memset(&xac_imp, 0, sizeof(xac_imp));
 
 	hmodule = Sys_LoadLibrary("xac_server" DLL_EXT);
-	if(hmodule == NULL)
+	if (hmodule == NULL)
 	{
-//		Sys_LoadLibraryError(errormsg, sizeof(errormsg));
-//		XACHLP_PrintError("xac_server" DLL_EXT " not found or it was not possible to load. Error is: %s.\n", errormsg);
+		//		Sys_LoadLibraryError(errormsg, sizeof(errormsg));
+		//		XACHLP_PrintError("xac_server" DLL_EXT " not found or it was not possible to load. Error is: %s.\n",
+		// errormsg);
 		return;
 	}
 	Init = Sys_GetProcedure("XAC_Main");
-	if(Init == NULL)
+	if (Init == NULL)
 	{
 		Sys_CloseLibrary(hmodule);
 		XACHLP_PrintError("XAC_Main entrypoint not found.\n");
@@ -319,32 +310,30 @@ void SV_TryLoadXAC()
 
 void SV_InitXAC()
 {
-    if(xac_imp.InitXAC)
-        xac_imp.InitXAC();
+	if (xac_imp.InitXAC)
+		xac_imp.InitXAC();
 }
-
 
 void SV_PassNETMessageXAC(client_t* client, msg_t* msg)
 {
-    if(xac_imp.PassClientMessage)
-        xac_imp.PassClientMessage(client - svs.clients, msg);
+	if (xac_imp.PassClientMessage)
+		xac_imp.PassClientMessage(client - svs.clients, msg);
 }
 
 void SV_ConnectXAC(client_t* client)
 {
-    if(xac_imp.Connect)
-        xac_imp.Connect(client - svs.clients);
+	if (xac_imp.Connect)
+		xac_imp.Connect(client - svs.clients);
 }
 
 void SV_DisconnectXAC(client_t* client)
 {
-    if(xac_imp.Disconnect)
-        xac_imp.Disconnect(client - svs.clients);	
+	if (xac_imp.Disconnect)
+		xac_imp.Disconnect(client - svs.clients);
 }
 
 void SV_RunFrameXAC()
 {
-	if(xac_imp.RunFrame)
+	if (xac_imp.RunFrame)
 		xac_imp.RunFrame();
 }
-

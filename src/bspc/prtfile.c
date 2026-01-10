@@ -1,47 +1,16 @@
-/*
-===========================================================================
-
-Return to Castle Wolfenstein multiplayer GPL Source Code
-Copyright (C) 1999-2010 id Software LLC, a ZeniMax Media company. 
-
-This file is part of the Return to Castle Wolfenstein multiplayer GPL Source Code (RTCW MP Source Code).  
-
-RTCW MP Source Code is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-RTCW MP Source Code is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with RTCW MP Source Code.  If not, see <http://www.gnu.org/licenses/>.
-
-In addition, the RTCW MP Source Code is also subject to certain additional terms. You should have received a copy of these additional terms immediately following the terms and conditions of the GNU General Public License which accompanied the RTCW MP Source Code.  If not, please request a copy in writing from id Software at the address below.
-
-If you have questions concerning this license or the applicable additional terms, you may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120, Rockville, Maryland 20850 USA.
-
-===========================================================================
-*/
-
 // NO LONGER USED
 #if 0
-#include "qbsp.h"
+	#include "qbsp.h"
 
 extern dleaf_t dleafs[MAX_MAP_LEAFS];
 /*
-==============================================================================
 
 PORTAL FILE GENERATION
 
 Save out name.prt for qvis to read
-==============================================================================
 */
 
-
-#define PORTALFILE  "PRT1"
+	#define PORTALFILE "PRT1"
 
 FILE    *pf;
 int num_visclusters;                    // clusters the player can be in
@@ -55,11 +24,6 @@ void WriteFloat2( FILE *f, vec_t v ) {
 	}
 }
 
-/*
-=================
-WritePortalFile_r
-=================
-*/
 void WritePortalFile_r( node_t *node ) {
 	int i, s;
 	portal_t    *p;
@@ -113,11 +77,9 @@ void WritePortalFile_r( node_t *node ) {
 }
 
 /*
-================
 FillLeafNumbers_r
 
 All of the leafs under node will have the same cluster
-================
 */
 void FillLeafNumbers_r( node_t *node, int num ) {
 	if ( node->planenum == PLANENUM_LEAF ) {
@@ -133,11 +95,6 @@ void FillLeafNumbers_r( node_t *node, int num ) {
 	FillLeafNumbers_r( node->children[1], num );
 }
 
-/*
-================
-NumberLeafs_r
-================
-*/
 void NumberLeafs_r( node_t *node ) {
 	portal_t    *p;
 
@@ -173,12 +130,6 @@ void NumberLeafs_r( node_t *node ) {
 
 }
 
-
-/*
-================
-CreateVisPortals_r
-================
-*/
 void CreateVisPortals_r( node_t *node ) {
 	// stop as soon as we get to a detail_seperator, which
 	// means that everything below is in a single cluster
@@ -193,11 +144,6 @@ void CreateVisPortals_r( node_t *node ) {
 	CreateVisPortals_r( node->children[1] );
 }
 
-/*
-================
-FinishVisPortals_r
-================
-*/
 void FinishVisPortals2_r( node_t *node ) {
 	if ( node->planenum == PLANENUM_LEAF ) {
 		return;
@@ -235,11 +181,6 @@ void SaveClusters_r( node_t *node ) {
 	SaveClusters_r( node->children[1] );
 }
 
-/*
-================
-WritePortalFile
-================
-*/
 void WritePortalFile( tree_t *tree ) {
 	char filename[1024];
 	node_t *headnode;

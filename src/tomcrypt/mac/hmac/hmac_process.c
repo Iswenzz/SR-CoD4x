@@ -17,7 +17,7 @@
 
 #ifdef LTC_HMAC
 
-/** 
+/**
   Process data through LTC_HMAC
   @param hmac    The hmac state
   @param in      The data to send through LTC_HMAC
@@ -26,17 +26,17 @@
 */
 int hmac_process(hmac_state *hmac, const unsigned char *in, unsigned long inlen)
 {
-    int err;
-    LTC_ARGCHK(hmac != NULL);
-    LTC_ARGCHK(in != NULL);
-    if ((err = hash_is_valid(hmac->hash)) != CRYPT_OK) {
-        return err;
-    }
-    return hash_descriptor[hmac->hash].process(&hmac->md, in, inlen);
+	int err;
+	LTC_ARGCHK(hmac != NULL);
+	LTC_ARGCHK(in != NULL);
+	if ((err = hash_is_valid(hmac->hash)) != CRYPT_OK)
+	{
+		return err;
+	}
+	return hash_descriptor[hmac->hash].process(&hmac->md, in, inlen);
 }
 
 #endif
-
 
 /* $Source: /cvs/libtom/libtomcrypt/src/mac/hmac/hmac_process.c,v $ */
 /* $Revision: 1.7 $ */

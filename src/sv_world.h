@@ -5,10 +5,11 @@
 #include "dobj.h"
 
 #ifdef __cplusplus
-extern "C"{
+extern "C"
+{
 #endif
 
-void SV_PointTraceToEntityIntern(const pointtrace_t* clip, gentity_t* touch, trace_t*, DObj_t* obj);
+	void SV_PointTraceToEntityIntern(const pointtrace_t* clip, gentity_t* touch, trace_t*, DObj_t* obj);
 
 #ifdef __cplusplus
 };

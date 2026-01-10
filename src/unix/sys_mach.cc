@@ -1,25 +1,3 @@
-/*
-===========================================================================
-    Copyright (C) 2010-2013  Ninja and TheKelm
-    Copyright (C) 1999-2005 Id Software, Inc.
-
-    This file is part of CoD4X18-Server source code.
-
-    CoD4X18-Server source code is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
-
-    CoD4X18-Server source code is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>
-===========================================================================
-*/
-
 
 #include "../q_shared.h"
 #include "../q_platform.h"
@@ -30,7 +8,6 @@
 #include "../cmd.h"
 #include "../sys_cod4defs.h"
 #include "../sec_crypto.h"
-#include "../sec_update.h"
 #include "../objfile_parser.h"
 
 #include <sys/resource.h>
@@ -50,11 +27,6 @@
 
 static char homePath[MAX_OSPATH];
 
-/*
-==================
-Sys_DefaultHomePath
-==================
-*/
 
 
 const char *Sys_DefaultHomePath(void)
@@ -77,18 +49,16 @@ const char *Sys_DefaultHomePath(void)
 }
 
 /*
-==============
 Sys_PlatformInit
 
 Unix specific initialisation
-==============
 */
 void Sys_PlatformInit( void )
 {
-	void *allocptr = (void*)0x8040000;  /* Image base of cod4_lnxded-bin */ 
+	void *allocptr = (void*)0x8040000;  /* Image base of cod4_lnxded-bin */
 	void *received_mem;
 	int pagesize = getpagesize();
-	
+
 	allocptr += 0xa1bc; /* Offset of .plt */
 	received_mem = mmap(allocptr - ((int)allocptr % pagesize), 0xa60 + 0x4 + 0x1bf1a4 + 0x3c + 0x36898 + pagesize, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_FIXED | MAP_ANON, 0, 0);
 	if(received_mem != allocptr - ((int)allocptr % pagesize))
@@ -97,14 +67,14 @@ void Sys_PlatformInit( void )
 		exit(1);
 	}
 	allocptr += 0xa60;
-	
-	allocptr += 0x4; /* Offset of .text */	
+
+	allocptr += 0x4; /* Offset of .text */
 	allocptr += 0x1bf1a4;
-	
-	allocptr += 0x3c; /* Offset of .rodata */	
+
+	allocptr += 0x3c; /* Offset of .rodata */
 	allocptr += 0x36898;
-	
-	allocptr += 0x2aee8; /* Offset of .data */		
+
+	allocptr += 0x2aee8; /* Offset of .data */
 	received_mem = mmap(allocptr - ((int)allocptr % pagesize), 0x9454 + 0x2c + 0xc182240 + pagesize, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_FIXED | MAP_ANON, 0, 0);
 	if(received_mem != allocptr - ((int)allocptr % pagesize))
 	{
@@ -112,20 +82,18 @@ void Sys_PlatformInit( void )
 		exit(1);
 	}
 	allocptr += 0x9454;
-	
+
 	allocptr += 0x2c; /* Offset of .bss */
 	allocptr += 0xc182240;
-	
+
 	Sys_InitCrashDumps();
 }
 /*
-=================
 Sys_StripAppBundle
 
 Discovers if passed dir is suffixed with the directory structure of a Mac OS X
 .app bundle. If it is, the .app directory structure is stripped off the end and
 the result is returned. If not, dir is returned untouched.
-=================
 */
 const char *Sys_StripAppBundle( const char *dir )
 {

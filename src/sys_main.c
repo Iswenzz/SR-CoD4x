@@ -1,27 +1,3 @@
-/*
-===========================================================================
-    Copyright (C) 2010-2013  Ninja and TheKelm
-    Copyright (C) 1999-2005 Id Software, Inc.
-
-    This file is part of CoD4X18-Server source code.
-
-    CoD4X18-Server source code is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
-
-    CoD4X18-Server source code is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>
-===========================================================================
-*/
-
-
-
 #include "q_shared.h"
 #include "sys_main.h"
 #include "q_platform.h"
@@ -51,23 +27,18 @@
 #define MAX_CMD 1024
 static char exit_cmdline[MAX_CMD + MAX_OSPATH] = "";
 
-static char binaryPath[ MAX_OSPATH ] = { 0 };
-static char installPath[ MAX_OSPATH ] = { 0 };
-static char exeFilename[ MAX_OSPATH ] = { 0 };
-static char exeFilenameShort[ MAX_OSPATH ] = { 0 };
+static char binaryPath[MAX_OSPATH] = { 0 };
+static char installPath[MAX_OSPATH] = { 0 };
+static char exeFilename[MAX_OSPATH] = { 0 };
+static char exeFilenameShort[MAX_OSPATH] = { 0 };
 static char cmdline[MAX_CMD + MAX_OSPATH] = "";
 
 #ifndef MAXPRINTMSG
-#define MAXPRINTMSG 1024
+	#define MAXPRINTMSG 1024
 #endif
 
 cvar_t* sys_shutdowntimeout;
 
-/*
-================
-Sys_Milliseconds
-================
-*/
 /* base time in seconds, that's our origin
    timeval:tv_sec is an int:
    assuming this wraps every 0x7fffffff - ~68 years since the Epoch (1970) - we're safe till 2038
@@ -80,46 +51,40 @@ Sys_Milliseconds
 
 unsigned int sys_timeBase;
 
-unsigned int Sys_Milliseconds( void )
+unsigned int Sys_Milliseconds(void)
 {
 	struct timeval tp;
 
-	gettimeofday( &tp, NULL );
+	gettimeofday(&tp, NULL);
 
-	return ( tp.tv_sec - sys_timeBase ) * 1000 + tp.tv_usec / 1000;
+	return (tp.tv_sec - sys_timeBase) * 1000 + tp.tv_usec / 1000;
 }
 
-unsigned long long Sys_MillisecondsLong( void )
+unsigned long long Sys_MillisecondsLong(void)
 {
 	unsigned long long time;
 
 	struct timeval tp;
 
-	gettimeofday( &tp, NULL );
+	gettimeofday(&tp, NULL);
 
 	time = (unsigned long long)tp.tv_sec - (unsigned long long)sys_timeBase;
 	time = time * 1000 + tp.tv_usec / 1000;
 	return time;
 }
 
-
-void Sys_TimerInit( void ) {
+void Sys_TimerInit(void)
+{
 	struct timeval tp;
 
-	gettimeofday( &tp, NULL );
+	gettimeofday(&tp, NULL);
 
-	if ( !sys_timeBase )
+	if (!sys_timeBase)
 	{
 		sys_timeBase = tp.tv_sec;
 	}
 }
 
-
-/*
-================
-Sys_Microseconds
-================
-*/
 /* base time in seconds, that's our origin
    timeval:tv_sec is an int:
    assuming this wraps every 0x7fffffff - ~68 years since the Epoch (1970) - we're safe till 2038
@@ -129,12 +94,13 @@ Sys_Microseconds
 	 0x7fffffff ms - ~24 days
    although timeval:tv_usec is an int, I'm not sure wether it is actually used as an unsigned int
 	 (which would affect the wrap period) */
-unsigned long long Sys_MicrosecondsLong( void ) {
+unsigned long long Sys_MicrosecondsLong(void)
+{
 	struct timeval tp;
 	unsigned long long orgtime;
 	unsigned long long time;
 
-	gettimeofday( &tp, NULL );
+	gettimeofday(&tp, NULL);
 
 	orgtime = tp.tv_sec - sys_timeBase;
 
@@ -150,96 +116,73 @@ unsigned long long Sys_MicrosecondsLong( void ) {
 	return time;
 }
 
-
-int Sys_Seconds( void ) {
+int Sys_Seconds(void)
+{
 	struct timeval tp;
 
-	gettimeofday( &tp, NULL );
+	gettimeofday(&tp, NULL);
 
 	return tp.tv_sec - sys_timeBase;
 }
 
 /*
-=================
 Sys_Exit
 
 Single exit point (regular exit or in case of error)
-=================
 */
-static __attribute__ ((noreturn)) void Sys_Exit( int exitCode ) {
-
+static __attribute__((noreturn)) void Sys_Exit(int exitCode)
+{
 	CON_Shutdown();
 	// we may be exiting to spawn another process
-	if ( exit_cmdline[0] != '\0' ) {
+	if (exit_cmdline[0] != '\0')
+	{
 		// possible race conditions?
 		// buggy kernels / buggy GL driver, I don't know for sure
 		// but it's safer to wait an eternity before and after the fork
-		Sys_SleepSec( 1 );
-		Sys_ReplaceProcess( exit_cmdline );
-		Sys_SleepSec( 1 );
+		Sys_SleepSec(1);
+		Sys_ReplaceProcess(exit_cmdline);
+		Sys_SleepSec(1);
 	}
 
 	// We can't do this
 	// as long as GL DLL's keep installing with atexit...
-	Sys_ExitForOS( exitCode );
+	Sys_ExitForOS(exitCode);
 }
 
-/*
-=================
-Sys_Quit
-=================
-*/
-void Sys_Quit( void )
+void Sys_Quit(void)
 {
-	Sys_Exit( 0 );
+	Sys_Exit(0);
 }
-
-/*
-=================
-Sys_SetExitCmdline
-=================
-*/
 
 void Sys_SetExitCmdline(const char* cmdline)
 {
-	if(strlen(cmdline) >= sizeof(exit_cmdline))
+	if (strlen(cmdline) >= sizeof(exit_cmdline))
 	{
-		Com_PrintError(CON_CHANNEL_SYSTEM,"Sys_SetExitCmdline: Exceeded length of %d characters.\n", sizeof(exit_cmdline) -1);
+		Com_PrintError(CON_CHANNEL_SYSTEM, "Sys_SetExitCmdline: Exceeded length of %d characters.\n",
+			sizeof(exit_cmdline) - 1);
 	}
 	Q_strncpyz(exit_cmdline, cmdline, sizeof(exit_cmdline));
 }
 
-/*
-=================
-Sys_GetCommandline
-=================
-*/
-
-const char* Sys_GetCommandline( void )
+const char* Sys_GetCommandline(void)
 {
-    return cmdline;
+	return cmdline;
 }
 
-
-/*
-=================
-Sys_DoSignalAction
-=================
-*/
-void Sys_DoSignalAction( int signal, const char* sigstring )
+void Sys_DoSignalAction(int signal, const char* sigstring)
 {
 	static qboolean signalcaught = qfalse;
 	char termmsg[MAX_STRING_CHARS];
 #ifndef _WIN32
-	if(signal == SIGCHLD)
+	if (signal == SIGCHLD)
 	{
 		Sys_TermProcess();
 		return;
 	}
 #endif
-	Com_Printf(CON_CHANNEL_SYSTEM, "Received signal: %s, exiting...\n", sigstring );
+	Com_Printf(CON_CHANNEL_SYSTEM, "Received signal: %s, exiting...\n", sigstring);
 
-	if( signalcaught )
+	if (signalcaught)
 	{
 		Com_Printf(CON_CHANNEL_SYSTEM, "DOUBLE SIGNAL FAULT: Received signal: %s, exiting...\n", sigstring);
 	}
@@ -248,181 +191,132 @@ void Sys_DoSignalAction( int signal, const char* sigstring )
 	{
 		signalcaught = qtrue;
 		Sys_BeginShutdownWatchdog();
-		Com_Printf(CON_CHANNEL_SYSTEM,"Server received signal: %s\nShutting down server...\n", sigstring);
+		Com_Printf(CON_CHANNEL_SYSTEM, "Server received signal: %s\nShutting down server...\n", sigstring);
 		Com_sprintf(termmsg, sizeof(termmsg), "\nServer received signal: %s\nTerminating server...", sigstring);
-		SV_Shutdown( termmsg );
+		SV_Shutdown(termmsg);
 		SV_SApiShutdown();
-		Sys_EnterCriticalSection( 2 );
+		Sys_EnterCriticalSection(2);
 
-		Com_CloseLogFiles(); //close all open logfiles
+		Com_CloseLogFiles(); // close all open logfiles
 		FS_Shutdown(qtrue);
 	}
 
-	if( signal == SIGTERM || signal == SIGINT )
-		Sys_Exit( 1 );
+	if (signal == SIGTERM || signal == SIGINT)
+		Sys_Exit(1);
 	else
-		Sys_Exit( 2 );
+		Sys_Exit(2);
 }
 
-
-void Sys_PrintBinVersion( const char* name ) {
-
+void Sys_PrintBinVersion(const char* name)
+{
 	char* sep = "==============================================================";
-	fprintf( stdout, "\n\n%s\n", sep );
+	fprintf(stdout, "\n\n%s\n", sep);
 
-	fprintf( stdout, "%s %s %s build %i %s\n", GAME_STRING,Q3_VERSION,PLATFORM_STRING, Sys_GetBuild(), __DATE__);
+	fprintf(stdout, "%s %s %s build %i %s\n", GAME_STRING, Q3_VERSION, PLATFORM_STRING, Sys_GetBuild(), __DATE__);
 
-	fprintf( stdout, " local install: %s\n", name );
-	fprintf( stdout, "%s\n\n", sep );
+	fprintf(stdout, " local install: %s\n", name);
+	fprintf(stdout, "%s\n\n", sep);
 }
-
 
 /*
-=============
 Sys_Error
 
 A raw string should NEVER be passed as fmt, because of "%f" type crashers.
-=============
 */
-__cdecl void QDECL Sys_Error( const char *fmt, ... ) {
-
-	FILE * fdout;
+__cdecl void QDECL Sys_Error(const char* fmt, ...)
+{
+	FILE* fdout;
 	char* fileout = "sys_error.txt";
-	va_list		argptr;
-	char		msg[MAXPRINTMSG];
-	char		buffer[MAXPRINTMSG];
+	va_list argptr;
+	char msg[MAXPRINTMSG];
+	char buffer[MAXPRINTMSG];
 
 	Sys_BeginShutdownWatchdog();
 
-	va_start (argptr,fmt);
-	Q_vsnprintf (msg, sizeof(msg), fmt, argptr);
-	va_end (argptr);
+	va_start(argptr, fmt);
+	Q_vsnprintf(msg, sizeof(msg), fmt, argptr);
+	va_end(argptr);
 
 	Com_sprintf(buffer, sizeof(buffer), "\nSys_Error: %s\n", msg);
 
-	//Print the error to our console
-	Sys_Print( buffer );
+	// Print the error to our console
+	Sys_Print(buffer);
 
-	//Try to write the error into a file
-	fdout=fopen(fileout, "w");
-	if(fdout){
-		fwrite(buffer, strlen(buffer), 1 ,fdout);
+	// Try to write the error into a file
+	fdout = fopen(fileout, "w");
+	if (fdout)
+	{
+		fwrite(buffer, strlen(buffer), 1, fdout);
 		fclose(fdout);
 	}
 
-	Sys_WaitForErrorConfirmation( msg );
+	Sys_WaitForErrorConfirmation(msg);
 
-	Sys_Exit( 1 ); // bk010104 - use single exit point.
+	Sys_Exit(1); // bk010104 - use single exit point.
 }
 
-
-/*
-================
-Sys_Init
-================
-*/
 void Sys_Init()
 {
 	Cvar_RegisterString("arch", OS_STRING "-" ARCH_STRING, CVAR_ROM, "System platform");
 	Cvar_RegisterString("username", Sys_GetUsername(), CVAR_ROM, "Current username");
-
 }
 
-/*
-=================
-Sys_Print
-=================
-*/
-void Sys_Print( const char *msg )
+void Sys_Print(const char* msg)
 {
 	Sys_EnterCriticalSection(CRITSECT_CONSOLE);
 
-//	CON_LogWrite( msg );
-	CON_Print( msg );
+	//	CON_LogWrite( msg );
+	CON_Print(msg);
 
 	Sys_LeaveCriticalSection(CRITSECT_CONSOLE);
-
 }
 
 /*
-=================
 Sys_ConsoleInput
 
 Handle new console input
-=================
 */
-char *Sys_ConsoleInput(void)
+char* Sys_ConsoleInput(void)
 {
-	return CON_Input( );
+	return CON_Input();
 }
 
-
-/*
-=================
-Sys_SetBinaryPath
-=================
-*/
-void Sys_SetBinaryPath(const char *path)
+void Sys_SetBinaryPath(const char* path)
 {
 	Q_strncpyz(binaryPath, path, sizeof(binaryPath));
 }
 
-/*
-=================
-Sys_SetExeFile
-=================
-*/
-void Sys_SetExeFile(const char *filepath)
+void Sys_SetExeFile(const char* filepath)
 {
 	Q_strncpyz(exeFilename, filepath, sizeof(exeFilename));
 }
 
-void Sys_SetExeFileShort(const char *filepath)
+void Sys_SetExeFileShort(const char* filepath)
 {
 	Q_strncpyz(exeFilenameShort, filepath, sizeof(exeFilenameShort));
 }
 
-/*
-=================
-Sys_ExeFile
-=================
-*/
-const char* Sys_ExeFile( void )
+const char* Sys_ExeFile(void)
 {
 	return exeFilename;
 }
 
-const char* Sys_ExeFileShort( void )
+const char* Sys_ExeFileShort(void)
 {
 	return exeFilenameShort;
 }
 
-/*
-=================
-Sys_BinaryPath
-=================
-*/
-const char *Sys_BinaryPath(void)
+const char* Sys_BinaryPath(void)
 {
 	return binaryPath;
 }
 
-/*
-=================
-Sys_SetDefaultInstallPath
-=================
-*/
-void Sys_SetDefaultInstallPath(const char *path)
+void Sys_SetDefaultInstallPath(const char* path)
 {
 	Q_strncpyz(installPath, path, sizeof(installPath));
 }
 
-/*
-=================
-Sys_DefaultInstallPath
-=================
-*/
-char *Sys_DefaultInstallPath(void)
+char* Sys_DefaultInstallPath(void)
 {
 	if (*installPath)
 		return installPath;
@@ -430,66 +324,55 @@ char *Sys_DefaultInstallPath(void)
 		return Sys_Cwd();
 }
 
-/*
-=================
-Sys_DefaultCDPath
-=================
-*/
-char *Sys_DefaultCDPath(void)
+char* Sys_DefaultCDPath(void)
 {
 	return "";
 }
 
-/*
-=================
-Sys_DefaultAppPath
-=================
-*/
-const char *Sys_DefaultAppPath(void)
+const char* Sys_DefaultAppPath(void)
 {
 	return Sys_BinaryPath();
 }
 
-
 #ifndef DEFAULT_BASEDIR
-#	ifdef MACOS_X
-#		define DEFAULT_BASEDIR Sys_StripAppBundle(Sys_BinaryPath())
-#	else
-#		define DEFAULT_BASEDIR Sys_BinaryPath()
-#	endif
+	#ifdef MACOS_X
+		#define DEFAULT_BASEDIR Sys_StripAppBundle(Sys_BinaryPath())
+	#else
+		#define DEFAULT_BASEDIR Sys_BinaryPath()
+	#endif
 #endif
 
+int Sys_Main(char* commandLine)
+{
+	Q_strncpyz(cmdline, commandLine, sizeof(cmdline));
 
-int Sys_Main(char* commandLine){
+	Sys_SetDefaultInstallPath(DEFAULT_BASEDIR);
 
-    Q_strncpyz(cmdline, commandLine, sizeof(cmdline));
+	Sys_TimerInit();
 
-    Sys_SetDefaultInstallPath( DEFAULT_BASEDIR );
+	Sys_PlatformInit();
 
-    Sys_TimerInit( );
+	Sys_InitializeCriticalSections();
 
-    Sys_PlatformInit( );
+	Sys_InitMainThread();
+	//    Sys_ThreadMain();
 
-    Sys_InitializeCriticalSections();
+	Com_InitSmallZoneMemory();
 
-    Sys_InitMainThread();
-//    Sys_ThreadMain();
+	CON_Init();
+	extractor_init();
+	/*    Sys_ImageFindConstant();   */
 
-    Com_InitSmallZoneMemory( );
+	Com_Init(commandLine);
 
-    CON_Init();
-    extractor_init();
-/*    Sys_ImageFindConstant();   */
+	sys_shutdowntimeout = Cvar_RegisterInt("sys_shutdowntimeout", 60, 30, 1200, CVAR_ARCHIVE,
+		"When server is going to shutdown there will be a timeout in seconds after server gets killed in case it is "
+		"still running");
 
-    Com_Init( commandLine );
-
-	sys_shutdowntimeout = Cvar_RegisterInt("sys_shutdowntimeout", 60, 30, 1200, CVAR_ARCHIVE, "When server is going to shutdown there will be a timeout in seconds after server gets killed in case it is still running");
-
-    while ( 1 )
-    {
-        Com_Frame();
-    }
-
+	while (1)
+	{
+		Com_Frame();
+	}
 }
 
 void Sys_Restart(const char* reason)
@@ -498,34 +381,27 @@ void Sys_Restart(const char* reason)
 
 	Sys_BeginShutdownWatchdog();
 
-	SV_Shutdown( reason );
-	SV_SApiShutdown( );
+	SV_Shutdown(reason);
+	SV_SApiShutdown();
 	Com_sprintf(commandline, sizeof(commandline), "%s %s", Sys_ExeFile(), Sys_GetCommandline());
-	Com_Printf(CON_CHANNEL_SYSTEM,"Restart commandline is: %s\n", commandline);
+	Com_Printf(CON_CHANNEL_SYSTEM, "Restart commandline is: %s\n", commandline);
 	Sys_SetExitCmdline(commandline);
 	Com_Quit_f();
 }
 
+void Sys_BeginLoadThreadPriorities() { }
 
-void Sys_BeginLoadThreadPriorities()
-{
-
-}
-
-void Sys_EndLoadThreadPriorities()
-{
-
-}
-
+void Sys_EndLoadThreadPriorities() { }
 
 void* Sys_ShutdownWatchdogThread(void* arg)
 {
 	int timeoutsec = (int)arg;
 	int maxmsec = timeoutsec * 1000 + Sys_Milliseconds();
 
-	do{
+	do
+	{
 		Sys_SleepSec(1);
-	}while(Sys_Milliseconds() < maxmsec);
+	} while (Sys_Milliseconds() < maxmsec);
 
 	_exit(-64);
 	return NULL;
@@ -534,22 +410,21 @@ void* Sys_ShutdownWatchdogThread(void* arg)
 void Sys_BeginShutdownWatchdog()
 {
 	static qboolean watchdogActive = false;
-	if(watchdogActive)
+	if (watchdogActive)
 	{
 		return;
 	}
 	threadid_t tinfo;
 	int timeout = 30;
-	if(sys_shutdowntimeout)
+	if (sys_shutdowntimeout)
 	{
 		timeout = sys_shutdowntimeout->integer;
 	}
 	watchdogActive = true;
 	Sys_CreateNewThread(Sys_ShutdownWatchdogThread, &tinfo, (void*)timeout);
-
 }
 
 void Sys_Sleep(int msec)
 {
-    Sys_SleepMSec(msec);
+	Sys_SleepMSec(msec);
 }

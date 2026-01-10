@@ -12,7 +12,7 @@ typedef unsigned int uint;
 
 struct MenuList
 {
-  const char *name;
-  int menuCount;
-  struct menuDef_t **menus;
+	const char *name;
+	int menuCount;
+	struct menuDef_t **menus;
 };

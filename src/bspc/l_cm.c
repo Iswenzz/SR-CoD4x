@@ -3,13 +3,11 @@
 
 TraceThreadInfo g_traceThreadInfo[NUMTHREADS];
 
-
 void* __cdecl Sys_GetValue(int key)
 {
-    if(key != 3)
+	if (key != 3)
 	{
 		Error("Sys_GetValue: Invalid value");
 	}
-    return &g_traceThreadInfo[0];
+	return &g_traceThreadInfo[0];
 }
-

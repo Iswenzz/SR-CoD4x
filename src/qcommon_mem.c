@@ -1,25 +1,3 @@
-/*
-===========================================================================
-    Copyright (C) 2010-2013  Ninja and TheKelm
-    Copyright (C) 1999-2005 Id Software, Inc.
-
-    This file is part of CoD4X18-Server source code.
-
-    CoD4X18-Server source code is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
-
-    CoD4X18-Server source code is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>
-===========================================================================
-*/
-
 #include <string.h>
 #include "q_shared.h"
 #include "qcommon_mem.h"
@@ -29,48 +7,43 @@
 #include "cvar.h"
 #include "cmd.h"
 
-cvar_t* com_hunkMegs;
-cvar_t* com_hunkused;
+cvar_t *com_hunkMegs;
+cvar_t *com_hunkused;
 #define DEF_COMZONEMEGS 16 // JPW NERVE cut this back too was 30
 
-void Z_PrintHeap_f( void );
-void Z_LogHeap( void );
+void Z_PrintHeap_f(void);
+void Z_LogHeap(void);
 
-void* Mem_AlignedAlloc(unsigned int align, unsigned int size)
+void *Mem_AlignedAlloc(unsigned int align, unsigned int size)
 {
-    void* newmem;
+	void *newmem;
 
-    newmem = calloc(1, size + align);
-    if(newmem == NULL)
-        return NULL;
+	newmem = calloc(1, size + align);
+	if (newmem == NULL)
+		return NULL;
 
-    return (void*)((unsigned int)newmem + ((unsigned int)newmem % align));
-
+	return (void *)((unsigned int)newmem + ((unsigned int)newmem % align));
 }
 
-
-void FreeString(char* tofree)
+void FreeString(char *tofree)
 {
-    if(tofree)
-    {
-        Z_Free(tofree);
-    }
+	if (tofree)
+	{
+		Z_Free(tofree);
+	}
 }
 
-void __cdecl Sys_OutOfMemError(const char* filename, int line)
+void __cdecl Sys_OutOfMemError(const char *filename, int line)
 {
 	Com_Error(ERR_FATAL, "System is out of memory! Filename: %s, Line: %d\n", filename, line);
 }
 
-void __cdecl Sys_OutOfMemErrorInternal(const char* filename, int line)
+void __cdecl Sys_OutOfMemErrorInternal(const char *filename, int line)
 {
 	Sys_OutOfMemError(filename, line);
 }
 
-
-
 /*
-==============================================================================
 
 						ZONE MEMORY ALLOCATION
 
@@ -81,58 +54,54 @@ The rover can be left pointing at a non-empty block
 
 The zone calls are pretty much only used for small strings and structures,
 all big things are allocated on the hunk.
-==============================================================================
 */
 
-#define ZONEID  0x1d4a11db
+#define ZONEID 0x1d4a11db
 #define MINFRAGMENT 64
 
-typedef struct zonedebug_s {
+typedef struct zonedebug_s
+{
 	char *label;
 	char *file;
 	int line;
 	int allocSize;
 } zonedebug_t;
 
-typedef struct memblock_s {
-	int size;               // including the header and possibly tiny fragments
-	int tag;                // a tag of 0 is a free block
-	struct memblock_s       *next, *prev;
-	int id;                 // should be ZONEID
+typedef struct memblock_s
+{
+	int size; // including the header and possibly tiny fragments
+	int tag;  // a tag of 0 is a free block
+	struct memblock_s *next, *prev;
+	int id; // should be ZONEID
 #ifdef ZONE_DEBUG
 	zonedebug_t d;
 #endif
 } memblock_t;
 
-typedef struct {
-	int size;               // total bytes malloced, including header
-	int used;               // total bytes used
-	memblock_t blocklist;   // start / end cap for linked list
-	memblock_t  *rover;
+typedef struct
+{
+	int size;			  // total bytes malloced, including header
+	int used;			  // total bytes used
+	memblock_t blocklist; // start / end cap for linked list
+	memblock_t *rover;
 } memzone_t;
 
 // main zone for all "dynamic" memory allocation
-memzone_t   *mainzone;
+memzone_t *mainzone;
 // we also have a small zone for small allocations that would only
 // fragment the main zone (think of cvar and cmd strings)
-memzone_t   *smallzone;
+memzone_t *smallzone;
 
+void Z_CheckHeap(void);
 
-void Z_CheckHeap( void );
-
-/*
-========================
-Z_ClearZone
-========================
-*/
-void Z_ClearZone( memzone_t *zone, int size ) {
-	memblock_t  *block;
+void Z_ClearZone(memzone_t *zone, int size)
+{
+	memblock_t *block;
 
 	// set the entire zone to one free block
 
-	zone->blocklist.next = zone->blocklist.prev = block =
-													  ( memblock_t * )( (byte *)zone + sizeof( memzone_t ) );
-	zone->blocklist.tag = 1;    // in use block
+	zone->blocklist.next = zone->blocklist.prev = block = (memblock_t *)((byte *)zone + sizeof(memzone_t));
+	zone->blocklist.tag = 1; // in use block
 	zone->blocklist.id = 0;
 	zone->blocklist.size = 0;
 	zone->rover = block;
@@ -140,98 +109,101 @@ void Z_ClearZone( memzone_t *zone, int size ) {
 	zone->used = 0;
 
 	block->prev = block->next = &zone->blocklist;
-	block->tag = 0;         // free block
+	block->tag = 0; // free block
 	block->id = ZONEID;
-	block->size = size - sizeof( memzone_t );
+	block->size = size - sizeof(memzone_t);
 }
 
-
-/*
-=================
-Com_InitZoneMemory
-=================
-*/
-void Com_InitSmallZoneMemory( void ) {
+void Com_InitSmallZoneMemory(void)
+{
 	int s_smallZoneTotal = 1024 * 1024;
 	// bk001205 - was malloc
-	smallzone = calloc( s_smallZoneTotal, 1 );
-	if ( !smallzone ) {
-		Com_Error( ERR_FATAL, "Small zone data failed to allocate %1.1f megs", (float)s_smallZoneTotal / ( 1024 * 1024 ) );
+	smallzone = calloc(s_smallZoneTotal, 1);
+	if (!smallzone)
+	{
+		Com_Error(ERR_FATAL, "Small zone data failed to allocate %1.1f megs", (float)s_smallZoneTotal / (1024 * 1024));
 	}
-	Z_ClearZone( smallzone, s_smallZoneTotal );
+	Z_ClearZone(smallzone, s_smallZoneTotal);
 
 	return;
 }
 
-void Com_InitZoneMemory( void ) {
-	cvar_t  *cv;
-    int s_zoneTotal;
+void Com_InitZoneMemory(void)
+{
+	cvar_t *cv;
+	int s_zoneTotal;
 	// allocate the random block zone
-	cv = Cvar_RegisterInt("com_zoneMegs", DEF_COMZONEMEGS, 8, 64*1024*1024, CVAR_LATCH | CVAR_ARCHIVE, "Amount of main zone memory allocated - needs to be increased when Z_Malloc fails");
+	cv = Cvar_RegisterInt("com_zoneMegs", DEF_COMZONEMEGS, 8, 64 * 1024 * 1024, CVAR_LATCH | CVAR_ARCHIVE,
+		"Amount of main zone memory allocated - needs to be increased when Z_Malloc fails");
 
 	s_zoneTotal = cv->integer * 1024 * 1024;
 
 	// bk001205 - was malloc
-	mainzone = calloc( s_zoneTotal, 1 );
-	if ( !mainzone ) {
-		Com_Error( ERR_FATAL, "Zone data failed to allocate %i megs", s_zoneTotal / ( 1024 * 1024 ) );
+	mainzone = calloc(s_zoneTotal, 1);
+	if (!mainzone)
+	{
+		Com_Error(ERR_FATAL, "Zone data failed to allocate %i megs", s_zoneTotal / (1024 * 1024));
 	}
-	Z_ClearZone( mainzone, s_zoneTotal );
+	Z_ClearZone(mainzone, s_zoneTotal);
 	Cmd_AddCommand("zonememinfo", Z_PrintHeap_f);
-
 }
 
-
-/*
-========================
-Z_Free
-========================
-*/
-void Z_Free( void *ptr ) {
-	memblock_t  *block, *other;
+void Z_Free(void *ptr)
+{
+	memblock_t *block, *other;
 	memzone_t *zone;
 
-	if ( !ptr ) {
-		Com_Error( ERR_DROP, "Z_Free: NULL pointer" );
+	if (!ptr)
+	{
+		Com_Error(ERR_DROP, "Z_Free: NULL pointer");
 	}
 
-	block = ( memblock_t * )( (byte *)ptr - sizeof( memblock_t ) );
-	if ( block->id != ZONEID ) {
-		Com_Error( ERR_FATAL, "Z_Free: freed a pointer without ZONEID" );
+	block = (memblock_t *)((byte *)ptr - sizeof(memblock_t));
+	if (block->id != ZONEID)
+	{
+		Com_Error(ERR_FATAL, "Z_Free: freed a pointer without ZONEID");
 	}
-	if ( block->tag == 0 ) {
-		Com_Error( ERR_FATAL, "Z_Free: freed a freed pointer" );
+	if (block->tag == 0)
+	{
+		Com_Error(ERR_FATAL, "Z_Free: freed a freed pointer");
 	}
 	// if static memory
-	if ( block->tag == TAG_STATIC ) {
+	if (block->tag == TAG_STATIC)
+	{
 		return;
 	}
 
 	// check the memory trash tester
-	if ( *( int * )( (byte *)block + block->size - 4 ) != ZONEID ) {
-		Com_Error( ERR_FATAL, "Z_Free: memory block wrote past end" );
+	if (*(int *)((byte *)block + block->size - 4) != ZONEID)
+	{
+		Com_Error(ERR_FATAL, "Z_Free: memory block wrote past end");
 	}
 
-	if ( block->tag == TAG_SMALL ) {
+	if (block->tag == TAG_SMALL)
+	{
 		zone = smallzone;
-	} else {
+	}
+	else
+	{
 		zone = mainzone;
 	}
 
 	zone->used -= block->size;
 	// set the block to something that should cause problems
 	// if it is referenced...
-	memset( ptr, 0xaa, block->size - sizeof( *block ) );
+	memset(ptr, 0xaa, block->size - sizeof(*block));
 
-	block->tag = 0;     // mark as free
+	block->tag = 0; // mark as free
 
 	other = block->prev;
-	if ( !other->tag ) {
+	if (!other->tag)
+	{
 		// merge with previous free block
 		other->size += block->size;
 		other->next = block->next;
 		other->next->prev = other;
-		if ( block == zone->rover ) {
+		if (block == zone->rover)
+		{
 			zone->rover = other;
 		}
 		block = other;
@@ -240,118 +212,125 @@ void Z_Free( void *ptr ) {
 	zone->rover = block;
 
 	other = block->next;
-	if ( !other->tag ) {
+	if (!other->tag)
+	{
 		// merge the next free block onto the end
 		block->size += other->size;
 		block->next = other->next;
 		block->next->prev = block;
-		if ( other == zone->rover ) {
+		if (other == zone->rover)
+		{
 			zone->rover = block;
 		}
 	}
 }
 
-
-/*
-================
-Z_FreeTags
-================
-*/
-void Z_FreeTags( int tag ) {
+void Z_FreeTags(int tag)
+{
 	int count;
-	memzone_t   *zone;
+	memzone_t *zone;
 
-	if ( tag == TAG_SMALL ) {
+	if (tag == TAG_SMALL)
+	{
 		zone = smallzone;
-	} else {
+	}
+	else
+	{
 		zone = mainzone;
 	}
 	count = 0;
 	// use the rover as our pointer, because
 	// Z_Free automatically adjusts it
 	zone->rover = zone->blocklist.next;
-	do {
-		if ( zone->rover->tag == tag ) {
+	do
+	{
+		if (zone->rover->tag == tag)
+		{
 			count++;
-			Z_Free( ( void * )( zone->rover + 1 ) );
+			Z_Free((void *)(zone->rover + 1));
 			continue;
 		}
 		zone->rover = zone->rover->next;
-	} while ( zone->rover != &zone->blocklist );
+	} while (zone->rover != &zone->blocklist);
 }
-
-
-
-/*
-================
-Z_TagMalloc
-================
-*/
 
 memblock_t *debugblock; // RF, jusy so we can track a block to find out when it's getting trashed
 
 #ifdef ZONE_DEBUG
-void *Z_TagMallocDebug( int size, int tag, char *label, char *file, int line ) {
+void *Z_TagMallocDebug(int size, int tag, char *label, char *file, int line)
+{
 #else
-void *Z_TagMalloc( int size, int tag ) {
+void *Z_TagMalloc(int size, int tag)
+{
 #endif
 	int extra;
 	int allocSize;
 
-	memblock_t  *start, *rover, *new, *base;
+	memblock_t *start, *rover, *new, *base;
 	memzone_t *zone;
 
-	if ( !tag ) {
-		Com_Error( ERR_FATAL, "Z_TagMalloc: tried to use a 0 tag" );
+	if (!tag)
+	{
+		Com_Error(ERR_FATAL, "Z_TagMalloc: tried to use a 0 tag");
 	}
 
-	if ( tag == TAG_SMALL ) {
+	if (tag == TAG_SMALL)
+	{
 		zone = smallzone;
-	} else {
+	}
+	else
+	{
 		zone = mainzone;
 	}
 
-	if ( zone == NULL ) {
-		Com_Error( ERR_FATAL, "Z_TagMalloc: Zone memory system not initialized" );
+	if (zone == NULL)
+	{
+		Com_Error(ERR_FATAL, "Z_TagMalloc: Zone memory system not initialized");
 	}
 	allocSize = size;
 	//
 	// scan through the block list looking for the first free block
 	// of sufficient size
 	//
-	size += sizeof( memblock_t ); // account for size of block header
-	size += 4;                  // space for memory trash tester
-	size = ( size + 3 ) & ~3;     // align to 32 bit boundary
+	size += sizeof(memblock_t); // account for size of block header
+	size += 4;					// space for memory trash tester
+	size = (size + 3) & ~3;		// align to 32 bit boundary
 
 	base = rover = zone->rover;
 	start = base->prev;
 
-	do {
-		if ( rover == start ) {
+	do
+	{
+		if (rover == start)
+		{
 #ifdef ZONE_DEBUG
 			Z_LogHeap();
 #endif
 			// scaned all the way around the list
-			Com_Error( ERR_FATAL, "Z_Malloc: failed on allocation of %i bytes from the %s zone",
-					   size, zone == smallzone ? "small" : "main" );
+			Com_Error(ERR_FATAL, "Z_Malloc: failed on allocation of %i bytes from the %s zone", size,
+				zone == smallzone ? "small" : "main");
 			return NULL;
 		}
-		if ( rover->tag ) {
+		if (rover->tag)
+		{
 			base = rover = rover->next;
-		} else {
+		}
+		else
+		{
 			rover = rover->next;
 		}
-	} while ( base->tag || base->size < size );
+	} while (base->tag || base->size < size);
 
 	//
 	// found a block big enough
 	//
 	extra = base->size - size;
-	if ( extra > MINFRAGMENT ) {
+	if (extra > MINFRAGMENT)
+	{
 		// there will be a free fragment after the allocated block
-		new = ( memblock_t * )( (byte *)base + size );
+		new = (memblock_t *)((byte *)base + size);
 		new->size = extra;
-		new->tag = 0;           // free block
+		new->tag = 0; // free block
 		new->prev = base;
 		new->id = ZONEID;
 		new->next = base->next;
@@ -360,10 +339,10 @@ void *Z_TagMalloc( int size, int tag ) {
 		base->size = size;
 	}
 
-	base->tag = tag;            // no longer a free block
+	base->tag = tag; // no longer a free block
 
-	zone->rover = base->next;   // next allocation will start looking here
-	zone->used += base->size;   //
+	zone->rover = base->next; // next allocation will start looking here
+	zone->used += base->size; //
 
 	base->id = ZONEID;
 
@@ -375,100 +354,101 @@ void *Z_TagMalloc( int size, int tag ) {
 #endif
 
 	// marker for memory trash testing
-	*( int * )( (byte *)base + base->size - 4 ) = ZONEID;
+	*(int *)((byte *)base + base->size - 4) = ZONEID;
 
-	Com_Memset( (byte *)base + sizeof( memblock_t ), 0, allocSize );
+	Com_Memset((byte *)base + sizeof(memblock_t), 0, allocSize);
 
-	return ( void * )( (byte *)base + sizeof( memblock_t ) );
+	return (void *)((byte *)base + sizeof(memblock_t));
 }
 
-/*
-========================
-Z_Malloc
-========================
-*/
 #ifdef ZONE_DEBUG
-void *Z_MallocDebug( int size, char *label, char *file, int line ) {
+void *Z_MallocDebug(int size, char *label, char *file, int line)
+{
 #else
-void *Z_Malloc( int size ) {
+void *Z_Malloc(int size)
+{
 #endif
-	void    *buf;
+	void *buf;
 
-	//Z_CheckHeap ();	// DEBUG
+	// Z_CheckHeap ();	// DEBUG
 
 #ifdef ZONE_DEBUG
-	buf = Z_TagMallocDebug( size, TAG_GENERAL, label, file, line );
+	buf = Z_TagMallocDebug(size, TAG_GENERAL, label, file, line);
 #else
-	buf = Z_TagMalloc( size, TAG_GENERAL );
+	buf = Z_TagMalloc(size, TAG_GENERAL);
 #endif
 	return buf;
 }
 
 #ifdef ZONE_DEBUG
-void *S_MallocDebug( int size, char *label, char *file, int line ) {
-	return Z_TagMallocDebug( size, TAG_SMALL, label, file, line );
+void *S_MallocDebug(int size, char *label, char *file, int line)
+{
+	return Z_TagMallocDebug(size, TAG_SMALL, label, file, line);
 }
 #else
-void *S_Malloc( int size ) {
-	return Z_TagMalloc( size, TAG_SMALL );
+void *S_Malloc(int size)
+{
+	return Z_TagMalloc(size, TAG_SMALL);
 }
 #endif
 
+void Z_CheckHeap(void)
+{
+	memblock_t *block;
 
-/*
-========================
-Z_CheckHeap
-========================
-*/
-void Z_CheckHeap( void ) {
-	memblock_t  *block;
-
-	for ( block = mainzone->blocklist.next ; ; block = block->next ) {
-		if ( block->next == &mainzone->blocklist ) {
-			break;          // all blocks have been hit
+	for (block = mainzone->blocklist.next;; block = block->next)
+	{
+		if (block->next == &mainzone->blocklist)
+		{
+			break; // all blocks have been hit
 		}
-		if ( (byte *)block + block->size != (byte *)block->next ) {
-			Com_Error( ERR_FATAL, "Z_CheckHeap: block size does not touch the next block\n" );
+		if ((byte *)block + block->size != (byte *)block->next)
+		{
+			Com_Error(ERR_FATAL, "Z_CheckHeap: block size does not touch the next block\n");
 		}
-		if ( block->next->prev != block ) {
-			Com_Error( ERR_FATAL, "Z_CheckHeap: next block doesn't have proper back link\n" );
+		if (block->next->prev != block)
+		{
+			Com_Error(ERR_FATAL, "Z_CheckHeap: next block doesn't have proper back link\n");
 		}
-		if ( !block->tag && !block->next->tag ) {
-			Com_Error( ERR_FATAL, "Z_CheckHeap: two consecutive free blocks\n" );
+		if (!block->tag && !block->next->tag)
+		{
+			Com_Error(ERR_FATAL, "Z_CheckHeap: two consecutive free blocks\n");
 		}
 	}
 }
 
-
-/*
-========================
-Z_LogZoneHeap
-========================
-*/
-void Z_PrintZoneHeap( memzone_t *zone, char *name ) {
+void Z_PrintZoneHeap(memzone_t *zone, char *name)
+{
 #ifdef ZONE_DEBUG
 	char dump[32], *ptr;
 	int i, j;
 #endif
-	memblock_t  *block;
+	memblock_t *block;
 	int size, allocSize, numBlocks;
 
 	size = allocSize = numBlocks = 0;
-	Com_Printf(CON_CHANNEL_SYSTEM,"\r\n================\r\n%s log\r\n================\r\n", name );
-	for ( block = zone->blocklist.next ; block->next != &zone->blocklist; block = block->next ) {
-		if ( block->tag ) {
+	Com_Printf(CON_CHANNEL_SYSTEM, "\r\n================\r\n%s log\r\n================\r\n", name);
+	for (block = zone->blocklist.next; block->next != &zone->blocklist; block = block->next)
+	{
+		if (block->tag)
+		{
 #ifdef ZONE_DEBUG
-			ptr = ( (char *) block ) + sizeof( memblock_t );
+			ptr = ((char *)block) + sizeof(memblock_t);
 			j = 0;
-			for ( i = 0; i < 20 && i < block->d.allocSize; i++ ) {
-				if ( ptr[i] >= 32 && ptr[i] < 127 ) {
+			for (i = 0; i < 20 && i < block->d.allocSize; i++)
+			{
+				if (ptr[i] >= 32 && ptr[i] < 127)
+				{
 					dump[j++] = ptr[i];
-				} else {
+				}
+				else
+				{
 					dump[j++] = '_';
 				}
 			}
 			dump[j] = '\0';
-			Com_Printf(CON_CHANNEL_SYSTEM,"size = %8d: %s, line: %d (%s) [%s]\r\n", block->d.allocSize, block->d.file, block->d.line, block->d.label, dump );
+			Com_Printf(CON_CHANNEL_SYSTEM, "size = %8d: %s, line: %d (%s) [%s]\r\n", block->d.allocSize, block->d.file,
+				block->d.line, block->d.label, dump);
 			allocSize += block->d.allocSize;
 #endif
 			size += block->size;
@@ -477,68 +457,67 @@ void Z_PrintZoneHeap( memzone_t *zone, char *name ) {
 	}
 #ifdef ZONE_DEBUG
 	// subtract debug memory
-	size -= numBlocks * sizeof( zonedebug_t );
+	size -= numBlocks * sizeof(zonedebug_t);
 #else
-	allocSize = numBlocks * sizeof( memblock_t ); // + 32 bit alignment
+	allocSize = numBlocks * sizeof(memblock_t); // + 32 bit alignment
 #endif
-	Com_Printf(CON_CHANNEL_SYSTEM, "%d %s memory in %d blocks\r\n", size, name, numBlocks );
-	Com_Printf(CON_CHANNEL_SYSTEM, "%d %s memory overhead\r\n", size - allocSize, name );
+	Com_Printf(CON_CHANNEL_SYSTEM, "%d %s memory in %d blocks\r\n", size, name, numBlocks);
+	Com_Printf(CON_CHANNEL_SYSTEM, "%d %s memory overhead\r\n", size - allocSize, name);
 }
 
-/*
-========================
-Z_LogHeap
-========================
-*/
-void Z_PrintHeap_f( void ) {
-	Z_PrintZoneHeap( mainzone, "MAIN" );
-	Z_PrintZoneHeap( smallzone, "SMALL" );
+void Z_PrintHeap_f(void)
+{
+	Z_PrintZoneHeap(mainzone, "MAIN");
+	Z_PrintZoneHeap(smallzone, "SMALL");
 }
 
-
-/*
-========================
-Z_LogZoneHeap
-========================
-*/
-void Z_LogZoneHeap( memzone_t *zone, char *name ) {
+void Z_LogZoneHeap(memzone_t *zone, char *name)
+{
 #ifdef ZONE_DEBUG
 	char dump[32], *ptr;
 	int i, j;
 #endif
-	memblock_t  *block;
+	memblock_t *block;
 	char buf[4096];
 	int size, allocSize, numBlocks;
-    fileHandle_t zonelogfile;
+	fileHandle_t zonelogfile;
 
-
-	if ( !FS_Initialized() ) {
+	if (!FS_Initialized())
+	{
 		return;
 	}
 
-    zonelogfile = FS_FOpenFileAppend("zonedebug.log");
+	zonelogfile = FS_FOpenFileAppend("zonedebug.log");
 
-    if ( !zonelogfile ) {
+	if (!zonelogfile)
+	{
 		return;
 	}
 	size = allocSize = numBlocks = 0;
-	Com_sprintf( buf, sizeof( buf ), "\r\n================\r\n%s log\r\n================\r\n", name );
-	FS_Write( buf, strlen( buf ), zonelogfile );
-	for ( block = zone->blocklist.next ; block->next != &zone->blocklist; block = block->next ) {
-		if ( block->tag ) {
+	Com_sprintf(buf, sizeof(buf), "\r\n================\r\n%s log\r\n================\r\n", name);
+	FS_Write(buf, strlen(buf), zonelogfile);
+	for (block = zone->blocklist.next; block->next != &zone->blocklist; block = block->next)
+	{
+		if (block->tag)
+		{
 #ifdef ZONE_DEBUG
-			ptr = ( (char *) block ) + sizeof( memblock_t );
+			ptr = ((char *)block) + sizeof(memblock_t);
 			j = 0;
-			for ( i = 0; i < 20 && i < block->d.allocSize; i++ ) {
-				if ( ptr[i] >= 32 && ptr[i] < 127 ) {
+			for (i = 0; i < 20 && i < block->d.allocSize; i++)
+			{
+				if (ptr[i] >= 32 && ptr[i] < 127)
+				{
 					dump[j++] = ptr[i];
-				} else {
+				}
+				else
+				{
 					dump[j++] = '_';
 				}
 			}
 			dump[j] = '\0';
-			Com_sprintf( buf, sizeof( buf ), "size = %8d: %s, line: %d (%s) [%s]\r\n", block->d.allocSize, block->d.file, block->d.line, block->d.label, dump );
-			FS_Write( buf, strlen( buf ), zonelogfile );
+			Com_sprintf(buf, sizeof(buf), "size = %8d: %s, line: %d (%s) [%s]\r\n", block->d.allocSize, block->d.file,
+				block->d.line, block->d.label, dump);
+			FS_Write(buf, strlen(buf), zonelogfile);
 			allocSize += block->d.allocSize;
 #endif
 			size += block->size;
@@ -547,120 +526,114 @@ void Z_LogZoneHeap( memzone_t *zone, char *name ) {
 	}
 #ifdef ZONE_DEBUG
 	// subtract debug memory
-	size -= numBlocks * sizeof( zonedebug_t );
+	size -= numBlocks * sizeof(zonedebug_t);
 #else
-	allocSize = numBlocks * sizeof( memblock_t ); // + 32 bit alignment
+	allocSize = numBlocks * sizeof(memblock_t); // + 32 bit alignment
 #endif
-	Com_sprintf( buf, sizeof( buf ), "%d %s memory in %d blocks\r\n", size, name, numBlocks );
-	FS_Write( buf, strlen( buf ), zonelogfile );
-	Com_sprintf( buf, sizeof( buf ), "%d %s memory overhead\r\n", size - allocSize, name );
-	FS_Write( buf, strlen( buf ), zonelogfile );
+	Com_sprintf(buf, sizeof(buf), "%d %s memory in %d blocks\r\n", size, name, numBlocks);
+	FS_Write(buf, strlen(buf), zonelogfile);
+	Com_sprintf(buf, sizeof(buf), "%d %s memory overhead\r\n", size - allocSize, name);
+	FS_Write(buf, strlen(buf), zonelogfile);
 
-	FS_FCloseFile( zonelogfile );
+	FS_FCloseFile(zonelogfile);
 	zonelogfile = 0;
 }
 
-
-/*
-========================
-Z_LogHeap
-========================
-*/
-void Z_LogHeap( void ) {
-	Z_LogZoneHeap( mainzone, "MAIN" );
-	Z_LogZoneHeap( smallzone, "SMALL" );
+void Z_LogHeap(void)
+{
+	Z_LogZoneHeap(mainzone, "MAIN");
+	Z_LogZoneHeap(smallzone, "SMALL");
 }
 
 // static mem blocks to reduce a lot of small zone overhead
-typedef struct memstatic_s {
+typedef struct memstatic_s
+{
 	memblock_t b;
 	byte mem[2];
 } memstatic_t;
 
 // bk001204 - initializer brackets
-memstatic_t emptystring =
-{ {( sizeof( memblock_t ) + 2 + 3 ) & ~3, TAG_STATIC, NULL, NULL, ZONEID}, {'\0', '\0'} };
-memstatic_t numberstring[] = {
-	{ {( sizeof( memstatic_t ) + 3 ) & ~3, TAG_STATIC, NULL, NULL, ZONEID}, {'0', '\0'} },
-	{ {( sizeof( memstatic_t ) + 3 ) & ~3, TAG_STATIC, NULL, NULL, ZONEID}, {'1', '\0'} },
-	{ {( sizeof( memstatic_t ) + 3 ) & ~3, TAG_STATIC, NULL, NULL, ZONEID}, {'2', '\0'} },
-	{ {( sizeof( memstatic_t ) + 3 ) & ~3, TAG_STATIC, NULL, NULL, ZONEID}, {'3', '\0'} },
-	{ {( sizeof( memstatic_t ) + 3 ) & ~3, TAG_STATIC, NULL, NULL, ZONEID}, {'4', '\0'} },
-	{ {( sizeof( memstatic_t ) + 3 ) & ~3, TAG_STATIC, NULL, NULL, ZONEID}, {'5', '\0'} },
-	{ {( sizeof( memstatic_t ) + 3 ) & ~3, TAG_STATIC, NULL, NULL, ZONEID}, {'6', '\0'} },
-	{ {( sizeof( memstatic_t ) + 3 ) & ~3, TAG_STATIC, NULL, NULL, ZONEID}, {'7', '\0'} },
-	{ {( sizeof( memstatic_t ) + 3 ) & ~3, TAG_STATIC, NULL, NULL, ZONEID}, {'8', '\0'} },
-	{ {( sizeof( memstatic_t ) + 3 ) & ~3, TAG_STATIC, NULL, NULL, ZONEID}, {'9', '\0'} }
-};
+memstatic_t emptystring = { { (sizeof(memblock_t) + 2 + 3) & ~3, TAG_STATIC, NULL, NULL, ZONEID }, { '\0', '\0' } };
+memstatic_t numberstring[] = { { { (sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, NULL, NULL, ZONEID }, { '0', '\0' } },
+	{ { (sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, NULL, NULL, ZONEID }, { '1', '\0' } },
+	{ { (sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, NULL, NULL, ZONEID }, { '2', '\0' } },
+	{ { (sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, NULL, NULL, ZONEID }, { '3', '\0' } },
+	{ { (sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, NULL, NULL, ZONEID }, { '4', '\0' } },
+	{ { (sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, NULL, NULL, ZONEID }, { '5', '\0' } },
+	{ { (sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, NULL, NULL, ZONEID }, { '6', '\0' } },
+	{ { (sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, NULL, NULL, ZONEID }, { '7', '\0' } },
+	{ { (sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, NULL, NULL, ZONEID }, { '8', '\0' } },
+	{ { (sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, NULL, NULL, ZONEID }, { '9', '\0' } } };
 
 /*
-========================
 CopyString
 
  NOTE:	never write over the memory CopyString returns because
 		memory from a memstatic_t might be returned
-========================
 */
-char *CopyString( const char *in ) {
-	char    *out;
+char *CopyString(const char *in)
+{
+	char *out;
 
-	if ( !in[0] ) {
-		return ( (char *)&emptystring ) + sizeof( memblock_t );
-	} else if ( !in[1] )     {
-		if ( in[0] >= '0' && in[0] <= '9' ) {
-			return ( (char *)&numberstring[in[0] - '0'] ) + sizeof( memblock_t );
+	if (!in[0])
+	{
+		return ((char *)&emptystring) + sizeof(memblock_t);
+	}
+	else if (!in[1])
+	{
+		if (in[0] >= '0' && in[0] <= '9')
+		{
+			return ((char *)&numberstring[in[0] - '0']) + sizeof(memblock_t);
 		}
 	}
-	out = S_Malloc( strlen( in ) + 1 );
-	strcpy( out, in );
+	out = S_Malloc(strlen(in) + 1);
+	strcpy(out, in);
 	return out;
 }
 
-
 char *__cdecl Z_TryMallocGarbage(int size, const char *name, int type)
 {
-  char *buf;
+	char *buf;
 
-  buf = Z_Malloc(size + 164);
-  if ( buf )
-  {
-    buf += 164;
-    //track_z_alloc(size + 72, name, type, buf, 0, 164);
-  }
-  return buf;
+	buf = Z_Malloc(size + 164);
+	if (buf)
+	{
+		buf += 164;
+		// track_z_alloc(size + 72, name, type, buf, 0, 164);
+	}
+	return buf;
 }
 
 #define CON_CHANNEL_SYSTEM 0
 
 void __cdecl Z_MallocFailed(int size)
 {
-  Com_PrintError(CON_CHANNEL_SYSTEM, "Failed to Z_Malloc %i bytes\n", size);
-  Sys_OutOfMemErrorInternal("C:\\projects_pc\\cod\\codsrc\\src\\universal\\com_memory.cpp", 436);
+	Com_PrintError(CON_CHANNEL_SYSTEM, "Failed to Z_Malloc %i bytes\n", size);
+	Sys_OutOfMemErrorInternal("C:\\projects_pc\\cod\\codsrc\\src\\universal\\com_memory.cpp", 436);
 }
 
 char *__cdecl Z_MallocGarbage(int size, const char *name, int type)
 {
-  char *buf;
+	char *buf;
 
-  buf = Z_TryMallocGarbage(size, name, type);
-  if ( !buf )
-  {
-    Z_MallocFailed(size + 164);
-  }
-  return buf;
+	buf = Z_TryMallocGarbage(size, name, type);
+	if (!buf)
+	{
+		Z_MallocFailed(size + 164);
+	}
+	return buf;
 }
 
-void *Hunk_Alloc( int size, const char* name, int type ) {
-    return Hunk_AllocInternal(size);
+void *Hunk_Alloc(int size, const char *name, int type)
+{
+	return Hunk_AllocInternal(size);
 }
-
-
 
 #if 0
 
-#define HUNK_MAGIC  0x89537892
-#define HUNK_FREE_MAGIC 0x89537893
-#define HUNK_HEAD_MAGIC 0x89537890
+	#define HUNK_MAGIC 0x89537892
+	#define HUNK_FREE_MAGIC 0x89537893
+	#define HUNK_HEAD_MAGIC 0x89537890
 
 typedef struct {
 	int permanent;
@@ -672,11 +645,11 @@ typedef struct hunkblock_s {
 	struct hunkblock_s *next;
 	struct hunkblock_s *prev;
 	int size;
-#ifdef HUNK_DEBUG
+	#ifdef HUNK_DEBUG
     char *label;
 	char *file;
 	int line;
-#endif
+	#endif
 } hunkblock_t;
 
 static hunkblock_t *hunk_permanent;
@@ -684,19 +657,16 @@ static hunkblock_t *hunk_temp;
 static hunkUsed_t hunk_used;
 
 
-
 /*
-=================
 Hunk_Alloc
 
 Allocate permanent (until the hunk is cleared) memory
-=================
 */
-#ifdef HUNK_DEBUG
+	#ifdef HUNK_DEBUG
 void *Hunk_AllocDebug( unsigned int size, char *label, char *file, int line ) {
-#else
+	#else
 void *Hunk_Alloc( int size ) {
-#endif
+	#endif
     void* buf;
 
 	if(size < 1)
@@ -725,13 +695,13 @@ void *Hunk_Alloc( int size ) {
     newmem->size = size;
     newmem->magic = HUNK_MAGIC;
 
-#ifdef HUNK_DEBUG
+	#ifdef HUNK_DEBUG
 	{
 		newmem->file = file;
 		newmem->label = label;
 		newmem->line = line;
 	}
-#endif
+	#endif
 
 	buf = ( (byte *) newmem ) + sizeof( hunkblock_t );
 
@@ -751,7 +721,7 @@ void Hunk_Free(void* m)
 		return;
 	}
 
-    hunkblock_t* hblock = (hunkblock_t*)((byte*)m - sizeof(hunkblock_t));   
+    hunkblock_t* hblock = (hunkblock_t*)((byte*)m - sizeof(hunkblock_t));
     if(hblock->magic != HUNK_MAGIC)
     {
         if(hblock->magic == HUNK_FREE_MAGIC)
@@ -787,23 +757,18 @@ void Hunk_Init()
 	hunk_temp->size = 0;
 	hunk_permanent->size = 0;
 
-#ifdef HUNK_DEBUG
+	#ifdef HUNK_DEBUG
     hunk_temp->label = "Hunk_temp_head";
 	hunk_temp->file = "Hunk_temp_head";
 	hunk_temp->line = 0;
     hunk_permanent->label = "Hunk_permanent_head";
 	hunk_permanent->file = "Hunk_permanent_head";
 	hunk_permanent->line = 0;
-#endif
+	#endif
 
 	com_hunkused = Cvar_RegisterInt("com_hunkused",0,0,0x7fffffff, CVAR_ROM, "Amount of used hunk memory");
 }
 
-/*
-=================
-Hunk_Log
-=================
-*/
 void Hunk_Log( void ) {
 	hunkblock_t *block;
 	char buf[4096];
@@ -829,13 +794,13 @@ void Hunk_Log( void ) {
 	Com_sprintf( buf, sizeof( buf ), "\r\n================\r\nHunk log\r\n================\r\n" );
 	FS_Write( buf, strlen( buf ), hunklogfile );
 	for ( block = hunk_permanent->next ; block != hunk_permanent; block = block->next ) {
-#ifdef HUNK_DEBUG
+	#ifdef HUNK_DEBUG
 		Com_sprintf( buf, sizeof( buf ), "size = %8d: %s, line: %d (%s)\r\n", block->size, block->file, block->line, block->label );
 		FS_Write( buf, strlen( buf ), hunklogfile );
-#else
+	#else
 		Com_sprintf( buf, sizeof( buf ), "size = %8d\r\n", block->size );
-		FS_Write( buf, strlen( buf ), hunklogfile );		
-#endif
+		FS_Write( buf, strlen( buf ), hunklogfile );
+	#endif
 		size += block->size;
 		numBlocks++;
 	}

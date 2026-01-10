@@ -2,8 +2,6 @@
 
 struct LocalizeEntry
 {
-  const char *value;
-  const char *name;
+	const char *value;
+	const char *name;
 };
-
-

@@ -1,181 +1,69 @@
-/*
-C standard version of vsnprintf located at msvcrt.dll does lockup in a critical section under certain conditions.
-_lock() function call will not return.
-Replacement function below. However this could just move the real problem around. We will see.
-*/
-
-/* $Id: snprintf.c,v 1.9 2008/01/20 14:02:00 holger Exp $ */
-
-/*
- * Copyright (c) 1995 Patrick Powell.
- *
- * This code is based on code written by Patrick Powell <papowell@astart.com>.
- * It may be used for any purpose as long as this notice remains intact on all
- * source code distributions.
- */
-
-/*
- * Copyright (c) 2008 Holger Weiss.
- *
- * This version of the code is maintained by Holger Weiss <holger@jhweiss.de>.
- * My changes to the code may freely be used, modified and/or redistributed for
- * any purpose.  It would be nice if additions and fixes to this file (including
- * trivial code cleanups) would be sent back in order to let me include them in
- * the version available at <http://www.jhweiss.de/software/snprintf.html>.
- * However, this is not a requirement for using or redistributing (possibly
- * modified) versions of this file, nor is leaving this notice intact mandatory.
- */
-
-/*
- * History
- *
- * 2008-01-20 Holger Weiss <holger@jhweiss.de> for C99-snprintf 1.1:
- *
- * 	Fixed the detection of infinite floating point values on IRIX (and
- * 	possibly other systems) and applied another few minor cleanups.
- *
- * 2008-01-06 Holger Weiss <holger@jhweiss.de> for C99-snprintf 1.0:
- *
- * 	Added a lot of new features, fixed many bugs, and incorporated various
- * 	improvements done by Andrew Tridgell <tridge@samba.org>, Russ Allbery
- * 	<rra@stanford.edu>, Hrvoje Niksic <hniksic@xemacs.org>, Damien Miller
- * 	<djm@mindrot.org>, and others for the Samba, INN, Wget, and OpenSSH
- * 	projects.  The additions include: support the "e", "E", "g", "G", and
- * 	"F" conversion specifiers (and use conversion style "f" or "F" for the
- * 	still unsupported "a" and "A" specifiers); support the "hh", "ll", "j",
- * 	"t", and "z" length modifiers; support the "#" flag and the (non-C99)
- * 	"'" flag; use localeconv(3) (if available) to get both the current
- * 	locale's decimal point character and the separator between groups of
- * 	digits; fix the handling of various corner cases of field width and
- * 	precision specifications; fix various floating point conversion bugs;
- * 	handle infinite and NaN floating point values; don't attempt to write to
- * 	the output buffer (which may be NULL) if a size of zero was specified;
- * 	check for integer overflow of the field width, precision, and return
- * 	values and during the floating point conversion; use the OUTCHAR() macro
- * 	instead of a function for better performance; provide asprintf(3) and
- * 	vasprintf(3) functions; add new test cases.  The replacement functions
- * 	have been renamed to use an "rpl_" prefix, the function calls in the
- * 	main project (and in this file) must be redefined accordingly for each
- * 	replacement function which is needed (by using Autoconf or other means).
- * 	Various other minor improvements have been applied and the coding style
- * 	was cleaned up for consistency.
- *
- * 2007-07-23 Holger Weiss <holger@jhweiss.de> for Mutt 1.5.13:
- *
- * 	C99 compliant snprintf(3) and vsnprintf(3) functions return the number
- * 	of characters that would have been written to a sufficiently sized
- * 	buffer (excluding the '\0').  The original code simply returned the
- * 	length of the resulting output string, so that's been fixed.
- *
- * 1998-03-05 Michael Elkins <me@mutt.org> for Mutt 0.90.8:
- *
- * 	The original code assumed that both snprintf(3) and vsnprintf(3) were
- * 	missing.  Some systems only have snprintf(3) but not vsnprintf(3), so
- * 	the code is now broken down under HAVE_SNPRINTF and HAVE_VSNPRINTF.
- *
- * 1998-01-27 Thomas Roessler <roessler@does-not-exist.org> for Mutt 0.89i:
- *
- * 	The PGP code was using unsigned hexadecimal formats.  Unfortunately,
- * 	unsigned formats simply didn't work.
- *
- * 1997-10-22 Brandon Long <blong@fiction.net> for Mutt 0.87.1:
- *
- * 	Ok, added some minimal floating point support, which means this probably
- * 	requires libm on most operating systems.  Don't yet support the exponent
- * 	(e,E) and sigfig (g,G).  Also, fmtint() was pretty badly broken, it just
- * 	wasn't being exercised in ways which showed it, so that's been fixed.
- * 	Also, formatted the code to Mutt conventions, and removed dead code left
- * 	over from the original.  Also, there is now a builtin-test, run with:
- * 	gcc -DTEST_SNPRINTF -o snprintf snprintf.c -lm && ./snprintf
- *
- * 2996-09-15 Brandon Long <blong@fiction.net> for Mutt 0.43:
- *
- * 	This was ugly.  It is still ugly.  I opted out of floating point
- * 	numbers, but the formatter understands just about everything from the
- * 	normal C string format, at least as far as I can tell from the Solaris
- * 	2.5 printf(3S) man page.
- */
-
-/*
- * ToDo
- *
- * - Add wide character support.
- * - Add support for "%a" and "%A" conversions.
- * - Create test routines which predefine the expected results.  Our test cases
- *   usually expose bugs in system implementations rather than in ours :-)
- */
-
-
-
 #include <math.h>	/* For pow(3), NAN, and INFINITY. */
-#include <string.h>	/* For strcmp(3). */
+#include <string.h> /* For strcmp(3). */
 #include <stdio.h>	/* For NULL, size_t, vsnprintf(3), and vasprintf(3). */
 
 #ifdef VA_START
-#undef VA_START
-#endif	/* defined(VA_START) */
+	#undef VA_START
+#endif /* defined(VA_START) */
 
 #ifdef VA_SHIFT
-#undef VA_SHIFT
-#endif	/* defined(VA_SHIFT) */
+	#undef VA_SHIFT
+#endif /* defined(VA_SHIFT) */
 
 #include <stdarg.h>
 
 #define VA_START(ap, last) va_start(ap, last)
 #define VA_SHIFT(ap, value, type) /* No-op for ANSI C. */
 
-
-#include <stdlib.h>	/* For malloc(3). */
+#include <stdlib.h> /* For malloc(3). */
 
 #ifdef VA_COPY
-#undef VA_COPY
-#endif	/* defined(VA_COPY) */
+	#undef VA_COPY
+#endif /* defined(VA_COPY) */
 
 #ifdef VA_END_COPY
-#undef VA_END_COPY
-#endif	/* defined(VA_END_COPY) */
+	#undef VA_END_COPY
+#endif /* defined(VA_END_COPY) */
 
 #define VA_COPY(dest, src) va_copy(dest, src)
 #define VA_END_COPY(ap) va_end(ap)
 
-#include <errno.h>	/* For ERANGE and errno. */
-#include <limits.h>	/* For *_MAX. */
-#include <inttypes.h>	/* For intmax_t (if not defined in <stdint.h>). */
-#include <locale.h>	/* For localeconv(3). */
-#include <stddef.h>	/* For ptrdiff_t. */
-#include <stdint.h>	/* For intmax_t. */
-
+#include <errno.h>	  /* For ERANGE and errno. */
+#include <limits.h>	  /* For *_MAX. */
+#include <inttypes.h> /* For intmax_t (if not defined in <stdint.h>). */
+#include <locale.h>	  /* For localeconv(3). */
+#include <stddef.h>	  /* For ptrdiff_t. */
+#include <stdint.h>	  /* For intmax_t. */
 
 /* Support for unsigned long long int.  We may also need ULLONG_MAX. */
-#ifndef ULONG_MAX	/* We may need ULONG_MAX as a fallback. */
-#ifdef UINT_MAX
-#define ULONG_MAX UINT_MAX
-#else
-#define ULONG_MAX INT_MAX
-#endif	/* defined(UINT_MAX) */
-#endif	/* !defined(ULONG_MAX) */
+#ifndef ULONG_MAX /* We may need ULONG_MAX as a fallback. */
+	#ifdef UINT_MAX
+		#define ULONG_MAX UINT_MAX
+	#else
+		#define ULONG_MAX INT_MAX
+	#endif /* defined(UINT_MAX) */
+#endif	   /* !defined(ULONG_MAX) */
 
 #ifdef ULLONG
-#undef ULLONG
-#endif	/* defined(ULLONG) */
+	#undef ULLONG
+#endif /* defined(ULLONG) */
 
 #define ULLONG uint64_t
 
 #ifndef ULLONG_MAX
-#define ULLONG_MAX ULONG_MAX
+	#define ULLONG_MAX ULONG_MAX
 #endif
 
 /* Support for uintmax_t.  We also need UINTMAX_MAX. */
 #ifdef UINTMAX_T
-#undef UINTMAX_T
-#endif	/* defined(UINTMAX_T) */
+	#undef UINTMAX_T
+#endif /* defined(UINTMAX_T) */
 
 #define UINTMAX_T uintmax_t
 
 #ifndef UINTMAX_MAX
-#define UINTMAX_MAX ULLONG_MAX
-#endif	/* !defined(UINTMAX_MAX) */
-
+	#define UINTMAX_MAX ULLONG_MAX
+#endif /* !defined(UINTMAX_MAX) */
 
 #define LDOUBLE long double
 #define LLONG int64_t
@@ -183,15 +71,14 @@ Replacement function below. However this could just move the real problem around
 #define UINTPTR_T uintptr_t
 #define PTRDIFF_T ptrdiff_t
 
-
 /*
  * We need an unsigned integer type corresponding to ptrdiff_t (cf. C99:
  * 7.19.6.1, 7).  However, we'll simply use PTRDIFF_T and convert it to an
  * unsigned type if necessary.  This should work just fine in practice.
  */
 #ifndef UPTRDIFF_T
-#define UPTRDIFF_T PTRDIFF_T
-#endif	/* !defined(UPTRDIFF_T) */
+	#define UPTRDIFF_T PTRDIFF_T
+#endif /* !defined(UPTRDIFF_T) */
 
 /*
  * We need a signed integer type corresponding to size_t (cf. C99: 7.19.6.1, 7).
@@ -199,83 +86,84 @@ Replacement function below. However this could just move the real problem around
  * necessary.  This should work just fine in practice.
  */
 #ifndef SSIZE_T
-#define SSIZE_T size_t
-#endif	/* !defined(SSIZE_T) */
+	#define SSIZE_T size_t
+#endif /* !defined(SSIZE_T) */
 
 /* Either ERANGE or E2BIG should be available everywhere. */
 #ifndef ERANGE
-#define ERANGE E2BIG
-#endif	/* !defined(ERANGE) */
+	#define ERANGE E2BIG
+#endif /* !defined(ERANGE) */
 
 #ifndef EOVERFLOW
-#define EOVERFLOW ERANGE
-#endif	/* !defined(EOVERFLOW) */
+	#define EOVERFLOW ERANGE
+#endif /* !defined(EOVERFLOW) */
 
 /*
  * Buffer size to hold the octal string representation of UINT128_MAX without
  * nul-termination ("3777777777777777777777777777777777777777777").
  */
 #ifdef MAX_CONVERT_LENGTH
-#undef MAX_CONVERT_LENGTH
-#endif	/* defined(MAX_CONVERT_LENGTH) */
-#define MAX_CONVERT_LENGTH      43
+	#undef MAX_CONVERT_LENGTH
+#endif /* defined(MAX_CONVERT_LENGTH) */
+#define MAX_CONVERT_LENGTH 43
 
 /* Format read states. */
-#define PRINT_S_DEFAULT         0
-#define PRINT_S_FLAGS           1
-#define PRINT_S_WIDTH           2
-#define PRINT_S_DOT             3
-#define PRINT_S_PRECISION       4
-#define PRINT_S_MOD             5
-#define PRINT_S_CONV            6
+#define PRINT_S_DEFAULT 0
+#define PRINT_S_FLAGS 1
+#define PRINT_S_WIDTH 2
+#define PRINT_S_DOT 3
+#define PRINT_S_PRECISION 4
+#define PRINT_S_MOD 5
+#define PRINT_S_CONV 6
 
 /* Format flags. */
-#define PRINT_F_MINUS           (1 << 0)
-#define PRINT_F_PLUS            (1 << 1)
-#define PRINT_F_SPACE           (1 << 2)
-#define PRINT_F_NUM             (1 << 3)
-#define PRINT_F_ZERO            (1 << 4)
-#define PRINT_F_QUOTE           (1 << 5)
-#define PRINT_F_UP              (1 << 6)
-#define PRINT_F_UNSIGNED        (1 << 7)
-#define PRINT_F_TYPE_G          (1 << 8)
-#define PRINT_F_TYPE_E          (1 << 9)
+#define PRINT_F_MINUS (1 << 0)
+#define PRINT_F_PLUS (1 << 1)
+#define PRINT_F_SPACE (1 << 2)
+#define PRINT_F_NUM (1 << 3)
+#define PRINT_F_ZERO (1 << 4)
+#define PRINT_F_QUOTE (1 << 5)
+#define PRINT_F_UP (1 << 6)
+#define PRINT_F_UNSIGNED (1 << 7)
+#define PRINT_F_TYPE_G (1 << 8)
+#define PRINT_F_TYPE_E (1 << 9)
 
 /* Conversion flags. */
-#define PRINT_C_CHAR            1
-#define PRINT_C_SHORT           2
-#define PRINT_C_LONG            3
-#define PRINT_C_LLONG           4
-#define PRINT_C_LDOUBLE         5
-#define PRINT_C_SIZE            6
-#define PRINT_C_PTRDIFF         7
-#define PRINT_C_INTMAX          8
+#define PRINT_C_CHAR 1
+#define PRINT_C_SHORT 2
+#define PRINT_C_LONG 3
+#define PRINT_C_LLONG 4
+#define PRINT_C_LDOUBLE 5
+#define PRINT_C_SIZE 6
+#define PRINT_C_PTRDIFF 7
+#define PRINT_C_INTMAX 8
 
 #ifndef MAX
-#define MAX(x, y) ((x >= y) ? x : y)
-#endif	/* !defined(MAX) */
+	#define MAX(x, y) ((x >= y) ? x : y)
+#endif /* !defined(MAX) */
 #ifndef CHARTOINT
-#define CHARTOINT(ch) (ch - '0')
-#endif	/* !defined(CHARTOINT) */
+	#define CHARTOINT(ch) (ch - '0')
+#endif /* !defined(CHARTOINT) */
 #ifndef ISDIGIT
-#define ISDIGIT(ch) ('0' <= (unsigned char)ch && (unsigned char)ch <= '9')
-#endif	/* !defined(ISDIGIT) */
+	#define ISDIGIT(ch) ('0' <= (unsigned char)ch && (unsigned char)ch <= '9')
+#endif /* !defined(ISDIGIT) */
 #ifndef ISNAN
-#define ISNAN(x) (x != x)
-#endif	/* !defined(ISNAN) */
+	#define ISNAN(x) (x != x)
+#endif /* !defined(ISNAN) */
 #ifndef ISINF
-#define ISINF(x) (x != 0.0 && x + x == x)
-#endif	/* !defined(ISINF) */
+	#define ISINF(x) (x != 0.0 && x + x == x)
+#endif /* !defined(ISINF) */
 
 #ifdef OUTCHAR
-#undef OUTCHAR
-#endif	/* defined(OUTCHAR) */
-#define OUTCHAR(str, len, size, ch)                                          \
-do {                                                                         \
-	if (len + 1 < size)                                                  \
-		str[len] = ch;                                               \
-	(len)++;                                                             \
-} while (/* CONSTCOND */ 0)
+	#undef OUTCHAR
+#endif /* defined(OUTCHAR) */
+#define OUTCHAR(str, len, size, ch) \
+	do                              \
+	{                               \
+		if (len + 1 < size)         \
+			str[len] = ch;          \
+		(len)++;                    \
+	} while (/* CONSTCOND */ 0)
 
 static void fmtstr(char *, size_t *, size_t, const char *, int, int, int);
 static void fmtint(char *, size_t *, size_t, INTMAX_T, int, int, int, int);
@@ -328,7 +216,8 @@ int Q_vsnprintf(char *str, size_t size, const char *format, va_list args)
 		size = 0;
 
 	while (ch != '\0')
-		switch (state) {
+		switch (state)
+		{
 		case PRINT_S_DEFAULT:
 			if (ch == '%')
 				state = PRINT_S_FLAGS;
@@ -337,7 +226,8 @@ int Q_vsnprintf(char *str, size_t size, const char *format, va_list args)
 			ch = *format++;
 			break;
 		case PRINT_S_FLAGS:
-			switch (ch) {
+			switch (ch)
+			{
 			case '-':
 				flags |= PRINT_F_MINUS;
 				ch = *format++;
@@ -358,7 +248,7 @@ int Q_vsnprintf(char *str, size_t size, const char *format, va_list args)
 				flags |= PRINT_F_ZERO;
 				ch = *format++;
 				break;
-			case '\'':	/* SUSv2 flag (not in C99). */
+			case '\'': /* SUSv2 flag (not in C99). */
 				flags |= PRINT_F_QUOTE;
 				ch = *format++;
 				break;
@@ -368,48 +258,60 @@ int Q_vsnprintf(char *str, size_t size, const char *format, va_list args)
 			}
 			break;
 		case PRINT_S_WIDTH:
-			if (ISDIGIT(ch)) {
+			if (ISDIGIT(ch))
+			{
 				ch = CHARTOINT(ch);
-				if (width > (INT_MAX - ch) / 10) {
+				if (width > (INT_MAX - ch) / 10)
+				{
 					overflow = 1;
 					goto out;
 				}
 				width = 10 * width + ch;
 				ch = *format++;
-			} else if (ch == '*') {
+			}
+			else if (ch == '*')
+			{
 				/*
 				 * C99 says: "A negative field width argument is
 				 * taken as a `-' flag followed by a positive
 				 * field width." (7.19.6.1, 5)
 				 */
-				if ((width = va_arg(args, int)) < 0) {
+				if ((width = va_arg(args, int)) < 0)
+				{
 					flags |= PRINT_F_MINUS;
 					width = -width;
 				}
 				ch = *format++;
 				state = PRINT_S_DOT;
-			} else
+			}
+			else
 				state = PRINT_S_DOT;
 			break;
 		case PRINT_S_DOT:
-			if (ch == '.') {
+			if (ch == '.')
+			{
 				state = PRINT_S_PRECISION;
 				ch = *format++;
-			} else
+			}
+			else
 				state = PRINT_S_MOD;
 			break;
 		case PRINT_S_PRECISION:
 			if (precision == -1)
 				precision = 0;
-			if (ISDIGIT(ch)) {
+			if (ISDIGIT(ch))
+			{
 				ch = CHARTOINT(ch);
-				if (precision > (INT_MAX - ch) / 10) {
+				if (precision > (INT_MAX - ch) / 10)
+				{
 					overflow = 1;
 					goto out;
 				}
 				precision = 10 * precision + ch;
 				ch = *format++;
-			} else if (ch == '*') {
+			}
+			else if (ch == '*')
+			{
 				/*
 				 * C99 says: "A negative precision argument is
 				 * taken as if the precision were omitted."
@@ -419,25 +321,31 @@ int Q_vsnprintf(char *str, size_t size, const char *format, va_list args)
 					precision = -1;
 				ch = *format++;
 				state = PRINT_S_MOD;
-			} else
+			}
+			else
 				state = PRINT_S_MOD;
 			break;
 		case PRINT_S_MOD:
-			switch (ch) {
+			switch (ch)
+			{
 			case 'h':
 				ch = *format++;
-				if (ch == 'h') {	/* It's a char. */
+				if (ch == 'h')
+				{ /* It's a char. */
 					ch = *format++;
 					cflags = PRINT_C_CHAR;
-				} else
+				}
+				else
 					cflags = PRINT_C_SHORT;
 				break;
 			case 'l':
 				ch = *format++;
-				if (ch == 'l') {	/* It's a long long. */
+				if (ch == 'l')
+				{ /* It's a long long. */
 					ch = *format++;
 					cflags = PRINT_C_LLONG;
-				} else
+				}
+				else
 					cflags = PRINT_C_LONG;
 				break;
 			case 'L':
@@ -460,11 +368,13 @@ int Q_vsnprintf(char *str, size_t size, const char *format, va_list args)
 			state = PRINT_S_CONV;
 			break;
 		case PRINT_S_CONV:
-			switch (ch) {
+			switch (ch)
+			{
 			case 'd':
 				/* FALLTHROUGH */
 			case 'i':
-				switch (cflags) {
+				switch (cflags)
+				{
 				case PRINT_C_CHAR:
 					value = (signed char)va_arg(args, int);
 					break;
@@ -490,8 +400,7 @@ int Q_vsnprintf(char *str, size_t size, const char *format, va_list args)
 					value = va_arg(args, int);
 					break;
 				}
-				fmtint(str, &len, size, value, 10, width,
-				    precision, flags);
+				fmtint(str, &len, size, value, 10, width, precision, flags);
 				break;
 			case 'X':
 				flags |= PRINT_F_UP;
@@ -507,14 +416,13 @@ int Q_vsnprintf(char *str, size_t size, const char *format, va_list args)
 				if (base == 0)
 					base = 10;
 				flags |= PRINT_F_UNSIGNED;
-				switch (cflags) {
+				switch (cflags)
+				{
 				case PRINT_C_CHAR:
-					value = (unsigned char)va_arg(args,
-					    unsigned int);
+					value = (unsigned char)va_arg(args, unsigned int);
 					break;
 				case PRINT_C_SHORT:
-					value = (unsigned short int)va_arg(args,
-					    unsigned int);
+					value = (unsigned short int)va_arg(args, unsigned int);
 					break;
 				case PRINT_C_LONG:
 					value = va_arg(args, unsigned long int);
@@ -535,8 +443,7 @@ int Q_vsnprintf(char *str, size_t size, const char *format, va_list args)
 					value = va_arg(args, unsigned int);
 					break;
 				}
-				fmtint(str, &len, size, value, base, width,
-				    precision, flags);
+				fmtint(str, &len, size, value, base, width, precision, flags);
 				break;
 			case 'A':
 				/* Not yet supported, we'll use "%F". */
@@ -551,8 +458,7 @@ int Q_vsnprintf(char *str, size_t size, const char *format, va_list args)
 					fvalue = va_arg(args, LDOUBLE);
 				else
 					fvalue = va_arg(args, double);
-				fmtflt(str, &len, size, fvalue, width,
-				    precision, flags, &overflow);
+				fmtflt(str, &len, size, fvalue, width, precision, flags, &overflow);
 				if (overflow)
 					goto out;
 				break;
@@ -565,8 +471,7 @@ int Q_vsnprintf(char *str, size_t size, const char *format, va_list args)
 					fvalue = va_arg(args, LDOUBLE);
 				else
 					fvalue = va_arg(args, double);
-				fmtflt(str, &len, size, fvalue, width,
-				    precision, flags, &overflow);
+				fmtflt(str, &len, size, fvalue, width, precision, flags, &overflow);
 				if (overflow)
 					goto out;
 				break;
@@ -585,8 +490,7 @@ int Q_vsnprintf(char *str, size_t size, const char *format, va_list args)
 				 */
 				if (precision == 0)
 					precision = 1;
-				fmtflt(str, &len, size, fvalue, width,
-				    precision, flags, &overflow);
+				fmtflt(str, &len, size, fvalue, width, precision, flags, &overflow);
 				if (overflow)
 					goto out;
 				break;
@@ -596,8 +500,7 @@ int Q_vsnprintf(char *str, size_t size, const char *format, va_list args)
 				break;
 			case 's':
 				strvalue = va_arg(args, char *);
-				fmtstr(str, &len, size, strvalue, width,
-				    precision, flags);
+				fmtstr(str, &len, size, strvalue, width, precision, flags);
 				break;
 			case 'p':
 				/*
@@ -611,9 +514,9 @@ int Q_vsnprintf(char *str, size_t size, const char *format, va_list args)
 					 * We use the glibc format.  BSD prints
 					 * "0x0", SysV "0".
 					 */
-					fmtstr(str, &len, size, "(nil)", width,
-					    -1, flags);
-				else {
+					fmtstr(str, &len, size, "(nil)", width, -1, flags);
+				else
+				{
 					/*
 					 * We use the BSD/glibc format.  SysV
 					 * omits the "0x" prefix (which we emit
@@ -621,13 +524,12 @@ int Q_vsnprintf(char *str, size_t size, const char *format, va_list args)
 					 */
 					flags |= PRINT_F_NUM;
 					flags |= PRINT_F_UNSIGNED;
-					fmtint(str, &len, size,
-					    (UINTPTR_T)strvalue, 16, width,
-					    precision, flags);
+					fmtint(str, &len, size, (UINTPTR_T)strvalue, 16, width, precision, flags);
 				}
 				break;
 			case 'n':
-				switch (cflags) {
+				switch (cflags)
+				{
 				case PRINT_C_CHAR:
 					charptr = va_arg(args, signed char *);
 					*charptr = len;
@@ -669,10 +571,10 @@ int Q_vsnprintf(char *str, size_t size, const char *format, va_list args)
 					break;
 				}
 				break;
-			case '%':	/* Print a "%" character verbatim. */
+			case '%': /* Print a "%" character verbatim. */
 				OUTCHAR(str, len, size, ch);
 				break;
-			default:	/* Skip other characters. */
+			default: /* Skip other characters. */
 				break;
 			}
 			ch = *format++;
@@ -687,76 +589,77 @@ out:
 	else if (size > 0)
 		str[size - 1] = '\0';
 
-	if (overflow || len >= INT_MAX) {
+	if (overflow || len >= INT_MAX)
+	{
 		errno = overflow ? EOVERFLOW : ERANGE;
 		return -1;
 	}
 	return (int)len;
 }
 
-static void
-fmtstr(char *str, size_t *len, size_t size, const char *value, int width,
-       int precision, int flags)
+static void fmtstr(char *str, size_t *len, size_t size, const char *value, int width, int precision, int flags)
 {
-	int padlen, strln;	/* Amount to pad. */
+	int padlen, strln; /* Amount to pad. */
 	int noprecision = (precision == -1);
 
-	if (value == NULL)	/* We're forgiving. */
+	if (value == NULL) /* We're forgiving. */
 		value = "(null)";
 
 	/* If a precision was specified, don't read the string past it. */
-	for (strln = 0; value[strln] != '\0' &&
-	    (noprecision || strln < precision); strln++)
+	for (strln = 0; value[strln] != '\0' && (noprecision || strln < precision); strln++)
 		continue;
 
 	if ((padlen = width - strln) < 0)
 		padlen = 0;
-	if (flags & PRINT_F_MINUS)	/* Left justify. */
+	if (flags & PRINT_F_MINUS) /* Left justify. */
 		padlen = -padlen;
 
-	while (padlen > 0) {	/* Leading spaces. */
+	while (padlen > 0)
+	{ /* Leading spaces. */
 		OUTCHAR(str, *len, size, ' ');
 		padlen--;
 	}
-	while (*value != '\0' && (noprecision || precision-- > 0)) {
+	while (*value != '\0' && (noprecision || precision-- > 0))
+	{
 		OUTCHAR(str, *len, size, *value);
 		value++;
 	}
-	while (padlen < 0) {	/* Trailing spaces. */
+	while (padlen < 0)
+	{ /* Trailing spaces. */
 		OUTCHAR(str, *len, size, ' ');
 		padlen++;
 	}
 }
 
-static void fmtint(char *str, size_t *len, size_t size, INTMAX_T value, int base, int width,
-       int precision, int flags)
+static void fmtint(char *str, size_t *len, size_t size, INTMAX_T value, int base, int width, int precision, int flags)
 {
 	UINTMAX_T uvalue;
 	char iconvert[MAX_CONVERT_LENGTH];
 	char sign = 0;
 	char hexprefix = 0;
-	int spadlen = 0;	/* Amount to space pad. */
-	int zpadlen = 0;	/* Amount to zero pad. */
+	int spadlen = 0; /* Amount to space pad. */
+	int zpadlen = 0; /* Amount to zero pad. */
 	int pos;
 	int separators = (flags & PRINT_F_QUOTE);
 	int noprecision = (precision == -1);
 
 	if (flags & PRINT_F_UNSIGNED)
 		uvalue = value;
-	else {
+	else
+	{
 		uvalue = (value >= 0) ? value : -value;
 		if (value < 0)
 			sign = '-';
-		else if (flags & PRINT_F_PLUS)	/* Do a sign. */
+		else if (flags & PRINT_F_PLUS) /* Do a sign. */
 			sign = '+';
 		else if (flags & PRINT_F_SPACE)
 			sign = ' ';
 	}
 
-	pos = convert(uvalue, iconvert, sizeof(iconvert), base,
-	    flags & PRINT_F_UP);
+	pos = convert(uvalue, iconvert, sizeof(iconvert), base, flags & PRINT_F_UP);
 
-	if (flags & PRINT_F_NUM && uvalue != 0) {
+	if (flags & PRINT_F_NUM && uvalue != 0)
+	{
 		/*
 		 * C99 says: "The result is converted to an `alternative form'.
 		 * For `o' conversion, it increases the precision, if and only
@@ -765,7 +668,8 @@ static void fmtint(char *str, size_t *len, size_t size, INTMAX_T value, int base
 		 * printed).  For `x' (or `X') conversion, a nonzero result has
 		 * `0x' (or `0X') prefixed to it." (7.19.6.1, 6)
 		 */
-		switch (base) {
+		switch (base)
+		{
 		case 8:
 			if (precision <= pos)
 				precision = pos + 1;
@@ -776,15 +680,15 @@ static void fmtint(char *str, size_t *len, size_t size, INTMAX_T value, int base
 		}
 	}
 
-	if (separators)	/* Get the number of group separators we'll print. */
+	if (separators) /* Get the number of group separators we'll print. */
 		separators = getnumsep(pos);
 
 	zpadlen = precision - pos - separators;
-	spadlen = width                         /* Minimum field width. */
-	    - separators                        /* Number of separators. */
-	    - MAX(precision, pos)               /* Number of integer digits. */
-	    - ((sign != 0) ? 1 : 0)             /* Will we print a sign? */
-	    - ((hexprefix != 0) ? 2 : 0);       /* Will we print a prefix? */
+	spadlen = width					  /* Minimum field width. */
+		- separators				  /* Number of separators. */
+		- MAX(precision, pos)		  /* Number of integer digits. */
+		- ((sign != 0) ? 1 : 0)		  /* Will we print a sign? */
+		- ((hexprefix != 0) ? 2 : 0); /* Will we print a prefix? */
 
 	if (zpadlen < 0)
 		zpadlen = 0;
@@ -796,40 +700,46 @@ static void fmtint(char *str, size_t *len, size_t size, INTMAX_T value, int base
 	 * ignored.  For `d', `i', `o', `u', `x', and `X' conversions, if a
 	 * precision is specified, the `0' flag is ignored." (7.19.6.1, 6)
 	 */
-	if (flags & PRINT_F_MINUS)	/* Left justify. */
+	if (flags & PRINT_F_MINUS) /* Left justify. */
 		spadlen = -spadlen;
-	else if (flags & PRINT_F_ZERO && noprecision) {
+	else if (flags & PRINT_F_ZERO && noprecision)
+	{
 		zpadlen += spadlen;
 		spadlen = 0;
 	}
-	while (spadlen > 0) {	/* Leading spaces. */
+	while (spadlen > 0)
+	{ /* Leading spaces. */
 		OUTCHAR(str, *len, size, ' ');
 		spadlen--;
 	}
-	if (sign != 0)	/* Sign. */
+	if (sign != 0) /* Sign. */
 		OUTCHAR(str, *len, size, sign);
-	if (hexprefix != 0) {	/* A "0x" or "0X" prefix. */
+	if (hexprefix != 0)
+	{ /* A "0x" or "0X" prefix. */
 		OUTCHAR(str, *len, size, '0');
 		OUTCHAR(str, *len, size, hexprefix);
 	}
-	while (zpadlen > 0) {	/* Leading zeros. */
+	while (zpadlen > 0)
+	{ /* Leading zeros. */
 		OUTCHAR(str, *len, size, '0');
 		zpadlen--;
 	}
-	while (pos > 0) {	/* The actual digits. */
+	while (pos > 0)
+	{ /* The actual digits. */
 		pos--;
 		OUTCHAR(str, *len, size, iconvert[pos]);
 		if (separators > 0 && pos > 0 && pos % 3 == 0)
 			printsep(str, len, size);
 	}
-	while (spadlen < 0) {	/* Trailing spaces. */
+	while (spadlen < 0)
+	{ /* Trailing spaces. */
 		OUTCHAR(str, *len, size, ' ');
 		spadlen++;
 	}
 }
 
-static void fmtflt(char *str, size_t *len, size_t size, LDOUBLE fvalue, int width,
-       int precision, int flags, int *overflow)
+static void fmtflt(char *str, size_t *len, size_t size, LDOUBLE fvalue, int width, int precision, int flags,
+	int *overflow)
 {
 	LDOUBLE ufvalue;
 	UINTMAX_T intpart;
@@ -838,7 +748,7 @@ static void fmtflt(char *str, size_t *len, size_t size, LDOUBLE fvalue, int widt
 	const char *infnan = NULL;
 	char iconvert[MAX_CONVERT_LENGTH];
 	char fconvert[MAX_CONVERT_LENGTH];
-	char econvert[4];	/* "e-12" (without nul-termination). */
+	char econvert[4]; /* "e-12" (without nul-termination). */
 	char esign = 0;
 	char sign = 0;
 	int leadfraczeros = 0;
@@ -854,7 +764,7 @@ static void fmtflt(char *str, size_t *len, size_t size, LDOUBLE fvalue, int widt
 	int estyle = (flags & PRINT_F_TYPE_E);
 #if HAVE_LOCALECONV && HAVE_LCONV_DECIMAL_POINT
 	struct lconv *lc = localeconv();
-#endif	/* HAVE_LOCALECONV && HAVE_LCONV_DECIMAL_POINT */
+#endif /* HAVE_LOCALECONV && HAVE_LCONV_DECIMAL_POINT */
 
 	/*
 	 * AIX' man page says the default is 0, but C99 and at least Solaris'
@@ -866,7 +776,7 @@ static void fmtflt(char *str, size_t *len, size_t size, LDOUBLE fvalue, int widt
 
 	if (fvalue < 0.0)
 		sign = '-';
-	else if (flags & PRINT_F_PLUS)	/* Do a sign. */
+	else if (flags & PRINT_F_PLUS) /* Do a sign. */
 		sign = '+';
 	else if (flags & PRINT_F_SPACE)
 		sign = ' ';
@@ -876,7 +786,8 @@ static void fmtflt(char *str, size_t *len, size_t size, LDOUBLE fvalue, int widt
 	else if (ISINF(fvalue))
 		infnan = (flags & PRINT_F_UP) ? "INF" : "inf";
 
-	if (infnan != NULL) {
+	if (infnan != NULL)
+	{
 		if (sign != 0)
 			iconvert[ipos++] = sign;
 		while (*infnan != '\0')
@@ -886,8 +797,10 @@ static void fmtflt(char *str, size_t *len, size_t size, LDOUBLE fvalue, int widt
 	}
 
 	/* "%e" (or "%E") or "%g" (or "%G") conversion. */
-	if (flags & PRINT_F_TYPE_E || flags & PRINT_F_TYPE_G) {
-		if (flags & PRINT_F_TYPE_G) {
+	if (flags & PRINT_F_TYPE_E || flags & PRINT_F_TYPE_G)
+	{
+		if (flags & PRINT_F_TYPE_G)
+		{
 			/*
 			 * For "%g" (and "%G") conversions, the precision
 			 * specifies the number of significant digits, which
@@ -920,7 +833,8 @@ again:
 	 * digits of the 32-bit, the 64-bit, or the 128-bit UINTMAX_MAX value
 	 * minus one) past the decimal point due to our conversion method.
 	 */
-	switch (sizeof(UINTMAX_T)) {
+	switch (sizeof(UINTMAX_T))
+	{
 	case 16:
 		if (precision > 38)
 			precision = 38;
@@ -936,10 +850,11 @@ again:
 	}
 
 	ufvalue = (fvalue >= 0.0) ? fvalue : -fvalue;
-	if (estyle)	/* We want exactly one integer digit. */
+	if (estyle) /* We want exactly one integer digit. */
 		ufvalue /= mypow10(exponent);
 
-	if ((intpart = cast(ufvalue)) == UINTMAX_MAX) {
+	if ((intpart = cast(ufvalue)) == UINTMAX_MAX)
+	{
 		*overflow = 1;
 		return;
 	}
@@ -953,7 +868,8 @@ again:
 	 * We "cheat" by converting the fractional part to integer by
 	 * multiplying by a factor of ten.
 	 */
-	if ((fracpart = myround(mask * (ufvalue - intpart))) >= mask) {
+	if ((fracpart = myround(mask * (ufvalue - intpart))) >= mask)
+	{
 		/*
 		 * For example, ufvalue = 2.99962, intpart = 2, and mask = 1000
 		 * (because precision = 3).  Now, myround(1000 * 0.99962) will
@@ -962,7 +878,8 @@ again:
 		 */
 		intpart++;
 		fracpart = 0;
-		if (estyle && intpart == 10) {
+		if (estyle && intpart == 10)
+		{
 			/*
 			 * The value was rounded up to ten, but we only want one
 			 * integer digit if using "e-style".  So, the integer
@@ -992,18 +909,21 @@ again:
 	 *
 	 * Note that we had decremented the precision by one.
 	 */
-	if (flags & PRINT_F_TYPE_G && estyle &&
-	    precision + 1 > exponent && exponent >= -4) {
+	if (flags & PRINT_F_TYPE_G && estyle && precision + 1 > exponent && exponent >= -4)
+	{
 		precision -= exponent;
 		estyle = 0;
 		goto again;
 	}
 
-	if (estyle) {
-		if (exponent < 0) {
+	if (estyle)
+	{
+		if (exponent < 0)
+		{
 			exponent = -exponent;
 			esign = '-';
-		} else
+		}
+		else
 			esign = '+';
 
 		/*
@@ -1026,16 +946,18 @@ again:
 
 	/* Convert the integer part and the fractional part. */
 	ipos = convert(intpart, iconvert, sizeof(iconvert), 10, 0);
-	if (fracpart != 0)	/* convert() would return 1 if fracpart == 0. */
+	if (fracpart != 0) /* convert() would return 1 if fracpart == 0. */
 		fpos = convert(fracpart, fconvert, sizeof(fconvert), 10, 0);
 
 	leadfraczeros = precision - fpos;
 
-	if (omitzeros) {
-		if (fpos > 0)	/* Omit trailing fractional part zeros. */
+	if (omitzeros)
+	{
+		if (fpos > 0) /* Omit trailing fractional part zeros. */
 			while (omitcount < fpos && fconvert[omitcount] == '0')
 				omitcount++;
-		else {	/* The fractional part is zero, omit it completely. */
+		else
+		{ /* The fractional part is zero, omit it completely. */
 			omitcount = precision;
 			leadfraczeros = 0;
 		}
@@ -1048,16 +970,16 @@ again:
 	 */
 	if (precision > 0 || flags & PRINT_F_NUM)
 		emitpoint = 1;
-	if (separators)	/* Get the number of group separators we'll print. */
+	if (separators) /* Get the number of group separators we'll print. */
 		separators = getnumsep(ipos);
 
-	padlen = width                  /* Minimum field width. */
-	    - ipos                      /* Number of integer digits. */
-	    - epos                      /* Number of exponent characters. */
-	    - precision                 /* Number of fractional digits. */
-	    - separators                /* Number of group separators. */
-	    - (emitpoint ? 1 : 0)       /* Will we print a decimal point? */
-	    - ((sign != 0) ? 1 : 0);    /* Will we print a sign character? */
+	padlen = width				 /* Minimum field width. */
+		- ipos					 /* Number of integer digits. */
+		- epos					 /* Number of exponent characters. */
+		- precision				 /* Number of fractional digits. */
+		- separators			 /* Number of group separators. */
+		- (emitpoint ? 1 : 0)	 /* Will we print a decimal point? */
+		- ((sign != 0) ? 1 : 0); /* Will we print a sign character? */
 
 	if (padlen < 0)
 		padlen = 0;
@@ -1066,51 +988,61 @@ again:
 	 * C99 says: "If the `0' and `-' flags both appear, the `0' flag is
 	 * ignored." (7.19.6.1, 6)
 	 */
-	if (flags & PRINT_F_MINUS)	/* Left justifty. */
+	if (flags & PRINT_F_MINUS) /* Left justifty. */
 		padlen = -padlen;
-	else if (flags & PRINT_F_ZERO && padlen > 0) {
-		if (sign != 0) {	/* Sign. */
+	else if (flags & PRINT_F_ZERO && padlen > 0)
+	{
+		if (sign != 0)
+		{ /* Sign. */
 			OUTCHAR(str, *len, size, sign);
 			sign = 0;
 		}
-		while (padlen > 0) {	/* Leading zeros. */
+		while (padlen > 0)
+		{ /* Leading zeros. */
 			OUTCHAR(str, *len, size, '0');
 			padlen--;
 		}
 	}
-	while (padlen > 0) {	/* Leading spaces. */
+	while (padlen > 0)
+	{ /* Leading spaces. */
 		OUTCHAR(str, *len, size, ' ');
 		padlen--;
 	}
-	if (sign != 0)	/* Sign. */
+	if (sign != 0) /* Sign. */
 		OUTCHAR(str, *len, size, sign);
-	while (ipos > 0) {	/* Integer part. */
+	while (ipos > 0)
+	{ /* Integer part. */
 		ipos--;
 		OUTCHAR(str, *len, size, iconvert[ipos]);
 		if (separators > 0 && ipos > 0 && ipos % 3 == 0)
 			printsep(str, len, size);
 	}
-	if (emitpoint) {	/* Decimal point. */
+	if (emitpoint)
+	{ /* Decimal point. */
 #if HAVE_LOCALECONV && HAVE_LCONV_DECIMAL_POINT
 		if (lc->decimal_point != NULL && *lc->decimal_point != '\0')
 			OUTCHAR(str, *len, size, *lc->decimal_point);
-		else	/* We'll always print some decimal point character. */
-#endif	/* HAVE_LOCALECONV && HAVE_LCONV_DECIMAL_POINT */
+		else /* We'll always print some decimal point character. */
+#endif		 /* HAVE_LOCALECONV && HAVE_LCONV_DECIMAL_POINT */
 			OUTCHAR(str, *len, size, '.');
 	}
-	while (leadfraczeros > 0) {	/* Leading fractional part zeros. */
+	while (leadfraczeros > 0)
+	{ /* Leading fractional part zeros. */
 		OUTCHAR(str, *len, size, '0');
 		leadfraczeros--;
 	}
-	while (fpos > omitcount) {	/* The remaining fractional part. */
+	while (fpos > omitcount)
+	{ /* The remaining fractional part. */
 		fpos--;
 		OUTCHAR(str, *len, size, fconvert[fpos]);
 	}
-	while (epos > 0) {	/* Exponent. */
+	while (epos > 0)
+	{ /* Exponent. */
 		epos--;
 		OUTCHAR(str, *len, size, econvert[epos]);
 	}
-	while (padlen < 0) {	/* Trailing spaces. */
+	while (padlen < 0)
+	{ /* Trailing spaces. */
 		OUTCHAR(str, *len, size, ' ');
 		padlen++;
 	}
@@ -1126,7 +1058,7 @@ static void printsep(char *str, size_t *len, size_t size)
 		for (i = 0; lc->thousands_sep[i] != '\0'; i++)
 			OUTCHAR(str, *len, size, lc->thousands_sep[i]);
 	else
-#endif	/* HAVE_LOCALECONV && HAVE_LCONV_THOUSANDS_SEP */
+#endif /* HAVE_LOCALECONV && HAVE_LCONV_THOUSANDS_SEP */
 		OUTCHAR(str, *len, size, ',');
 }
 
@@ -1138,12 +1070,13 @@ static int getnumsep(int digits)
 	struct lconv *lc = localeconv();
 
 	/* We support an arbitrary separator length (including zero). */
-	if (lc->thousands_sep != NULL) {
+	if (lc->thousands_sep != NULL)
+	{
 		for (strln = 0; lc->thousands_sep[strln] != '\0'; strln++)
 			continue;
 		separators *= strln;
 	}
-#endif	/* HAVE_LOCALECONV && HAVE_LCONV_THOUSANDS_SEP */
+#endif /* HAVE_LOCALECONV && HAVE_LCONV_THOUSANDS_SEP */
 	return separators;
 }
 
@@ -1173,7 +1106,8 @@ static int convert(UINTMAX_T value, char *buf, size_t size, int base, int caps)
 	size_t pos = 0;
 
 	/* We return an unterminated buffer with the digits in reverse order. */
-	do {
+	do
+	{
 		buf[pos++] = digits[value % base];
 		value /= base;
 	} while (value != 0 && pos < size);
@@ -1215,11 +1149,13 @@ static LDOUBLE mypow10(int exponent)
 {
 	LDOUBLE result = 1;
 
-	while (exponent > 0) {
+	while (exponent > 0)
+	{
 		result *= 10;
 		exponent--;
 	}
-	while (exponent < 0) {
+	while (exponent < 0)
+	{
 		result /= 10;
 		exponent++;
 	}
