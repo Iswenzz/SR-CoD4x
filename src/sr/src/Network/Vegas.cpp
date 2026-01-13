@@ -11,7 +11,7 @@ namespace SR
 
 	qboolean Vegas::Connect(netadr_t *from, msg_t *msg, int *connectionId)
 	{
-		return qtrue;
+		return static_cast<qboolean>(Enabled->boolean);
 	}
 
 	void Vegas::Disconnect(netadr_t *from, int connectionId) { }
