@@ -1,6 +1,6 @@
 {
 	"name": "sr",
-	"version": "1.1.0",
+	"version": "21.1.0",
 	"description": "SR server module.",
 	"homepage": "https://github.com/Iswenzz/SR-CoD4x",
 	"dependencies": ["cod4dm1", "libsamplerate", "minimp3", "speex"],
