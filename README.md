@@ -39,6 +39,7 @@ _Pre-Requisites:_
 
 1. [MinGW](https://github.com/brechtsanders/winlibs_mingw/releases/download/15.2.0posix-13.0.0-msvcrt-r5/winlibs-i686-posix-dwarf-gcc-15.2.0-mingw-w64msvcrt-13.0.0-r5.zip)
 2. [CMake](https://cmake.org/) and [vcpkg](https://vcpkg.io/en/)
+3. [NASM](https://www.nasm.us/)
 
 _Build Command:_
 
@@ -50,7 +51,9 @@ _Pre-Requisites:_
 
 1. [CMake](https://cmake.org/) and [vcpkg](https://vcpkg.io/en/)
 
-	sudo dpkg --add-architecture i386
+_Pre-Requisites:_
+
+    sudo dpkg --add-architecture i386
     sudo apt update
     sudo apt install build-essential gcc-multilib g++-multilib pkg-config linux-libc-dev nasm:i386
 
