@@ -116,6 +116,7 @@
 	extern cm
 	extern comWorld
 	extern gameWorldMp
+	extern gameWorldSp
 	extern s_world
 	extern g_zones
 	extern g_assetEntryPool

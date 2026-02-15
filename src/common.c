@@ -1228,7 +1228,7 @@ void Com_SyncThreads() { }
 
 void Com_GetBspFilename(char* bspfilename, size_t len, const char* levelname)
 {
-	Com_sprintf(bspfilename, len, "maps/mp/%s.d3dbsp", levelname);
+	Com_sprintf(bspfilename, len, strstr(levelname, "mp_") ? "maps/mp/%s.d3dbsp" : "maps/%s.d3dbsp", levelname);
 }
 
 void __cdecl Com_ErrorAbort()

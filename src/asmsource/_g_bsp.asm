@@ -2,6 +2,7 @@
 
 ;Exports of g_bsp:
 	global gameWorldMp
+	global gameWorldSp
 
 
 SECTION .text
@@ -18,6 +19,7 @@ SECTION .rdata
 ;Zero initialized global or static variables of g_bsp:
 SECTION .bss
 gameWorldMp: resb 0x20
+gameWorldSp: resb 0x2C
 
 
 ;All cstrings:

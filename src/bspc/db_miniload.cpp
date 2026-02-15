@@ -280,7 +280,7 @@ void DB_InitXAssetPools()
 	DB_XAssetPool[ASSET_TYPE_CLIPMAP] = &cm;
 	DB_XAssetPool[ASSET_TYPE_CLIPMAP_PVS] = &cm;
 	DB_XAssetPool[ASSET_TYPE_COMWORLD] = &comWorld;
-	DB_XAssetPool[ASSET_TYPE_GAMEWORLD_SP] = NULL;
+	DB_XAssetPool[ASSET_TYPE_GAMEWORLD_SP] = &gameWorldSp;
 	DB_XAssetPool[ASSET_TYPE_GAMEWORLD_MP] = &gameWorldMp;
 	DB_XAssetPool[ASSET_TYPE_MAP_ENTS] = XAssetAllocPool(ASSET_TYPE_MAP_ENTS, sizeof(MapEnts));
 	DB_XAssetPool[ASSET_TYPE_GFXWORLD] = &s_world;

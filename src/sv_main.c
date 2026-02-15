@@ -3669,31 +3669,51 @@ qboolean SV_Map(const char *levelname)
 	Q_strncpyz(mapname, map, sizeof(mapname));
 	Q_strlwr(mapname);
 
-	if (!useFastFile->boolean)
+	if (strstr(mapname, "mp_"))
 	{
-		Com_sprintf(expanded, sizeof(expanded), "maps/mp/%s.d3dbsp", mapname);
-		if (FS_ReadFile(expanded, NULL) == -1)
+		if (!useFastFile->boolean)
 		{
-			Com_PrintError(CON_CHANNEL_SERVER, "Can't find map %s\n", expanded);
+			Com_sprintf(expanded, sizeof(expanded), "maps/mp/%s.d3dbsp", mapname);
+			if (FS_ReadFile(expanded, NULL) == -1)
+			{
+				Com_PrintError(CON_CHANNEL_SERVER, "Can't find map %s\n", expanded);
+				return qfalse;
+			}
+		}
+		if (!DB_FileExists(mapname, 0) && (!fs_gameDirVar->string[0] || !DB_FileExists(mapname, 2)))
+		{
+			Com_PrintError(CON_CHANNEL_SERVER, "Can't find map %s\n", mapname);
+			if (!fs_gameDirVar->string[0])
+				Com_PrintError(CON_CHANNEL_SERVER, "A mod is required to run custom maps\n");
+			return qfalse;
+		}
+		Com_sprintf(mapname_loadff, sizeof(mapname_loadff), "%s_load", mapname);
+
+		if (!DB_FileExists(mapname_loadff, 0) && !DB_FileExists(mapname_loadff, 2))
+		{
+			Com_PrintError(CON_CHANNEL_SERVER, "Can't find file %s.ff\n", mapname_loadff);
 			return qfalse;
 		}
 	}
-
-	if (!DB_FileExists(mapname, 0) && (!fs_gameDirVar->string[0] || !DB_FileExists(mapname, 2)))
+	else
 	{
-		Com_PrintError(CON_CHANNEL_SERVER, "Can't find map %s\n", mapname);
-		if (!fs_gameDirVar->string[0])
-			Com_PrintError(CON_CHANNEL_SERVER, "A mod is required to run custom maps\n");
-		return qfalse;
+		if (!useFastFile->boolean)
+		{
+			Com_sprintf(expanded, sizeof(expanded), "maps/%s.d3dbsp", mapname);
+			if (FS_ReadFile(expanded, NULL) == -1)
+			{
+				Com_PrintError(CON_CHANNEL_SERVER, "Can't find map %s\n", expanded);
+				return qfalse;
+			}
+		}
+		if (!DB_FileExists(mapname, 0) && (!fs_gameDirVar->string[0] || !DB_FileExists(mapname, 2)))
+		{
+			Com_PrintError(CON_CHANNEL_SERVER, "Can't find map %s\n", mapname);
+			if (!fs_gameDirVar->string[0])
+				Com_PrintError(CON_CHANNEL_SERVER, "A mod is required to run custom maps\n");
+			return qfalse;
+		}
 	}
-	Com_sprintf(mapname_loadff, sizeof(mapname_loadff), "%s_load", mapname);
-	if (!DB_FileExists(mapname_loadff, 0) && !DB_FileExists(mapname_loadff, 2))
-	{
-		Com_PrintError(CON_CHANNEL_SERVER, "Can't find file %s.ff\n", mapname_loadff);
-		return qfalse;
-	}
-	//	Cbuf_ExecuteBuffer(0, 0, "selectStringTableEntryInDvar mp/didyouknow.csv 0 didyouknow");
-
 	SV_LoadLevel(mapname);
 	return qtrue;
 }

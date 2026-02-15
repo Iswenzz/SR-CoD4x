@@ -509,3 +509,4 @@ extern "C"
 
 struct GfxWorld s_world;
 struct GameWorldMp gameWorldMp;
+struct GameWorldSp gameWorldSp;
