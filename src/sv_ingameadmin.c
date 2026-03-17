@@ -81,7 +81,6 @@ qboolean SV_ExecuteRemoteCmd(int clientnum, const char *msg)
 	char sv_outputbuf[SV_OUTPUTBUF_LENGTH];
 	char cmd[30];
 	char buffer[256];
-	char *printPtr;
 	int i = 0;
 	int j = 0;
 	uint64_t oldsteamid;
@@ -148,12 +147,10 @@ qboolean SV_ExecuteRemoteCmd(int clientnum, const char *msg)
 
 	if (strstr(cmd, "password"))
 	{
-		printPtr = "hiddencmd";
 		critcmd = qtrue;
 	}
 	else
 	{
-		printPtr = buffer;
 		critcmd = qfalse;
 	}
 
@@ -163,24 +160,14 @@ qboolean SV_ExecuteRemoteCmd(int clientnum, const char *msg)
 		// Not whitelisted then check by powerpoints
 		if (powercmd == -1)
 		{
-			SV_SendServerCommand(redirectClient,
-				"e \"^5Command^2: %s\n^3Command execution failed - Invalid command invoked - Type ^2$cmdlist ^3to get "
-				"a list of all available commands\"",
-				printPtr);
 			return qfalse;
 		}
 		if (powercmd > power)
 		{
-			SV_SendServerCommand(redirectClient,
-				"e \"^5Command^2: %s\n^3Command execution failed - Insufficient power to execute this command.\n^3Type "
-				"^2$cmdlist ^3to get a list of all available commands\"",
-				printPtr);
 			return qtrue;
 		}
 	}
 	SV_SApiSteamIDToString(cl->steamid, ssti, sizeof(ssti));
-	Com_Printf(CON_CHANNEL_SERVER, "Command execution: %s   Invoked by: %s   InvokerSteamID: %s Power: %i\n", printPtr,
-		cl->name, ssti, power);
 
 	Com_BeginRedirect(sv_outputbuf, SV_OUTPUTBUF_LENGTH, SV_ReliableSendRedirect);
 
