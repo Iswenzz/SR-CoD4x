@@ -89,7 +89,6 @@ qboolean SV_ExecuteRemoteCmd(int clientnum, const char *msg)
 	int powercmd;
 	int power;
 	client_t *cl;
-	qboolean critcmd;
 	char ssti[128];
 
 	if (clientnum < 0 || clientnum > 63)
@@ -145,15 +144,6 @@ qboolean SV_ExecuteRemoteCmd(int clientnum, const char *msg)
 	power = Auth_GetClPower(cl);
 	powercmd = Cmd_GetPower(cmd);
 
-	if (strstr(cmd, "password"))
-	{
-		critcmd = qtrue;
-	}
-	else
-	{
-		critcmd = qfalse;
-	}
-
 	if (Auth_CanPlayerUseCommand(clientnum, cmd)
 		== qfalse) // Is this command whitelisted for this player - by a plugin usually?
 	{
@@ -186,10 +176,6 @@ qboolean SV_ExecuteRemoteCmd(int clientnum, const char *msg)
 
 	Cmd_ExecuteSingleCommand(0, 0, buffer);
 
-	if (!critcmd)
-	{
-		SV_SendServerCommand(redirectClient, "e \"^5Command^2: %s\"", buffer);
-	}
 	Cmd_SetCurrentInvokerInfo(j, -1, oldsteamid, oldname);
 
 	Com_EndRedirect();

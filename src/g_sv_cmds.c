@@ -599,7 +599,7 @@ __cdecl void G_Say(gentity_t *ent, gentity_t *target, int mode, const char *chat
 		return;
 
 	// echo the text to the console
-	Com_Printf(CON_CHANNEL_SERVER, "Say %s: %s\n", name, text);
+	Com_Printf(CON_CHANNEL_SERVER, "%s: %s\n", name, text);
 
 	// send it to all the apropriate clients
 	for (j = 0; j < level.maxclients; j++)

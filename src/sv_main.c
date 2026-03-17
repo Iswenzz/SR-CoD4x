@@ -2696,7 +2696,7 @@ void SV_MasterHeartbeat(const char *message)
 				continue;
 			}
 		}
-		Com_Printf(CON_CHANNEL_SERVER, "Sending heartbeat to %s\n", sv_master[i]->string);
+		Com_DPrintf(CON_CHANNEL_SERVER, "Sending heartbeat to %s\n", sv_master[i]->string);
 
 		if (master_adr[i][0].type != NA_BAD)
 			NET_OutOfBandPrint(NS_SERVER, &master_adr[i][0], "heartbeat %s\n", message);
@@ -3908,7 +3908,7 @@ void SV_CheckTimeouts(void)
 				return;
 			}
 
-			Com_Printf(CON_CHANNEL_SERVER, "Going from CS_ZOMBIE to CS_FREE for client %d\n", i);
+			Com_DPrintf(CON_CHANNEL_SERVER, "Going from CS_ZOMBIE to CS_FREE for client %d\n", i);
 			cl->state = CS_FREE; // can now be reused
 			continue;
 		}

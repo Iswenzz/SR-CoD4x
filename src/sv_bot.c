@@ -101,7 +101,7 @@ int SV_BotAllocateClient(void)
 		return -1;
 	}
 
-	Com_Printf(CON_CHANNEL_AI, "Going from CS_FREE to CS_CONNECTED for %s num %i\n", name, i);
+	Com_DPrintf(CON_CHANNEL_AI, "Going from CS_FREE to CS_CONNECTED for %s num %i\n", name, i);
 
 	// save the addressgamestateMessageNum
 	// init the netchan queue

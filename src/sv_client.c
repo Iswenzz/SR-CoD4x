@@ -524,7 +524,7 @@ __optimize3 __regparm1 void SV_DirectConnect(netadr_t *from)
 			return;
 		}
 
-		Com_Printf(CON_CHANNEL_SERVER, "Going from CS_FREE to CS_CONNECTED for %s num %i from: %s\n", nick, clientNum,
+		Com_DPrintf(CON_CHANNEL_SERVER, "Going from CS_FREE to CS_CONNECTED for %s num %i from: %s\n", nick, clientNum,
 			NET_AdrToConnectionString(from));
 
 #ifdef COD4X18UPDATE
@@ -542,7 +542,7 @@ __optimize3 __regparm1 void SV_DirectConnect(netadr_t *from)
 	if (newcl->needupdate)
 	{
 		newcl->state = CS_ZOMBIE;
-		Com_Printf(CON_CHANNEL_SERVER, "Going from CS_FREE to CS_ZOMBIE for %s num %i from: %s\n", nick, clientNum,
+		Com_DPrintf(CON_CHANNEL_SERVER, "Going from CS_FREE to CS_ZOMBIE for %s num %i from: %s\n", nick, clientNum,
 			NET_AdrToConnectionString(from));
 		newcl->nextSnapshotTime = 0x7fffffff;
 	}
@@ -715,7 +715,7 @@ void SV_ReceiveStats_f(client_t *cl, msg_t *msg)
 		}
 		rijndael_done(&skey);
 	}
-	Com_Printf(CON_CHANNEL_SERVER, "Received packet %i of stats data\n", 0);
+	Com_DPrintf(CON_CHANNEL_SERVER, "Received packet %i of stats data\n", 0);
 	cl->receivedstats = 1;
 }
 
@@ -1347,7 +1347,7 @@ gentity_t *SV_AddBotClient(char *requested_name)
 		SV_FreeClientScriptId(cl);
 		return NULL;
 	}
-	Com_Printf(CON_CHANNEL_SERVER, "Going from CS_FREE to CS_CONNECTED for %s num %i\n", name, i);
+	Com_DPrintf(CON_CHANNEL_SERVER, "Going from CS_FREE to CS_CONNECTED for %s num %i\n", name, i);
 
 	// save the addressgamestateMessageNum
 	// init the netchan queue
@@ -2182,7 +2182,7 @@ void __cdecl SV_VerifyPaks_f(client_t *cl)
 					}
 					if (k >= nServerPaks)
 					{
-						Com_Printf(CON_CHANNEL_SERVER, "Bad checksum %d Localization: %d\n", nClientChkSum[i],
+						Com_DPrintf(CON_CHANNEL_SERVER, "Bad checksum %d Localization: %d\n", nClientChkSum[i],
 							cl->localization);
 						bGood = 0; // Ignore this yet - logging only
 						bPrint = 1;
@@ -2220,7 +2220,7 @@ void __cdecl SV_VerifyPaks_f(client_t *cl)
 	if (bPrint)
 	{
 		char buffer[1024];
-		Com_Printf(CON_CHANNEL_SERVER, "My name: %s My cp: %s\n", cl->name, SV_Cmd_Argsv(0, buffer, sizeof(buffer)));
+		Com_DPrintf(CON_CHANNEL_SERVER, "My name: %s My cp: %s\n", cl->name, SV_Cmd_Argsv(0, buffer, sizeof(buffer)));
 	}
 
 	if (bGood)
