@@ -1019,54 +1019,6 @@ void Cmd_WritePowerConfig(char *buffer, int size)
 	}
 }
 
-static void Cmd_ListPower_f()
-{
-	cmd_function_t *cmd;
-	int i, hidden, j, l;
-	char *match;
-
-	if (Cmd_Argc() > 1)
-	{
-		match = Cmd_Argv(1);
-	}
-	else
-	{
-		match = NULL;
-	}
-
-	i = 0;
-	hidden = 0;
-	for (cmd = cmd_functions; cmd; cmd = cmd->next)
-	{
-		if ((match && !Com_Filter(match, (char *)cmd->name, qfalse)))
-		{
-			continue;
-		}
-		if (cmd->minPower == 100 || cmd->minPower == 0)
-		{
-			hidden++;
-			continue;
-		}
-		Com_Printf(CON_CHANNEL_DONT_FILTER, "%s", cmd->name);
-
-		l = 24 - strlen(cmd->name);
-		j = 0;
-
-		do
-		{
-			Com_Printf(CON_CHANNEL_DONT_FILTER, " ");
-			j++;
-		} while (j < l);
-
-		Com_Printf(CON_CHANNEL_DONT_FILTER, "%d\n", cmd->minPower);
-		i++;
-	}
-	Com_Printf(CON_CHANNEL_DONT_FILTER, "\n%i commands with specified power settings are shown\n", i);
-	Com_Printf(CON_CHANNEL_DONT_FILTER,
-		"%i commands are hidden because the required power level for those commands is set to 100 or 0\n", hidden);
-	Com_Printf(CON_CHANNEL_DONT_FILTER, "Type cmdlist to get a complete list of all commands\n");
-}
-
 /*
 Cmd_ExecuteString
 
@@ -1195,83 +1147,6 @@ void Cmd_ExecuteSingleCommand(int arg1, int arg2, const char *text)
 	Cmd_ExecuteString(text);
 }
 
-static void Cmd_List_f(void)
-{
-	cmd_function_t *cmd;
-	int i;
-	char *match;
-
-	if (Cmd_Argc() > 1)
-	{
-		match = Cmd_Argv(1);
-	}
-	else
-	{
-		match = NULL;
-	}
-
-	i = 0;
-	for (cmd = cmd_functions; cmd; cmd = cmd->next)
-	{
-		if ((match && !Com_Filter(match, (char *)cmd->name, qfalse)) || Cmd_GetInvokerPower() < cmd->minPower
-			|| ((cmd->minPower == 0) && Cmd_GetInvokerPower() != 100))
-		{
-			if (!Auth_CanPlayerUseCommand(Cmd_GetInvokerClnum(), (char *)cmd->name))
-			{
-				continue;
-			}
-		}
-		Com_Printf(CON_CHANNEL_DONT_FILTER, "%s\n", cmd->name);
-		i++;
-	}
-	Com_Printf(CON_CHANNEL_DONT_FILTER, "%i commands\n", i);
-}
-
-/*
-static void Cmd_Help_f( void ) {
-	cmd_function_t  *cmd;
-	char            *cmdname;
-
-	if ( Cmd_Argc() > 1 )
-	{
-		cmdname = Cmd_Argv( 1 );
-	}else{
-		Com_Printf(CON_CHANNEL_SYSTEM,"Displaying common help here\n\n");
-		return;
-	}
-
-	for ( cmd = cmd_functions ; cmd ; cmd = cmd->next ) {
-		if ( Q_stricmp( cmdname, cmd->name ) != 0)
-		{
-			continue;
-		}
-		if(cmd->helptext == NULL)
-		{
-			Com_Printf(CON_CHANNEL_SYSTEM,"For command %s is no help available\n", cmd->name);
-			return;
-		}
-		Com_Printf(CON_CHANNEL_SYSTEM,"Help for %s:\n", cmd->name);
-		Com_Printf(CON_CHANNEL_SYSTEM,"-------------------------------------\n");
-		Com_Printf(CON_CHANNEL_SYSTEM,"%s\n", cmd->helptext);
-		Com_Printf(CON_CHANNEL_SYSTEM,"-------------------------------------\n");
-		return;
-	}
-	Com_Printf(CON_CHANNEL_SYSTEM, "Help: Couldn't find command: %s\n", cmdname );
-}
-*/
-
-/*
-void Cmd_CompleteCfgName( char *args, int argNum ) {
-	if( argNum == 2 ) {
-		Field_CompleteFilename( "", "cfg", qfalse, qtrue );
-	}
-}
-*/
-
-/*
- For holding the state of powers
- */
-
 typedef struct
 {
 	int currentCmdPower; // used to set an execution permissionlevel - Default is 100 but if users execute commands it
@@ -1327,8 +1202,6 @@ void Cmd_ResetInvokerInfo()
 
 void Cmd_Init(void)
 {
-	Cmd_AddPCommand("cmdlist", Cmd_List_f, 1);
-	Cmd_AddPCommand("AdminListCommands", Cmd_ListPower_f, 95);
 	Cmd_AddPCommand("exec", Cmd_Exec_f, 98);
 	Cmd_AddCommand("vstr", Cmd_Vstr_f);
 	Cmd_AddCommand("echo", Cmd_Echo_f);
