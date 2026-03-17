@@ -38,10 +38,10 @@ struct NodeTypeToName
 
 struct PathLinkInfo
 {
-	unsigned __int16 from;
-	unsigned __int16 to;
-	unsigned __int16 prev;
-	unsigned __int16 next;
+	unsigned short from;
+	unsigned short to;
+	unsigned short prev;
+	unsigned short next;
 };
 
 struct pathlocal_t_tag
@@ -83,32 +83,32 @@ struct pathsort_t
 struct pathlink_s
 {
 	float fDist;
-	unsigned __int16 nodeNum;
-	unsigned __int8 disconnectCount;
-	unsigned __int8 negotiationLink;
-	unsigned __int8 ubBadPlaceCount[4];
+	unsigned short nodeNum;
+	unsigned char disconnectCount;
+	unsigned char negotiationLink;
+	unsigned char ubBadPlaceCount[4];
 };
 
 struct pathnode_constant_t
 {
 	NodeType type;
-	unsigned __int16 spawnflags;
-	unsigned __int16 targetname;
-	unsigned __int16 script_linkName;
-	unsigned __int16 script_noteworthy;
-	unsigned __int16 target;
-	unsigned __int16 animscript;
+	unsigned short spawnflags;
+	unsigned short targetname;
+	unsigned short script_linkName;
+	unsigned short script_noteworthy;
+	unsigned short target;
+	unsigned short animscript;
 	int animscriptfunc;
 	float vOrigin[3];
 	float fAngle;
 	float forward[2];
 	float fRadius;
 	float minUseDistSq;
-	__int16 wOverlapNode[2];
-	__int16 wChainId;
-	__int16 wChainDepth;
-	__int16 wChainParent;
-	unsigned __int16 totalLinkCount;
+	short wOverlapNode[2];
+	short wChainId;
+	short wChainDepth;
+	short wChainParent;
+	unsigned short totalLinkCount;
 	pathlink_s *Links;
 };
 
@@ -118,10 +118,10 @@ struct pathnode_dynamic_t
 	int iFreeTime;
 	int iValidTime[3];
 	int inPlayerLOSTime;
-	__int16 wLinkCount;
-	__int16 wOverlapCount;
-	__int16 turretEntNumber;
-	__int16 userCount;
+	short wLinkCount;
+	short wOverlapCount;
+	short turretEntNumber;
+	short userCount;
 };
 
 struct pathnode_transient_t
@@ -151,7 +151,7 @@ struct pathbasenode_t
 struct pathnode_tree_nodes_t
 {
 	int nodeCount;
-	unsigned __int16 *nodes;
+	unsigned short *nodes;
 };
 
 struct pathnode_tree_t;
@@ -178,10 +178,10 @@ struct PathData
 	pathnode_t *nodes;
 	pathbasenode_t *basenodes;
 	unsigned int chainNodeCount;
-	unsigned __int16 *chainNodeForNode;
-	unsigned __int16 *nodeForChainNode;
+	unsigned short *chainNodeForNode;
+	unsigned short *nodeForChainNode;
 	int visBytes;
-	unsigned __int8 *pathVis;
+	unsigned char *pathVis;
 	int nodeTreeCount;
 	pathnode_tree_t *nodeTree;
 };
