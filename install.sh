@@ -41,5 +41,5 @@ cd $ROOT
 
 # Install
 echo -e "[+] Install"
-cp -v bin/cod4x18_dedrun /home/cod4/cod4x18_dedrun && chmod u+x /home/cod4/cod4x18_dedrun
-cp -v bin/gsclib.so /home/cod4/plugins
+cp -v bin/cod4x18_dedrun /home/cod4/Game/cod4x18_dedrun
+cp -v bin/gsclib.so /home/cod4/Game/plugins
