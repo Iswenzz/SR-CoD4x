@@ -101,7 +101,7 @@ qboolean SV_ExecuteRemoteCmd(int clientnum, const char *msg)
 		i++;
 	}
 
-	if (i > 29 || i < 3)
+	if (i > 29 || i < 1)
 		return qfalse;
 
 	Q_strncpyz(cmd, msg, i + 1);
@@ -144,12 +144,14 @@ qboolean SV_ExecuteRemoteCmd(int clientnum, const char *msg)
 	power = Auth_GetClPower(cl);
 	powercmd = Cmd_GetPower(cmd);
 
-	if (Auth_CanPlayerUseCommand(clientnum, cmd)
-		== qfalse) // Is this command whitelisted for this player - by a plugin usually?
+	// Is this command whitelisted for this player - by a plugin usually?
+	if (Auth_CanPlayerUseCommand(clientnum, cmd) == qfalse)
 	{
 		// Not whitelisted then check by powerpoints
 		if (powercmd == -1)
 		{
+			SV_SendServerCommand(redirectClient,
+				"h \"%s^1Unknown command. ^7Type ^5!help ^7to see available commands\"", sv_contellname->string);
 			return qfalse;
 		}
 		if (powercmd > power)
