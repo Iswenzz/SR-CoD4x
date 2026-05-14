@@ -12,6 +12,7 @@ namespace SR
 		Scr_AddMethod("proximityenable", ProximityEnable, qfalse);
 		Scr_AddMethod("radioenable", RadioEnable, qfalse);
 		Scr_AddMethod("savestate", SaveState, qfalse);
+		Scr_AddMethod("setjumporigin", SetJumpOrigin, qfalse);
 		Scr_AddMethod("surfaceflags", SurfaceFlags, qfalse);
 		Scr_AddMethod("voicechatbuttonpressed", VoiceChatButtonPressed, qfalse);
 		Scr_AddMethod("weaponstate", GetWeaponState, qfalse);
@@ -39,6 +40,21 @@ namespace SR
 			return;
 		}
 		Scr_AddInt(player->SurfaceFlags);
+	}
+
+	void PlayerCommands::SetJumpOrigin(scr_entref_t num)
+	{
+		CHECK_PARAMS(1, "Usage: SetJumpOrigin(<origin>)\n");
+
+		Ref<Player> player = Player::Get(num.entnum);
+		float origin = Scr_GetFloat(0);
+
+		if (!player)
+		{
+			Scr_ObjectError("Player not found.\n");
+			return;
+		}
+		player->ps->jumpOriginZ = origin;
 	}
 
 	void PlayerCommands::GetViewHeightLerpDown(scr_entref_t num)
