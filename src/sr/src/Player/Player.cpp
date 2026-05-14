@@ -15,6 +15,7 @@ namespace SR
 	{
 		DemoPlayer = CreateScope<class DemoPlayer>(shared_from_this());
 		PMove = CreateScope<class PMove>(shared_from_this());
+		SaveState = CreateScope<playerState_t>();
 	}
 
 	void Player::Disconnect() { }

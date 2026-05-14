@@ -16,6 +16,7 @@ namespace SR
 		static inline std::array<Ref<Player>, MAX_CLIENTS> List{};
 		client_t *cl = nullptr;
 		playerState_t *ps = nullptr;
+		Scope<playerState_t> SaveState;
 		Scope<class PMove> PMove;
 		Scope<class DemoPlayer> DemoPlayer;
 		int SurfaceFlags = 0;
