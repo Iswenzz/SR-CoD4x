@@ -1902,7 +1902,7 @@ void GScr_KickClient()
 	if (paramCount == 2)
 		SV_DropClient(cl, reason);
 	else
-		SV_DropClient(cl, "Player kicked by scriptadmin\n");
+		SV_DropClientNoNotify(cl, "Player kicked by scriptadmin\n");
 }
 
 void GScr_BanClient()

@@ -2370,7 +2370,7 @@ void SV_AddOperatorCommands()
 	Cmd_AddPCommand("map_restart", SV_MapRestart_f, 50);
 	Cmd_AddCommand("fast_restart", SV_FastRestart_f);
 	Cmd_AddCommand("heartbeat", SV_Heartbeat_f);
-	Cmd_AddPCommand("kick", Cmd_KickPlayer_f, 35);
+	Cmd_AddPCommand("sv_kick", Cmd_KickPlayer_f, 35);
 	Cmd_AddCommand("clientkick", Cmd_KickPlayer_f);
 	Cmd_AddCommand("onlykick", Cmd_KickPlayer_f);
 	Cmd_AddPCommand("unban", Cmd_UnbanPlayer_f, 80);

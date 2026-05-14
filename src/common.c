@@ -508,7 +508,7 @@ void Com_Init(char* commandLine)
 	{
 		Cmd_AddCommand("error", Com_Error_f);
 		Cmd_AddCommand("crash", Com_Crash_f);
-		Cmd_AddCommand("freeze", Com_Freeze_f);
+		Cmd_AddCommand("sv_freeze", Com_Freeze_f);
 		add_extractor_console_commands();
 	}
 	Cmd_AddCommand("quit", Com_Quit_f);

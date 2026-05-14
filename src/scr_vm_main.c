@@ -197,8 +197,6 @@ void Scr_AddStockFunctions()
 	Scr_AddFunction("setvotenocount", GScr_SetVoteNoCount, 0);
 	Scr_AddFunction("fprintfields", GScr_FPrintFields, 1);
 	Scr_AddFunction("fgetarg", GScr_FGetArg, 1);
-	// Scr_AddFunction("kick", GScr_KickPlayer, 0 );
-	// Scr_AddFunction("ban", GScr_BanPlayer, 0 );
 	Scr_AddFunction("map", GScr_LoadMap, 0);
 	Scr_AddFunction("playrumbleonposition", Scr_PlayRumbleOnPosition, 0);
 	Scr_AddFunction("playrumblelooponposition", Scr_PlayRumbleLoopOnPosition, 0);
