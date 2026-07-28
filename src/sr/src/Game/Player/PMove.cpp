@@ -67,10 +67,10 @@ namespace SR
 		switch (GetMovementMode())
 		{
 		case MovementMode::Q3:
-			Q3::WalkMove(reinterpret_cast<pmove_tt *>(pm), reinterpret_cast<pml_tt *>(pml));
+			Q3::WalkMove(reinterpret_cast<pmove_tt *>(pm), reinterpret_cast<pml_tt *>(pml), false);
 			return true;
 		case MovementMode::Q3CPM:
-			Q3::WalkMoveCPM(reinterpret_cast<pmove_tt *>(pm), reinterpret_cast<pml_tt *>(pml));
+			Q3::WalkMove(reinterpret_cast<pmove_tt *>(pm), reinterpret_cast<pml_tt *>(pml), true);
 			return true;
 		case MovementMode::CS:
 			CS::WalkMove(reinterpret_cast<pmove_tt *>(pm), reinterpret_cast<pml_tt *>(pml));
@@ -84,10 +84,10 @@ namespace SR
 		switch (GetMovementMode())
 		{
 		case MovementMode::Q3:
-			Q3::AirMove(reinterpret_cast<pmove_tt *>(pm), reinterpret_cast<pml_tt *>(pml));
+			Q3::AirMove(reinterpret_cast<pmove_tt *>(pm), reinterpret_cast<pml_tt *>(pml), false);
 			return true;
 		case MovementMode::Q3CPM:
-			Q3::AirMoveCPM(reinterpret_cast<pmove_tt *>(pm), reinterpret_cast<pml_tt *>(pml));
+			Q3::AirMove(reinterpret_cast<pmove_tt *>(pm), reinterpret_cast<pml_tt *>(pml), true);
 			return true;
 		case MovementMode::CS:
 			CS::AirMove(reinterpret_cast<pmove_tt *>(pm), reinterpret_cast<pml_tt *>(pml));
