@@ -11,6 +11,10 @@ namespace SR
 	{
 		Demo = demo;
 		FrameIndex = 0;
+		PreviousFrameIndex = 0;
+		Clock = 0;
+		LastServerTime = 0;
+		HasFrame = false;
 
 		Entity = G_Spawn();
 		Scr_SetString(&Entity->classname, scr_const.script_origin);
@@ -21,6 +25,7 @@ namespace SR
 	{
 		Player->cl->deltaMessage = 0;
 		Demo.reset();
+		HasFrame = false;
 	}
 
 	void DemoPlayer::UpdateEntity(snapshotInfo_t *snapInfo, msg_t *msg, const int time, entityState_t *from,
@@ -60,87 +65,73 @@ namespace SR
 
 	bool DemoPlayer::ComputeFrame()
 	{
-		if (!Demo)
+		if (!Demo || Demo->Frames.empty())
 			return false;
 
 		// Controls
 		int direction = Player->cl->lastUsercmd.forwardmove < 0 ? -1 : 1;
 		bool fastForward = Player->cl->lastUsercmd.forwardmove > 0;
-		PreviousFrameIndex = FrameIndex;
-		Slowmo = Player->cl->lastUsercmd.buttons & KEY_MASK_JUMP;
-		FrameIndex += !Slowmo ? direction : 0;
-		FrameIndex += !Slowmo && fastForward ? 1 : 0;
+		bool slowmo = Player->cl->lastUsercmd.buttons & KEY_MASK_JUMP;
+		float speed = slowmo ? 0.1f : fastForward ? 2.0f : 1.0f;
 
-		// EOF
-		if (FrameIndex >= Demo->Frames.size())
+		// Pace playback with the demo timestamps rather than the server framerate,
+		// so demos recorded at any snapshot rate play back at real speed
+		if (!HasFrame)
+			Clock = Demo->Frames.front().time;
+
+		int frameTime = LastServerTime ? svs.time - LastServerTime : 0;
+		LastServerTime = svs.time;
+		Clock += frameTime * speed * direction;
+
+		// EOF forward, or rewound past the beginning
+		if (Clock < Demo->Frames.front().time || Clock > Demo->Frames.back().time)
 		{
 			Stop();
 			return false;
 		}
 
+		PreviousFrameIndex = FrameIndex;
+		while (FrameIndex + 1 < Demo->Frames.size() && Demo->Frames.at(FrameIndex + 1).time <= Clock)
+			FrameIndex++;
+		while (FrameIndex > 0 && Demo->Frames.at(FrameIndex).time > Clock)
+			FrameIndex--;
+
 		DemoFrame frame = Demo->Frames.at(FrameIndex);
-		ComputeSlowmotion(frame);
+		if (FrameIndex + 1 < Demo->Frames.size())
+		{
+			const DemoFrame &next = Demo->Frames.at(FrameIndex + 1);
+			int duration = next.time - frame.time;
+			if (duration > 0)
+				InterpolateFrame(frame, next, (Clock - frame.time) / duration);
+		}
 		CurrentFrame = frame;
+		HasFrame = true;
 
 		return true;
 	}
 
-	void DemoPlayer::ComputeSlowmotion(DemoFrame &frame)
+	void DemoPlayer::InterpolateFrame(DemoFrame &frame, const DemoFrame &next, float interpolate)
 	{
-		int direction = Player->cl->lastUsercmd.forwardmove < 0 ? -1 : 1;
+		// Only interpolate continuous motion: velocity and the movement keys must
+		// stay the exact recorded values, not a blend of two frames
+		frame.ps.commandTime = std::lerp(frame.ps.commandTime, next.ps.commandTime, interpolate);
 
-		if (!Slowmo)
-		{
-			SlowmoIndex = FrameIndex + direction;
-			SlowmoThreshold = 0;
-			return;
-		}
-		// Interpolation range forward/backward
-		if (SlowmoThreshold > 10)
-		{
-			if (SlowmoIndex > FrameIndex)
-				FrameIndex++;
-			SlowmoIndex = FrameIndex + 1;
-			SlowmoThreshold = 1;
-		}
-		else if (SlowmoThreshold < 0)
-		{
-			if (SlowmoIndex < FrameIndex)
-				FrameIndex--;
-			SlowmoIndex = FrameIndex - 1;
-			SlowmoThreshold = 9;
-		}
-		if (SlowmoIndex < 0 || SlowmoIndex >= Demo->Frames.size() || FrameIndex >= Demo->Frames.size())
-			return;
-
-		frame = Demo->Frames.at(FrameIndex);
-		DemoFrame interpolateFrame = Demo->Frames.at(SlowmoIndex);
-		float interpolate = static_cast<float>(SlowmoThreshold) / 10;
-		interpolate = SlowmoIndex > FrameIndex ? interpolate : 1.0 - interpolate;
-
-		frame.forwardmove = std::lerp(frame.forwardmove, interpolateFrame.forwardmove, interpolate);
-		frame.rightmove = std::lerp(frame.rightmove, interpolateFrame.rightmove, interpolate);
-		frame.velocity = std::lerp(frame.velocity, interpolateFrame.velocity, interpolate);
-		frame.ps.commandTime = std::lerp(frame.ps.commandTime, interpolateFrame.ps.commandTime, interpolate);
-
-		frame.ps.origin[0] = std::lerp(frame.ps.origin[0], interpolateFrame.ps.origin[0], interpolate);
-		frame.ps.origin[1] = std::lerp(frame.ps.origin[1], interpolateFrame.ps.origin[1], interpolate);
-		frame.ps.origin[2] = std::lerp(frame.ps.origin[2], interpolateFrame.ps.origin[2], interpolate);
+		frame.ps.origin[0] = std::lerp(frame.ps.origin[0], next.ps.origin[0], interpolate);
+		frame.ps.origin[1] = std::lerp(frame.ps.origin[1], next.ps.origin[1], interpolate);
+		frame.ps.origin[2] = std::lerp(frame.ps.origin[2], next.ps.origin[2], interpolate);
 
 		// Prevent angle clamp interpolation
-		if (std::abs(frame.ps.viewangles[0] - interpolateFrame.ps.viewangles[0]) < 170)
-			frame.ps.viewangles[0] = std::lerp(frame.ps.viewangles[0], interpolateFrame.ps.viewangles[0], interpolate);
-		if (std::abs(frame.ps.viewangles[1] - interpolateFrame.ps.viewangles[1]) < 170)
-			frame.ps.viewangles[1] = std::lerp(frame.ps.viewangles[1], interpolateFrame.ps.viewangles[1], interpolate);
-		if (std::abs(frame.ps.viewangles[2] - interpolateFrame.ps.viewangles[2]) < 170)
-			frame.ps.viewangles[2] = std::lerp(frame.ps.viewangles[2], interpolateFrame.ps.viewangles[2], interpolate);
-
-		SlowmoThreshold += direction;
+		if (std::abs(frame.ps.viewangles[0] - next.ps.viewangles[0]) < 170)
+			frame.ps.viewangles[0] = std::lerp(frame.ps.viewangles[0], next.ps.viewangles[0], interpolate);
+		if (std::abs(frame.ps.viewangles[1] - next.ps.viewangles[1]) < 170)
+			frame.ps.viewangles[1] = std::lerp(frame.ps.viewangles[1], next.ps.viewangles[1], interpolate);
+		if (std::abs(frame.ps.viewangles[2] - next.ps.viewangles[2]) < 170)
+			frame.ps.viewangles[2] = std::lerp(frame.ps.viewangles[2], next.ps.viewangles[2], interpolate);
 	}
 
 	void DemoPlayer::Packet()
 	{
-		if (!Demo || FrameIndex == PreviousFrameIndex)
+		if (!Demo || !HasFrame)
 			return;
 
 		playerState_t originalPS = *Player->ps;
@@ -200,10 +191,13 @@ namespace SR
 		// Movement
 		VectorCopy(CurrentFrame.ps.origin, frame->ps.origin);
 		SetClientViewAngle(Player->cl->gentity, CurrentFrame.ps.viewangles);
+		VectorCopy(Player->ps->viewangles, frame->ps.viewangles);
+		VectorCopy(Player->ps->delta_angles, frame->ps.delta_angles);
 		Velocity = CurrentFrame.velocity;
 
 		// Commands
-		for (const std::string &message : CurrentFrame.chat)
-			SV_SendServerCommand(Player->cl, "h \"^5[Demo] ^7%s\"", message.c_str());
+		for (int i = PreviousFrameIndex + 1; i <= FrameIndex; i++)
+			for (const std::string &message : Demo->Frames.at(i).chat)
+				SV_SendServerCommand(Player->cl, "h \"^5[Demo] ^7%s\"", message.c_str());
 	}
 }

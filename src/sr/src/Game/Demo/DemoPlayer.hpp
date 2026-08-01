@@ -16,9 +16,9 @@ namespace SR
 		DemoFrame CurrentFrame;
 		int FrameIndex = 0;
 		int PreviousFrameIndex = 0;
-		bool Slowmo = false;
-		int SlowmoIndex = 0;
-		int SlowmoThreshold = 0;
+		double Clock = 0;
+		int LastServerTime = 0;
+		bool HasFrame = false;
 
 		DemoPlayer(const Ref<class Player>& player);
 		~DemoPlayer() = default;
@@ -29,7 +29,7 @@ namespace SR
 		void UpdateEntity(snapshotInfo_t* snapInfo, msg_t* msg, const int time, entityState_t* from, entityState_t* to,
 			qboolean force);
 		bool ComputeFrame();
-		void ComputeSlowmotion(DemoFrame& frame);
+		void InterpolateFrame(DemoFrame& frame, const DemoFrame& next, float interpolate);
 
 		void Packet();
 		void Frame();

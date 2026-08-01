@@ -46,6 +46,12 @@ namespace SR
 				frame.time = Reader->GetTimeMilliseconds();
 				frame.fps = Reader->GetFPS();
 				frame.ps = *reinterpret_cast<playerState_t *>(&ps);
+
+				if (archive.commandTime)
+				{
+					VectorCopy(archive.angles, frame.ps.viewangles);
+					VectorCopy(archive.velocity, frame.ps.velocity);
+				}
 				frame.velocity = GetVelocity(frame);
 				frame.playerName = Reader->GetPlayerName().netname;
 				frame.entities = previousFrame.entities;

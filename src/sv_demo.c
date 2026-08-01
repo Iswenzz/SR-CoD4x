@@ -110,6 +110,9 @@ void SV_StopRecord(client_t *cl, qboolean save)
 	cl->demorecording = qfalse;
 	// Com_Printf(CON_CHANNEL_SERVERDEMO, "Stopped demo for: %s\n", cl->name);
 
+	// restore the snapshot rate from the client's snaps setting
+	SV_UpdateClientSnapshotMsec(cl);
+
 	if (!*sv_demoCompletedCmd->string)
 		return;
 
@@ -204,6 +207,9 @@ void SV_RecordClient(client_t *cl, char *basename)
 
 	cl->demorecording = qtrue;
 	Q_strncpyz(cl->demoName, name, sizeof(cl->demoName));
+
+	// record at the full server rate regardless of the client's snaps setting
+	SV_UpdateClientSnapshotMsec(cl);
 
 	// don't start saving messages until a non-delta compressed message is received
 	cl->demowaiting = qtrue;

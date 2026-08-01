@@ -741,6 +741,35 @@ qboolean SV_RequestStats(client_t *client)
 }
 
 /*
+SV_UpdateClientSnapshotMsec
+
+Set the snapshot interval from the client's snaps setting. While a demo is
+recording the full server rate is forced, so demo quality does not depend
+on the client's snaps setting.
+*/
+void SV_UpdateClientSnapshotMsec(client_t *cl)
+{
+	char *val;
+	int i;
+
+	val = Info_ValueForKey(cl->userinfo, "snaps");
+
+	i = sv_fps->integer;
+
+	if (!cl->demorecording && strlen(val))
+	{
+		i = atoi(val);
+
+		if (i < 10)
+			i = 10;
+		else if (i > sv_fps->integer)
+			i = sv_fps->integer;
+	}
+
+	cl->snapshotMsec = 1000 / i;
+}
+
+/*
 SV_UserinfoChanged
 
 Pull specific info from a newly changed userinfo string
@@ -802,21 +831,7 @@ void SV_UserinfoChanged(client_t *cl)
 		}
 	}
 	// snaps command
-	val = Info_ValueForKey(cl->userinfo, "snaps");
-
-	i = sv_fps->integer;
-
-	if (strlen(val))
-	{
-		i = atoi(val);
-
-		if (i < 10)
-			i = 10;
-		else if (i > sv_fps->integer)
-			i = sv_fps->integer;
-	}
-
-	cl->snapshotMsec = 1000 / i;
+	SV_UpdateClientSnapshotMsec(cl);
 
 	val = Info_ValueForKey(cl->userinfo, "cl_voice");
 	cl->sendVoice = atoi(val);
