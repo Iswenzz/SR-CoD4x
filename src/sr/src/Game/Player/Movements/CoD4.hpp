@@ -357,5 +357,6 @@ namespace SR
 		static int CorrectAllSolid(pmove_tt* pm, pml_tt* pml, trace_tt* trace);
 		static void GroundTraceMissed(pmove_tt* pm, pml_tt* pml);
 		static void CrashLand(playerState_tt* ps, pml_tt* pml);
+		static bool InKnockback(playerState_tt* ps);
 	};
 }

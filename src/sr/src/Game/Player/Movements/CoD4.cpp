@@ -323,4 +323,9 @@ namespace SR
 			}
 		}
 	}
+
+	bool CoD4::InKnockback(playerState_tt *ps)
+	{
+		return (ps->pm_flags & PMF_TIME_KNOCKBACK) && ps->pm_time;
+	}
 }
