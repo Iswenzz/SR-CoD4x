@@ -9,7 +9,6 @@
 #define sv_stepsize 18.0f
 #define sv_air_tick_hz 100.0f
 #define sv_air_tick_ms (1000.0f / sv_air_tick_hz)
-#define jump_height 39.0f
 
 #define SURF_SLOPE_NORMAL 0.7f
 #define OVERCLIP 1.001f
@@ -205,7 +204,8 @@ namespace SR
 		if (!(pm->cmd.buttons & PMF_JUMP_HELD))
 			return false;
 
-		float jump_velocity = sqrt(2.0f * static_cast<float>(pm->ps->gravity) * jump_height);
+		float jump_velocity =
+			sqrt(2.0f * static_cast<float>(pm->ps->gravity) * svs.clients[pm->ps->clientNum].jumpHeight);
 
 		pml->groundPlane = false;
 		pml->almostGroundPlane = false;

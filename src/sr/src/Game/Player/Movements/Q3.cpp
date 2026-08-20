@@ -14,7 +14,6 @@
 #define pm_strafeaccelerate 70.0f
 #define pm_stepsize 18.0f
 #define pm_double_jump_cpm 100.0f
-#define jump_height 39.0f
 
 #define OVERCLIP 1.001f
 #define MAX_CLIP_PLANES 5
@@ -325,7 +324,8 @@ namespace SR
 		if (!(pm->cmd.buttons & PMF_JUMP_HELD))
 			return false;
 
-		float jump_velocity = sqrt(2.0f * static_cast<float>(pm->ps->gravity) * jump_height);
+		float jump_velocity =
+			sqrt(2.0f * static_cast<float>(pm->ps->gravity) * svs.clients[pm->ps->clientNum].jumpHeight);
 		if (cpm && pm->ps->jumpTime > 0)
 			jump_velocity += pm_double_jump_cpm;
 
